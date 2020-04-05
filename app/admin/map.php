@@ -225,14 +225,15 @@
                                         </button>
 
 
-                                        <button type="button" ng-click="selectTool('shadow')"
-                                                class="btn bg-{{selection.tool=='shadow'?'black':'default'}} waves-effect">
-                                            <i class="material-icons">brightness_2</i>
+                                        <button type="button" ng-click="draw()"
+                                                class="btn bg-blue-grey waves-effect">
+                                            <i class="material-icons">replay_10</i>
                                         </button>
 
                                         <button ng-repeat="(ket,value) in [1,2,3,4,5,6,7,8,9]" type="button"
                                                 ng-click="selectLayer(value)"
-                                                class="btn bg-{{selection.layer==value?'green':'default'}} waves-effect">
+                                                ng-dblclick="hideLayer(value)"
+                                                class="btn  bg-{{hideLayers.indexOf(value)!==-1?'red' : (selection.layer==value?'green':'default')}}  waves-effect">
                                             <i class="material-icons">filter_{{value}}</i>
                                         </button>
 
@@ -247,9 +248,10 @@
 
                             </table>
                             <div style="position: relative;">
-                                <canvas style="position: absolute;z-index: {{layer}};background-color: transparent"
+                                <canvas style="position: absolute;z-index: {{layer}};background-color: transparent;"
                                         ng-repeat="(key,layer) in layers"
                                         id="W_{{layer}}A"
+                                        ng-show="hideLayers.indexOf(layer)===-1"
                                         width="{{bounds().width}}"
                                         height="{{bounds().height}}">
                                 </canvas>

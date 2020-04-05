@@ -150,14 +150,18 @@ function displayColorsHex(color, divd) {
 }
 
 PRESS = {
-    CTRL: false
+    CTRL: false,
+    SHIFT: false
 };
 $(document).on("keydown", function (e) {
     if (e.ctrlKey)
         PRESS.CTRL = true;
+    if (e.shiftKey)
+        PRESS.SHIFT = true;
 });
 $(document).on("keyup", function (e) {
     PRESS.CTRL = false;
+    PRESS.SHIFT = false;
 });
 
 $(document).on("click", ".gradientclass", function () {

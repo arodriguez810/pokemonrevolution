@@ -92,7 +92,6 @@ MAP_ = {
 
 pokemon.controller('map', ['$scope', function ($scope) {
     //Draw tools
-
     $scope.selectorImage = "../resources/selectors/red.png";
     $scope.selectorImageBlue = "../resources/selectors/bluep.png?v=1";
     $scope.baseWidth = 48;
@@ -129,6 +128,16 @@ pokemon.controller('map', ['$scope', function ($scope) {
     };
     $scope.selectLayer = function (key) {
         $scope.selection.layer = key;
+    };
+    $scope.hideLayers = [];
+    $scope.hideLayer = function (key) {
+        var index = $scope.hideLayers.indexOf(key);
+        if (index !== -1) {
+            $scope.hideLayers.splice(index, 1);
+        } else {
+            $scope.hideLayers.push(key);
+        }
+
     };
     $scope.getSelectors = function () {
         var selectors = [];
@@ -378,7 +387,6 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.form.data.map[`${l}_${x}_${y}`] = OSO(value);
     };
     $scope.getTile = function (l, x, y) {
-
         return $scope.form.data.map[`${l}_${x}_${y}`];
     };
     $scope.getTiles = function () {
@@ -389,123 +397,132 @@ pokemon.controller('map', ['$scope', function ($scope) {
         delete $scope.form.data.map[`${l}_${x}_${y}`];
     };
     $scope.drawTiles = function (event) {
-        var x = Math.floor(event.stageX / $scope.baseWidth);
-        var y = Math.floor(event.stageY / $scope.baseHeight);
-        var e = $scope.getTile($scope.selection.layer, x, y);
-        if ($scope.selection.tool === "deletesquare") {
-            if ($scope.selecteds.length === 1) {
-                $scope.squareClick.push({x: x, y: y});
-                if (e)
-                    $scope.removeTile($scope.selection.layer, x, y);
-                if ($scope.squareClick.length > 1) {
-                    var x1 = $scope.squareClick[0].x;
-                    var x2 = $scope.squareClick[1].x;
-
-                    var y1 = $scope.squareClick[0].y;
-                    var y2 = $scope.squareClick[1].y;
-
-                    var burbuja = 0;
-                    if (x2 < x1) {
-                        burbuja = x1;
-                        x1 = x2;
-                        x2 = burbuja;
-                    }
-                    if (y2 < y1) {
-                        burbuja = y1;
-                        y1 = y2;
-                        y2 = burbuja;
-                    }
-                    for (var rX = x1; rX <= x2; rX++) {
-                        for (var rY = y1; rY <= y2; rY++) {
-                            if ($scope.getTile($scope.selection.layer, rX, rY))
-                                $scope.removeTile($scope.selection.layer, rX, rY);
-                        }
-                    }
-                    $scope.squareClick = [];
-                }
-            }
-        } else if ($scope.selection.tool === "square") {
-            if ($scope.selecteds.length === 1) {
-                $scope.squareClick.push({x: x, y: y});
-                var drawe = true;
+        if ($scope.hideLayers.indexOf($scope.selection.layer) === -1) {
+            var x = Math.floor(event.stageX / $scope.baseWidth);
+            var y = Math.floor(event.stageY / $scope.baseHeight);
+            var e = $scope.getTile($scope.selection.layer, x, y);
+            if (PRESS.SHIFT) {
+                $scope.selecteds = [];
                 if (e) {
-                    if (e.id === $scope.selecteds[0].id) {
-                        drawe = false;
-                    }
-                }
-                if (drawe) {
-                    $scope.putTile($scope.selection.layer, x, y, $scope.selecteds[0]);
-                    $scope.addOne($scope.selection.layer, x, y, true);
-                }
-                if ($scope.squareClick.length > 1) {
-                    var x1 = $scope.squareClick[0].x;
-                    var x2 = $scope.squareClick[1].x;
-
-                    var y1 = $scope.squareClick[0].y;
-                    var y2 = $scope.squareClick[1].y;
-
-                    var burbuja = 0;
-                    if (x2 < x1) {
-                        burbuja = x1;
-                        x1 = x2;
-                        x2 = burbuja;
-                    }
-                    if (y2 < y1) {
-                        burbuja = y1;
-                        y1 = y2;
-                        y2 = burbuja;
-                    }
-                    for (var rX = x1; rX <= x2; rX++) {
-                        for (var rY = y1; rY <= y2; rY++) {
-                            var f = $scope.getTile($scope.selection.layer, rX, rY);
-                            if (f) {
-                                if (f.id === $scope.selecteds[0].id)
-                                    continue;
-                            }
-                            $scope.putTile($scope.selection.layer, rX, rY, $scope.selecteds[0]);
-                            $scope.deleteOne($scope.selection.layer, rX, rY);
-                            $scope.createOne($scope.selection.layer, rX, rY);
-                        }
-                    }
-                    $scope.draw();
-                    $scope.squareClick = [];
+                    $scope.selecteds.push($scope.form.data.map[`${$scope.selection.layer}_${x}_${y}`]);
+                    return;
                 }
             }
-        } else if ($scope.selection.tool === "draw") {
-            $scope.squareClick = [];
-            var base = undefined;
+            if ($scope.selection.tool === "deletesquare") {
+                if ($scope.selecteds.length === 1) {
+                    $scope.squareClick.push({x: x, y: y});
+                    if (e)
+                        $scope.removeTile($scope.selection.layer, x, y);
+                    if ($scope.squareClick.length > 1) {
+                        var x1 = $scope.squareClick[0].x;
+                        var x2 = $scope.squareClick[1].x;
 
-            for (var selector of $scope.selecteds) {
-                if (!base) {
-                    base = {x: x, y: y, data: selector};
+                        var y1 = $scope.squareClick[0].y;
+                        var y2 = $scope.squareClick[1].y;
 
-                    if (e) {
-                        if (e.id === selector.id)
-                            continue;
+                        var burbuja = 0;
+                        if (x2 < x1) {
+                            burbuja = x1;
+                            x1 = x2;
+                            x2 = burbuja;
+                        }
+                        if (y2 < y1) {
+                            burbuja = y1;
+                            y1 = y2;
+                            y2 = burbuja;
+                        }
+                        for (var rX = x1; rX <= x2; rX++) {
+                            for (var rY = y1; rY <= y2; rY++) {
+                                if ($scope.getTile($scope.selection.layer, rX, rY))
+                                    $scope.removeTile($scope.selection.layer, rX, rY);
+                            }
+                        }
+                        $scope.squareClick = [];
                     }
-                    $scope.putTile($scope.selection.layer, x, y, selector);
-                    $scope.addOne($scope.selection.layer, x, y, true);
-                } else {
-                    var dx = selector.xx - base.data.xx;
-                    var dy = selector.yy - base.data.yy;
-                    var xx = x + (dx);
-                    var yy = y + (dy);
-                    if (xx >= 0 && yy >= 0) {
-                        var f = $scope.getTile($scope.selection.layer, xx, yy);
-                        if (f) {
-                            if (f.id === selector.id)
+                }
+            } else if ($scope.selection.tool === "square") {
+                if ($scope.selecteds.length === 1) {
+                    $scope.squareClick.push({x: x, y: y});
+                    var drawe = true;
+                    if (e) {
+                        if (e.id === $scope.selecteds[0].id) {
+                            drawe = false;
+                        }
+                    }
+                    if (drawe) {
+                        $scope.putTile($scope.selection.layer, x, y, $scope.selecteds[0]);
+                        $scope.addOne($scope.selection.layer, x, y, true);
+                    }
+                    if ($scope.squareClick.length > 1) {
+                        var x1 = $scope.squareClick[0].x;
+                        var x2 = $scope.squareClick[1].x;
+
+                        var y1 = $scope.squareClick[0].y;
+                        var y2 = $scope.squareClick[1].y;
+
+                        var burbuja = 0;
+                        if (x2 < x1) {
+                            burbuja = x1;
+                            x1 = x2;
+                            x2 = burbuja;
+                        }
+                        if (y2 < y1) {
+                            burbuja = y1;
+                            y1 = y2;
+                            y2 = burbuja;
+                        }
+                        for (var rX = x1; rX <= x2; rX++) {
+                            for (var rY = y1; rY <= y2; rY++) {
+                                var f = $scope.getTile($scope.selection.layer, rX, rY);
+                                if (f) {
+                                    if (f.id === $scope.selecteds[0].id)
+                                        continue;
+                                }
+                                $scope.putTile($scope.selection.layer, rX, rY, $scope.selecteds[0]);
+                                $scope.deleteOne($scope.selection.layer, rX, rY);
+                                $scope.createOne($scope.selection.layer, rX, rY);
+                            }
+                        }
+                        $scope.draw();
+                        $scope.squareClick = [];
+                    }
+                }
+            } else if ($scope.selection.tool === "draw") {
+                $scope.squareClick = [];
+                var base = undefined;
+
+                for (var selector of $scope.selecteds) {
+                    if (!base) {
+                        base = {x: x, y: y, data: selector};
+
+                        if (e) {
+                            if (e.id === selector.id)
                                 continue;
                         }
-                        $scope.putTile($scope.selection.layer, xx, yy, selector);
-                        $scope.addOne($scope.selection.layer, xx, yy, true);
+                        $scope.putTile($scope.selection.layer, x, y, selector);
+                        $scope.addOne($scope.selection.layer, x, y, true);
+                    } else {
+                        var dx = selector.xx - base.data.xx;
+                        var dy = selector.yy - base.data.yy;
+                        var xx = x + (dx);
+                        var yy = y + (dy);
+                        if (xx >= 0 && yy >= 0) {
+                            var f = $scope.getTile($scope.selection.layer, xx, yy);
+                            if (f) {
+                                if (f.id === selector.id)
+                                    continue;
+                            }
+                            $scope.putTile($scope.selection.layer, xx, yy, selector);
+                            $scope.addOne($scope.selection.layer, xx, yy, true);
+                        }
                     }
-                }
 
+                }
+            } else if ($scope.selection.tool === "delete") {
+                $scope.squareClick = [];
+                if (e)
+                    $scope.removeTile($scope.selection.layer, x, y);
             }
-        } else if ($scope.selection.tool === "delete") {
-            $scope.squareClick = [];
-            if (e)
-                $scope.removeTile($scope.selection.layer, x, y);
         }
     };
 
@@ -513,8 +530,9 @@ pokemon.controller('map', ['$scope', function ($scope) {
     bluf = new createjs.ColorFilter(1, 1, 1, 1, 50, 200, 50, 0);
     greenf = new createjs.ColorFilter(1, 1, 1, 1, 50, 50, 200, 0);
     yellowf = new createjs.ColorFilter(1, 1, 1, 1, 50, 200, 200, 0);
+
     //Canvas
-    $scope.layers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    $scope.layers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     $scope.canvas = ["canvas_bg", "canvas_world"];
     for (var can of $scope.canvas) {
         eval(`${can.split('_')[1].toUpperCase()} = new createjs.Stage("${can}");`);
@@ -522,6 +540,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
     for (var l = 0; l < $scope.layers.length; l++) {
         eval(`W_${$scope.layers[l]}A = new createjs.Stage("W_${$scope.layers[l]}A");`);
     }
+
     WORLD.on("stagemousedown", $scope.drawTiles);
     WORLD.on('pressmove', function (event) {
         $scope.drawTiles(event);
@@ -728,6 +747,17 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 castle3.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth) + $scope.midWidth, ((my) * $scope.baseHeight), $scope.midWidth, $scope.midHeight);
                 castle3.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
                 eval(`W_${l}A.addChild(castle3);`);
+
+                var bro4 = $scope.getTile(l + 1, x, y - 1);
+                if (bro4) {
+                    if (bro4.mode === "A3" || bro4.mode === "A2") {
+                        var rect = new createjs.Shape();
+                        rect.name = `${l}_${x}_${y}_4`;
+                        rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
+                        eval(`W_${l}A.addChild(rect);`);
+                    }
+                }
+
                 return true;
             }
         }
@@ -791,7 +821,24 @@ pokemon.controller('map', ['$scope', function ($scope) {
             if (bro1 !== undefined && bro2 !== undefined && bro3 !== undefined) {
                 if (bro1.id === e.id && bro2.id === e.id && bro3.id === e.id) {
                     floor.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth), ((my) * $scope.baseHeight) + $scope.midHeight, $scope.baseWidth, $scope.baseHeight);
+
+                    var rect = new createjs.Shape();
+                    rect.name = `${l}_${x}_${y}_4`;
+                    rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
+                    eval(`W_${l}A.addChild(rect);`);
+
                     return true;
+                }
+
+            } else {
+                var bro4 = $scope.getTile(l + 1, x, y - 1);
+                if (bro4) {
+                    if (bro4.mode === "A3" || bro4.mode === "A2") {
+                        var rect = new createjs.Shape();
+                        rect.name = `${l}_${x}_${y}_4`;
+                        rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
+                        eval(`W_${l}A.addChild(rect);`);
+                    }
                 }
             }
         }
@@ -1025,7 +1072,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
 
         return $scope.broRightLeft(e, l, x, y, floor, filter);
     };
-
+    $scope.shadowq = createjs.Graphics.getRGB(0, 0, 0, 0.7);
     //3
     $scope.broRightLeft = function (e, l, x, y, floor, filter) {
         var mx = (e.x - 1);
@@ -1122,6 +1169,12 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     castle3.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth) + $scope.midWidth, ((my + 1) * $scope.baseHeight), $scope.midWidth, $scope.midHeight);
                     castle3.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
                     eval(`W_${l}A.addChild(castle3);`);
+
+                    var rect = new createjs.Shape();
+                    rect.name = `${l}_${x}_${y}_4`;
+                    rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
+
+                    eval(`W_${l}A.addChild(rect);`);
                     return true;
                 }
             }
@@ -1207,6 +1260,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     castle3.sourceRect = new createjs.Rectangle(((mx) * $scope.baseWidth) + $scope.midWidth, ((my) * $scope.baseHeight), $scope.midWidth, $scope.midHeight);
                     castle3.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
                     eval(`W_${l}A.addChild(castle3);`);
+
+
                     return true;
                 }
             }
@@ -1247,6 +1302,12 @@ pokemon.controller('map', ['$scope', function ($scope) {
             if (bro1 !== undefined && bro2 !== undefined) {
                 if (bro1.id === e.id && bro2.id === e.id) {
                     floor.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth), ((my + 1) * $scope.baseHeight), $scope.baseWidth, $scope.baseHeight);
+
+                    var rect = new createjs.Shape();
+                    rect.name = `${l}_${x}_${y}_1`;
+                    rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
+
+                    eval(`W_${l}A.addChild(rect);`);
                     return true;
                 }
             }
@@ -1333,6 +1394,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
             if (bro1 !== undefined && bro2 !== undefined) {
                 if (bro1.id === e.id && bro2.id === e.id) {
                     floor.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth), ((my) * $scope.baseHeight), $scope.baseWidth, $scope.baseHeight);
+
+
                     return true;
                 }
             }
@@ -1446,6 +1509,14 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     castle3.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth) + $scope.midWidth, ((my + 1) * $scope.baseHeight), $scope.midWidth, $scope.midHeight);
                     castle3.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
                     eval(`W_${l}A.addChild(castle3);`);
+
+
+                    var rect = new createjs.Shape();
+                    rect.name = `${l}_${x}_${y}_4`;
+                    rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
+
+                    eval(`W_${l}A.addChild(rect);`);
+
                     return true;
                 }
             }
@@ -1514,6 +1585,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     castle3.sourceRect = new createjs.Rectangle(((mx + 1) * $scope.baseWidth) + $scope.midWidth, ((my) * $scope.baseHeight), $scope.midWidth, $scope.midHeight);
                     castle3.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
                     eval(`W_${l}A.addChild(castle3);`);
+
+
                     return true;
                 }
             }
@@ -1739,12 +1812,25 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     }
                 }
             }
+            if (["A3"].indexOf(e.mode) !== -1) {
+                for (var xx = (x - 1); xx <= (x + 1); xx++) {
+                    for (var yy = (y - 1); yy <= (y + 1); yy++) {
+                        if (xx !== x || yy !== y) {
+                            if (l - 1 > 0) {
+                                $scope.deleteOne(l - 1, xx, yy);
+                                $scope.createOneBase(l - 1, xx, yy);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         var base = eval(`W_${l}A.getChildByName("${l}_${x}_${y}")`);
         var bro1 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_1")`);
         var bro2 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_2")`);
         var bro3 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_3")`);
+        var bro4 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_4")`);
 
 
         if (base) {
@@ -1756,6 +1842,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
             eval(`W_${l}A.removeChild(bro2)`);
         if (bro3)
             eval(`W_${l}A.removeChild(bro3)`);
+        if (bro4)
+            eval(`W_${l}A.removeChild(bro4)`);
         if (update)
             eval(`W_${l}A.update()`);
 
@@ -1801,19 +1889,32 @@ pokemon.controller('map', ['$scope', function ($scope) {
                         }
                     }
                 }
+                if (["A3"].indexOf(e.mode) !== -1) {
+                    for (var xx2 = (x - 1); xx2 <= (x + 1); xx2++) {
+                        for (var yy2 = (y - 1); yy2 <= (y + 1); yy2++) {
+                            if (xx2 !== x || yy2 !== y) {
+                                if (l - 1 > 0) {
+                                    $scope.deleteOne(l - 1, xx2, yy2);
+                                    $scope.createOneBase(l - 1, xx2, yy2);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     };
-
     $scope.draw = function () {
-        eval(`W_${$scope.selection.layer}A.removeAllChildren();`);
+        for (var l = 0; l < $scope.layers.length; l++) {
+            eval(`W_${$scope.layers[l]}A.removeAllChildren();`);
+        }
         var width = $scope.form.data.width;
         var height = $scope.form.data.height;
         for (var l = 1; l <= 9; l++) {
             $scope.selection.layer = l;
             for (var x = 0; x < width; x++) {
                 for (var y = 0; y < height; y++) {
-                    $scope.createOne($scope.selection.layer, x, y);
+                    $scope.createOneBase($scope.selection.layer, x, y);
                 }
             }
             eval(`W_${$scope.selection.layer}A.update();`);
@@ -1992,7 +2093,4 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 sel.color = $scope.overlay
             }
     });
-
-
-}
-]);
+}]);
