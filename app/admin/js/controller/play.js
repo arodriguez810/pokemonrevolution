@@ -17,7 +17,8 @@ GAME = {
 _colors = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey", "black"];
 pokemon.controller('play', ['$scope', function ($scope) {
     //Base Variables
-    createjs.Ticker.framerate = 3;
+    $scope.spriteFrames = 3;
+    $scope.playerFrames = 10;
     $scope.width = 12;
     $scope.height = 7;
     $scope.baseHeight = 48;
@@ -27,15 +28,27 @@ pokemon.controller('play', ['$scope', function ($scope) {
     $scope.baseHeight = 48;
     $scope.midHeight = $scope.baseHeight / 2;
     $scope.midWidth = $scope.baseWidth / 2;
+    $scope.shadowY = 8;
     mapQueues = {};
     players = {};
     maps = {};
     STAGE = new createjs.Stage("game");
     createjs.Ticker.addEventListener("tick", STAGE);
+    createjs.Touch.enable(STAGE);
     for (var l = 1; l <= 9; l++) {
         eval(`layer${l} = new createjs.Container();`);
         eval(`STAGE.addChild(layer${l});`);
     }
+    $scope.hero = {
+        x: 0,
+        y: 1,
+        l: 1,
+        body: null,
+        shadow: null,
+        speed: 200,
+        walking: false,
+        route: []
+    };
 
     //Bound And Calcs
     $scope.bounds = function () {
@@ -44,11 +57,15 @@ pokemon.controller('play', ['$scope', function ($scope) {
             height: $scope.height * $scope.baseHeight
         };
     };
+    difference = function (a, b) {
+        return Math.abs(a - b);
+    };
 
     //Draws
     $scope.drawMap = function (name) {
         for (var L = 1; L <= 9; L++) {
             var Sprite = new createjs.SpriteSheet({
+                framerate: $scope.spriteFrames,
                 "images": [
                     mapQueues[name].getResult(`layer${L}_A`),
                     mapQueues[name].getResult(`layer${L}_B`),
@@ -72,16 +89,25 @@ pokemon.controller('play', ['$scope', function ($scope) {
             eval(`layer${L}.addChild(item);`);
         }
         STAGE.update();
+        FIRSTMAP = name;
     };
-    $scope.drawPlayer = function (x, y, name) {
-        var shadow = new createjs.Bitmap(mapQueues["player_" + name].getResult(`SHADOW`));
-        shadow.x = x * $scope.baseWidth;
-        shadow.y = y * $scope.baseHeight + 8;
-        shadow.name = `playershadow`;
-        shadow.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
-        layer1.addChild(shadow);
+    $scope.drawPlayer = function (hero, name, x, y, L) {
+        x = x || hero.x;
+        y = y || hero.y;
+        L = L || hero.l;
+
+        hero.x = x;
+        hero.y = y;
+        hero.l = y;
+        hero.shadow = new createjs.Bitmap(mapQueues["player_" + name].getResult(`SHADOW`));
+        hero.shadow.x = x * $scope.baseWidth;
+        hero.shadow.y = y * $scope.baseHeight + $scope.shadowY;
+        hero.shadow.name = `playershadow`;
+        hero.shadow.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
+        eval(`layer${L}.addChild(hero.shadow);`);
 
         var Sprite = new createjs.SpriteSheet({
+            framerate: $scope.playerFrames,
             "images": [mapQueues["player_" + name].getResult(`TV`)],
             frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
             "animations": {
@@ -95,17 +121,120 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 "wright": {frames: [6, 7, 8, 7]}
             },
         });
-        var item = new createjs.Sprite(Sprite, "down");
-        item.x = x * $scope.baseWidth;
-        item.y = y * $scope.baseHeight;
-        item.name = `player`;
-        layer1.addChild(item);
+        hero.body = new createjs.Sprite(Sprite, "down");
+        hero.body.x = x * $scope.baseWidth;
+        hero.body.y = y * $scope.baseHeight;
+        hero.body.name = `player`;
+        eval(`layer${L}.addChild(hero.body);`);
         STAGE.update();
     };
-    $scope.move = function (event) {
-
+    $scope.traslades = function (hero, events) {
+        if (events.length > 0) {
+            var event = OSO(events[0]);
+            events.shift();
+            $scope.traslade(hero, event.animation, event.point, event.repeat, events);
+        }
     };
-    STAGE.on("stagemousedown", $scope.move);
+    $scope.traslade = function (hero, animation, point, repeat, events) {
+        if ($scope.collision(hero, !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x,
+            !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y)) {
+            hero.walking = false;
+            hero.body.gotoAndPlay(animation);
+            return;
+        }
+        hero.body.gotoAndPlay("w" + animation);
+        var shadow = OSO(point);
+        if (shadow.y !== undefined)
+            shadow.y += $scope.shadowY;
+        createjs.Tween.get(hero.shadow).to(shadow, hero.speed);
+        createjs.Tween.get(hero.body).to(point, hero.speed).call(function () {
+            hero.x = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
+            hero.y = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
+            if (repeat <= 1) {
+                if (events.length > 0) {
+                    $scope.traslades(hero, events);
+                } else {
+                    hero.walking = false;
+                    hero.body.gotoAndPlay(animation);
+                }
+            } else {
+                if (animation === "left")
+                    point.x -= $scope.baseWidth;
+                if (animation === "right")
+                    point.x += $scope.baseWidth;
+                if (animation === "up")
+                    point.y -= $scope.baseHeight;
+                if (animation === "down")
+                    point.y += $scope.baseHeight;
+                $scope.traslade(hero, animation, point, --repeat, events);
+            }
+        });
+    };
+    $scope.collision = function (hero, cx, cy) {
+        var collisions = [];
+        var object = maps[FIRSTMAP].map[`${hero.l}_${cx}_${cy}`];
+        if (object) {
+            console.log("collision", object);
+            collisions.push(object.mode === "A1");
+        }
+        collisions.push(maps[FIRSTMAP].map[`${hero.l + 1}_${cx}_${cy}`] !== undefined);
+        for (var l = hero.l; l >= 1; l--) {
+            collisions.push(maps[FIRSTMAP].map[`${hero.l - l}_${cx}_${cy}`] !== undefined);
+        }
+        return collisions.indexOf(true) !== -1;
+    };
+    $scope.moveMe = function (event) {
+        $scope.move($scope.hero, event);
+    };
+    $scope.createEvent = function (events, hero, cx, cy, dx, dy, variable) {
+        eval(`if (d${variable} > 0) {
+                if (c${variable} < hero.${variable}){
+                
+                    events.push({
+                        animation: "${variable === 'x' ? 'left' : 'up'}",
+                        point: {${variable}: (hero.${variable} * $scope.baseWidth) - $scope.baseWidth},
+                        repeat: d${variable}
+                    });
+                 }
+                else{
+                    events.push({
+                        animation: "${variable === 'x' ? 'right' : 'down'}",
+                        point: {${variable}: (hero.${variable} * $scope.baseWidth) + $scope.baseWidth},
+                        repeat: d${variable}
+                    });
+                    }
+            }`);
+    };
+    $scope.researchMove = false;
+    $scope.move = function (hero, event) {
+        if (!hero.walking) {
+            hero.walking = true;
+            var cx = Math.floor(event.stageX / $scope.baseWidth);
+            var cy = Math.floor(event.stageY / $scope.baseHeight);
+
+            var dx = difference(cx, hero.x);
+            var dy = difference(cy, hero.y);
+            if (dx === 0 && dy === 0) {
+                hero.walking = false;
+                return;
+            }
+            var events = [];
+eval
+            if (dx < dy) {
+                $scope.createEvent(events, hero, cx, cy, dx, dy, "x");
+                $scope.createEvent(events, hero, cx, cy, dx, dy, "y");
+            } else {
+                $scope.createEvent(events, hero, cx, cy, dx, dy, "y");
+                $scope.createEvent(events, hero, cx, cy, dx, dy, "x");
+            }
+            $scope.traslades(hero, events);
+        }
+    };
+    STAGE.on("stagemousedown", $scope.moveMe);
+    STAGE.on("pressmove", $scope.moveMe);
+    STAGE.on("stageswipeleft", function () {
+        console.log(1);
+    });
 
     //Starters and Loadings
     $scope.playLoading = function (text) {
@@ -167,11 +296,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
         $scope.playLoading("Loading Resources");
         await $scope.loadMap(FIRSTMAP);
         await $scope.loadPlayer(PLAYER);
-        $scope.stopLoading();
-        console.log(maps);
-        console.log(players);
         $scope.drawMap(FIRSTMAP);
-        $scope.drawPlayer(7, 3, PLAYER);
+        $scope.drawPlayer($scope.hero, PLAYER, 0, 0, 1);
+        $scope.stopLoading();
     };
     $scope.init();
 

@@ -33,13 +33,16 @@
     }
 </style>
 <script>
+    window.addEventListener('scroll', function noScroll() {
+        window.scrollTo(0, 0);
+    });
     FIRSTMAP = `<?PHP echo $_GET["map"];?>`;
     PLAYER = `<?PHP echo $_GET["player"];?>`;
 </script>
 <?PHP
 
 ?>
-<body>
+<body oncontextmenu="return false;" style="overflow: hidden">
 <section id="play" ng-app="pokemon" ng-controller="play">
     <canvas
             width="{{bounds().width}}"
