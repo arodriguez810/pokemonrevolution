@@ -22,12 +22,10 @@
     .worldtable td {
         border: blue solid 1px;
     }
-
     audio {
         width: 100%;
         height: 20px;
     }
-
     .patron {
         background: radial-gradient(#ccc 15%, transparent 16%) 0 0,
         radial-gradient(#ccc 15%, transparent 16%) 8px 8px,
@@ -141,18 +139,48 @@
                         <div class="col-sm-2">
                             <div class="form-group form-float">
                                 <div class="form-line focused">
-                                    <input type="number" ng-model="form.data.virtual.x"
-                                           class="form-control">
-                                    <label class="form-label">Virtual X</label>
+                                    <select required title="Vecino Derecho" class="form-control show-tick"
+                                            ng-model="form.data.virtual.right">
+                                        <option value="{{map.data.name}}" ng-repeat="(key,map) in list">
+                                            {{map.data.name}} - {{map.data.displayName}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group form-float">
                                 <div class="form-line focused">
-                                    <input type="number" ng-model="form.data.virtual.y"
-                                           class="form-control">
-                                    <label class="form-label">Virtual Y</label>
+                                    <select required title="Vecino Izquierdo" class="form-control show-tick"
+                                            ng-model="form.data.virtual.left">
+                                        <option value="{{map.data.name}}" ng-repeat="(key,map) in list">
+                                            {{map.data.name}} - {{map.data.displayName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <select required title="Vecino Arriba" class="form-control show-tick"
+                                            ng-model="form.data.virtual.up">
+                                        <option value="{{map.data.name}}" ng-repeat="(key,map) in list">
+                                            {{map.data.name}} - {{map.data.displayName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <select required title="Vecino Abajo" class="form-control show-tick"
+                                            ng-model="form.data.virtual.down">
+                                        <option value="{{map.data.name}}" ng-repeat="(key,map) in list">
+                                            {{map.data.name}} - {{map.data.displayName}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -237,10 +265,6 @@
                                             <i class="material-icons">filter_{{value}}</i>
                                         </button>
 
-                                        <button type="button" style="float: right"
-                                                class="btn bg-red waves-effect">
-                                            <i class="material-icons">play_arrow</i>
-                                        </button>
 
                                     </td>
                                 </tr>
@@ -252,6 +276,22 @@
                                         ng-repeat="(key,layer) in layers"
                                         id="W_{{layer}}A"
                                         ng-show="hideLayers.indexOf(layer)===-1"
+                                        width="{{bounds().width}}"
+                                        height="{{bounds().height}}">
+                                </canvas>
+
+                                <canvas style="position: absolute;z-index: {{layer}};background-color: transparent;"
+                                        ng-repeat="(key,layer) in layers"
+                                        id="W_{{layer}}B"
+                                        ng-show="false"
+                                        width="{{bounds().width}}"
+                                        height="{{bounds().height}}">
+                                </canvas>
+
+                                <canvas style="position: absolute;z-index: {{layer}};background-color: transparent;"
+                                        ng-repeat="(key,layer) in layers"
+                                        id="W_{{layer}}C"
+                                        ng-show="false"
                                         width="{{bounds().width}}"
                                         height="{{bounds().height}}">
                                 </canvas>
@@ -327,7 +367,7 @@
 
     <div class="container-fluid">
         <div class="block-header">
-            <h2>Personajes</h2>
+            <h2>Mapas</h2>
 
         </div>
         <!-- Widgets -->
@@ -373,6 +413,11 @@
                                  class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                 <h1> {{map.data.name}}
                                     <div>
+                                        <button type="button" style="float: right"
+                                                ng-click="plays(map.data.name)"
+                                                class="btn bg-red waves-effect">
+                                            <i class="material-icons">play_arrow</i>
+                                        </button>
                                         <button type="button" ng-click="edit(map)" style="z-index: 10"
                                                 class="btn btn-default waves-effect">
                                             <i class="material-icons">edit</i>
@@ -398,11 +443,53 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="characetrs" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lgx" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="largeModalLabel">Personajes</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="body table-responsive">
+                        <div class="col-sm-12">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" ng-model="search2" class="form-control">
+                                    <label class="form-label">Buscar</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-unstyled row clearfix">
+                            <div ng-repeat="(key, character) in characters | filter:search2"
+                                 class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <div>
+                                    <h4> {{character.data.name}} </h4> <span>{{character.data.title}}</span>
+                                </div>
+
+                                <img class="img-responsive thumbnail"
+                                     src='data/characters_file/{{character.data.name}}/face.png?{{cache}}'>
+
+                                <button type="button" ng-click="runs(character.data.name)"
+                                        class="btn bg-red waves-effect">
+                                    <i class="material-icons">play_arrow</i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-<?php include_once($path . '/js.php') ?>
 
+
+<?php include_once($path . '/js.php') ?>
 <script src="js/controller/map.js"></script>
+<script src="js/controller/character.js"></script>
 </body>
 
 </html>

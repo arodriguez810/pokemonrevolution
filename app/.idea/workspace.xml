@@ -31,30 +31,32 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
   <component name="ProjectId" id="1ZHuNrjsRTOQ8ucB8LwtFYd2MWs" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin/data/language" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin/data" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\moves" />
-      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\pokedex" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\pokemon\app\admin\data" />
+      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\language" />
+      <recent name="C:\xampp\htdocs\pokemon\app\admin\layout" />
+      <recent name="C:\xampp\htdocs\pokemon\app\admin\js\controller" />
       <recent name="C:\xampp\htdocs\pokemon\app\admin" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\language" />
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\pokemon\app\admin" />
-      <recent name="C:\xampp\htdocs\pokemon\app\admin\js\controller" />
-      <recent name="C:\xampp\htdocs\pokemon\app\admin\data" />
-      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\characters" />
+      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\moves" />
+      <recent name="C:\xampp\htdocs\pokemon\app\admin\data\pokedex" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -91,7 +93,7 @@
       <workItem from="1585690492375" duration="20662000" />
       <workItem from="1585756641657" duration="27184000" />
       <workItem from="1585843387883" duration="34806000" />
-      <workItem from="1585926310664" duration="65413000" />
+      <workItem from="1585926310664" duration="102789000" />
     </task>
     <servers />
   </component>
