@@ -101,7 +101,6 @@ MAP_ = {
 
 pokemon.controller('map', ['$scope', function ($scope) {
     //Draw tools
-    createjs.Ticker.framerate = 3;
     $scope.selectorImage = "../resources/selectors/red.png";
     $scope.selectorImageBlue = "../resources/selectors/bluep.png?v=1";
     $scope.baseWidth = 48;
@@ -116,6 +115,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
     $scope.selectedsBMPS = [];
     $scope.selectorLimit = 8;
     $scope.squareClick = [];
+
 
     $scope.clearAll = function () {
         $scope.form.data.map = {};
@@ -1951,7 +1951,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
             var filter = new createjs.ColorFilter(1, 1, 1, 1, color._r, color._g, color._b, 0);
             floor.filters = [filter];
             floor.sourceRect = new createjs.Rectangle(mx * $scope.baseWidth, my * $scope.baseHeight, $scope.baseWidth, $scope.baseHeight);
-            $scope.broCross(e, $scope.selection.layer, x, y, floor, filter);
+            $scope.broCross(e, l, x, y, floor, filter);
             eval(`W_${l}A.addChild(floor);`);
             $scope.Animate(l, x, y);
             return e;
@@ -1977,8 +1977,13 @@ pokemon.controller('map', ['$scope', function ($scope) {
                         for (var yy2 = (y - 1); yy2 <= (y + 1); yy2++) {
                             if (xx2 !== x || yy2 !== y) {
                                 if (l - 1 > 0) {
-                                    $scope.deleteOne(l - 1, xx2, yy2);
-                                    $scope.createOneBase(l - 1, xx2, yy2);
+                                    var x = $scope.createOneBase(l - 1, xx2, yy2);
+                                    if (x) {
+                                        if (x.mode === "A3") {
+                                            $scope.deleteOne(l - 1, xx2, yy2);
+                                            $scope.createOneBase(l - 1, xx2, yy2);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1994,15 +1999,13 @@ pokemon.controller('map', ['$scope', function ($scope) {
         var width = $scope.form.data.width;
         var height = $scope.form.data.height;
         for (var l = 1; l <= 9; l++) {
-            $scope.selection.layer = l;
             for (var x = 0; x < width; x++) {
                 for (var y = 0; y < height; y++) {
-                    $scope.createOneBase($scope.selection.layer, x, y);
+                    $scope.createOneBase(l, x, y);
                 }
             }
             eval(`W_${$scope.selection.layer}A.update();`);
         }
-        $scope.selection.layer = 1;
     };
     $scope.drawTools = function () {
         $scope.selectors = $scope.getSelectors();
@@ -2027,6 +2030,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $('#map_form').modal('hide');
     };
     $scope.edit = function (edit) {
+        $scope.selection.layer = 1;
         $('#map_form').modal('show');
         $("[loading='map']").show();
         $(".modal-body").hide();
@@ -2055,6 +2059,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
 
     };
     $scope.new = function () {
+        $scope.selection.layer = 1;
         $scope.clearData();
         $('#map_form').modal('show');
         $("[loading='map']").hide();

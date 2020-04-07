@@ -22,10 +22,12 @@
     .worldtable td {
         border: blue solid 1px;
     }
+
     audio {
         width: 100%;
         height: 20px;
     }
+
     .patron {
         background: radial-gradient(#ccc 15%, transparent 16%) 0 0,
         radial-gradient(#ccc 15%, transparent 16%) 8px 8px,
@@ -429,7 +431,7 @@
                                     </div>
                                 </h1>
 
-                                <div style="position: relative">
+                                <div style="position: relative;height: 300px">
                                     <img ng-repeat="(key,layer) in layers" class="img-responsive thumbnail"
                                          style="position: absolute;z-index: {{layer}};background-color: transparent"
                                          src='data/maps_file/{{map.data.name}}/W_{{layer}}A.png?{{cache}}'>
@@ -461,8 +463,7 @@
                             </div>
                         </div>
                         <div class="list-unstyled row clearfix">
-                            <div ng-repeat="(key, character) in characters | filter:search2"
-                                 class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div ng-repeat="(key, character) in characters | filter:search2"  class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                 <div>
                                     <h4> {{character.data.name}} </h4> <span>{{character.data.title}}</span>
                                 </div>
@@ -476,15 +477,12 @@
                                 </button>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 
 
 <?php include_once($path . '/js.php') ?>

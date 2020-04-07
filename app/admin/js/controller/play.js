@@ -17,10 +17,11 @@ GAME = {
 _colors = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey", "black"];
 pokemon.controller('play', ['$scope', function ($scope) {
     //Base Variables
-    $scope.spriteFrames = 3;
-    $scope.playerFrames = 10;
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
+    $scope.spriteFrames = 1;
+    $scope.playerFrames = 8;
     $scope.width = 12;
-    $scope.height = 7;
+    $scope.height = 8;
     $scope.baseHeight = 48;
     $scope.baseWidth = 48;
     $scope.baseHeight = 48;
@@ -34,6 +35,29 @@ pokemon.controller('play', ['$scope', function ($scope) {
     maps = {};
     STAGE = new createjs.Stage("game");
     createjs.Ticker.addEventListener("tick", STAGE);
+    createjs.Ticker.addEventListener("tick", function (event) {
+        if ($scope.hero) {
+            if ($scope.hero.body) {
+                var cameraX = $scope.hero.body.x - (($scope.width / 2) * $scope.baseWidth);
+                var cameraY = $scope.hero.body.y - (($scope.height / 2) * $scope.baseHeight);
+
+                var regX = cameraX < 0 ? 0 : cameraX;
+                var regY = cameraY < 0 ? 0 : cameraY;
+                if (regX !== 0) {
+                    var limitX = ((maps[FIRSTMAP].width * $scope.baseWidth) - ($scope.width * $scope.baseWidth));
+                    regX = regX > limitX ? limitX : regX;
+                }
+                if (regY !== 0) {
+                    var limitY = ((maps[FIRSTMAP].height * $scope.baseHeight) - ($scope.height * $scope.baseHeight));
+                    regY = regY > limitY ? limitY : regY;
+                }
+
+                STAGE.regX = regX;
+                STAGE.regY = regY;
+            }
+        }
+        STAGE.update(event);
+    });
     createjs.Touch.enable(STAGE);
     for (var l = 1; l <= 9; l++) {
         eval(`layer${l} = new createjs.Container();`);
@@ -90,6 +114,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
         }
         STAGE.update();
         FIRSTMAP = name;
+        createjs.Sound.play("bgm");
     };
     $scope.drawPlayer = function (hero, name, x, y, L) {
         x = x || hero.x;
@@ -136,17 +161,21 @@ pokemon.controller('play', ['$scope', function ($scope) {
         }
     };
     $scope.traslade = function (hero, animation, point, repeat, events) {
-        if ($scope.collision(hero, !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x,
-            !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y)) {
+        var newx = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
+        var newy = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
+
+        if ($scope.collision(hero, newx, newy)) {
             hero.walking = false;
             hero.body.gotoAndPlay(animation);
+            $scope.researchMove = !$scope.researchMove;
             return;
         }
         hero.body.gotoAndPlay("w" + animation);
         var shadow = OSO(point);
         if (shadow.y !== undefined)
             shadow.y += $scope.shadowY;
-        createjs.Tween.get(hero.shadow).to(shadow, hero.speed);
+        STAGE.regX =
+            createjs.Tween.get(hero.shadow).to(shadow, hero.speed);
         createjs.Tween.get(hero.body).to(point, hero.speed).call(function () {
             hero.x = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
             hero.y = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
@@ -174,7 +203,6 @@ pokemon.controller('play', ['$scope', function ($scope) {
         var collisions = [];
         var object = maps[FIRSTMAP].map[`${hero.l}_${cx}_${cy}`];
         if (object) {
-            console.log("collision", object);
             collisions.push(object.mode === "A1");
         }
         collisions.push(maps[FIRSTMAP].map[`${hero.l + 1}_${cx}_${cy}`] !== undefined);
@@ -184,7 +212,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
         return collisions.indexOf(true) !== -1;
     };
     $scope.moveMe = function (event) {
-        $scope.move($scope.hero, event);
+        if ($scope.hero.body)
+            $scope.move($scope.hero, event);
     };
     $scope.createEvent = function (events, hero, cx, cy, dx, dy, variable) {
         eval(`if (d${variable} > 0) {
@@ -209,8 +238,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
     $scope.move = function (hero, event) {
         if (!hero.walking) {
             hero.walking = true;
-            var cx = Math.floor(event.stageX / $scope.baseWidth);
-            var cy = Math.floor(event.stageY / $scope.baseHeight);
+            var local = STAGE.globalToLocal(event.stageX, event.stageY);
+            var cx = Math.floor(local.x / $scope.baseWidth);
+            var cy = Math.floor(local.y / $scope.baseHeight);
 
             var dx = difference(cx, hero.x);
             var dy = difference(cy, hero.y);
@@ -219,8 +249,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 return;
             }
             var events = [];
-eval
-            if (dx < dy) {
+
+
+            if (eval(`dx ${$scope.researchMove ? '>' : '<'} dy`)) {
                 $scope.createEvent(events, hero, cx, cy, dx, dy, "x");
                 $scope.createEvent(events, hero, cx, cy, dx, dy, "y");
             } else {
@@ -232,9 +263,6 @@ eval
     };
     STAGE.on("stagemousedown", $scope.moveMe);
     STAGE.on("pressmove", $scope.moveMe);
-    STAGE.on("stageswipeleft", function () {
-        console.log(1);
-    });
 
     //Starters and Loadings
     $scope.playLoading = function (text) {
@@ -250,7 +278,7 @@ eval
     };
     $scope.loadMap = (name) => new Promise(async (resolve, reject) => {
         mapQueues[name] = new createjs.LoadQueue(false);
-        mapQueues[name].installPlugin(createjs.Sound)
+        mapQueues[name].installPlugin(createjs.Sound);
         maps[FIRSTMAP] = await GAME.GETMAP(FIRSTMAP);
         var loadJson = [];
         loadJson.push({id: "BG", src: `data/maps_file/${name}/bg.png`});
@@ -274,6 +302,7 @@ eval
     });
     $scope.loadPlayer = (name) => new Promise(async (resolve, reject) => {
         mapQueues["player_" + name] = new createjs.LoadQueue(false);
+        mapQueues["player_" + name].installPlugin(createjs.Sound);
         players[name] = await GAME.GETPLAYER(name);
 
         var loadJson = [];
