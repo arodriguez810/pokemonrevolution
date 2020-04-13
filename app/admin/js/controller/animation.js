@@ -1,73 +1,96 @@
-MAP = function () {
-    this.data = {
-        name: ""
-    }
+ANIMATION = function () {
+    this.name = "";
+    this.category = "Dark";
+    this.file = "";
+    this.frames = [];
+    this.sound = "";
+    this.rows = 1;
+    this.columns = 1;
 };
-MAP_ = {
+ANIMATION_ = {
     ALL: () => new Promise(async (resolve, reject) => {
         var data = await API.POST("data.php", {
-            "folder": "maps"
+            "folder": "animations"
         });
-        resolve(data.data || MAP);
+        resolve(data.data || ANIMATION);
     }),
     SAVE: (name, dataset, gender) => new Promise(async (resolve, reject) => {
         var data = await API.POST("save.php", {
-            "folder": "maps",
+            "folder": "animations",
             "name": name,
             "data": dataset
         });
         await CHARACTER_.UPLOAD(name, gender);
-        resolve(data.data || MAP);
+        resolve(data.data || ANIMATION);
     }),
     DELETE: (name) => new Promise(async (resolve, reject) => {
         var data = await API.POST("delete.php", {
-            "folder": "maps",
+            "folder": "animations",
             "name": name
         });
-        resolve(data.data || MAP);
+        resolve(data.data || ANIMATION);
     }),
-    UPLOAD: (name, gender) => new Promise(async (resolve, reject) => {
-        // var dataTUM = {
-        //     "folder": "characters_file/" + name,
-        //     "name": name,
-        //     face: FACE.toDataURL(),
-        //     sv: SV.toDataURL(),
-        //     tv: TV.toDataURL(),
-        //     tvd: TVD.toDataURL()
-        // };
-        // $.ajax({
-        //     type: "POST",
-        //     url: "upload.php",
-        //     data: dataTUM
-        // }).done(function (o) {
-        //     resolve(true);
-        // });
-        resolve(true);
-
-    })
+    animationdb: () => new Promise(async (resolve, reject) => {
+        var data = await API.POST("animationdb.php", {});
+        resolve(data.data || {});
+    }),
+    sounddb: () => new Promise(async (resolve, reject) => {
+        var data = await API.POST("sounddb.php", {});
+        resolve(data.data || {});
+    }),
 };
 
-pokemon.controller('map', ['$scope', function ($scope) {
+pokemon.controller('animation', ['$scope', function ($scope) {
+    //Variables
+    PLAYER = new createjs.Stage("player");
+    SELECTOR = new createjs.Stage("selector");
+    //Logic
+    $scope.bound = function () {
+        return {
+            w: $("#currentImage")[0].width,
+            h: $("#currentImage")[0].height
+        };
+    };
+    $scope.img = function () {
+        return {
+            w: $("#currentImage")[0].width / $scope.form.columns,
+            h: $("#currentImage")[0].height / $scope.form.rows
+        };
+    };
+    $scope.getObjects = function () {
+        if ($scope.form.file) {
+            var cubes = [];
+            var index = 0;
+            for (var yy = 0; yy < $scope.form.rows; yy++) {
+                for (var xx = 0; xx < $scope.form.columns; xx++) {
+                    cubes.push(index);
+                    index++;
+                }
+            }
+            return cubes;
+        }
+        return [0];
+    };
+
+    //CRUD
     $scope.clearData = function () {
         $scope.prop = {mode: "new"};
-        $scope.form = new MAP;
+        $scope.form = new ANIMATION;
     };
     $scope.clear = function () {
         $scope.clearData();
-        $('#map_form').modal('hide');
+        $('#animation_form').modal('hide');
     };
-
     $scope.edit = function (edit) {
-        $("[loading='map']").show();
+        $("[loading='animation']").show();
         $(".modal-body").hide();
 
         $scope.prop = {mode: "edit"};
-        $scope.form = new MAP;
-        $('#map_form').modal('show');
+        $scope.form = new ANIMATION;
+        $('#animation_form').modal('show');
         setTimeout(() => {
             $scope.$digest();
-            $("[loading='map']").hide(200);
-            $("select").selectpicker('refresh');
+            $("[loading='animation']").hide(200);
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
             });
@@ -76,9 +99,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
     };
     $scope.new = function () {
         $scope.clearData();
-        $('#character_form').modal('show');
-        $("[loading='map']").hide();
-        $("select").selectpicker('refresh');
+        $('#animation_form').modal('show');
+        $("[loading='animation']").hide();
     };
     $scope.delete = function (data) {
         swal({
@@ -91,10 +113,9 @@ pokemon.controller('map', ['$scope', function ($scope) {
             closeOnConfirm: false,
             showLoaderOnConfirm: true,
         }, function () {
-            MAP_.DELETE(data.data.name).then(function () {
+            ANIMATION_.DELETE(data.data.name).then(function () {
                 $scope.clear();
                 $scope.refresh().then(function () {
-                    $("select").selectpicker('refresh');
                     $scope.$digest();
                     swal("deleted!");
                 });
@@ -103,22 +124,29 @@ pokemon.controller('map', ['$scope', function ($scope) {
         });
     };
     $scope.save = async function () {
-        await MAP_.SAVE($scope.form.data.name, $scope.form, $scope.form.data.gender);
-        $("[loading='map']").show();
-        $("[loading='map']").hide(200);
+        await ANIMATION_.SAVE($scope.form.data.name, $scope.form, $scope.form.data.gender);
+        $("[loading='animation']").show();
+        $("[loading='animation']").hide(200);
         $scope.clear();
         await $scope.refresh();
     };
     $scope.refresh = async function () {
-        $("[loading='map']").show();
+        $("[loading='animation']").show();
         $scope.list = [];
-        $scope.list = await MAP_.ALL();
+        $scope.list = await ANIMATION_.ALL();
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
-        $("[loading='map']").hide(200);
-        $("select").selectpicker('refresh');
+        $scope.sprites = await ANIMATION_.animationdb();
+        $scope.SOUNDSDB = await ANIMATION_.sounddb();
+        $("[loading='animation']").hide(200);
         $scope.$digest();
     };
     $scope.clear();
     $scope.refresh();
+
+    //Watchers
+    $scope.$watch('form.sound', function (newValue, oldValue, scope) {
+        if ($scope.form)
+            document.getElementById("sound").src = $scope.form.sound;
+    });
 }]);

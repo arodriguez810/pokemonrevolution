@@ -91,7 +91,7 @@
             height="{{bounds().height}}"
             id="game">
     </canvas>
-    <div style="position: absolute;display: none" id="texts">
+    <div style="position: absolute;display: none;width: 100%;" id="texts">
 
         <div class="DialogWindow" style="min-height: 172px;min-width: 600px">
 
@@ -103,7 +103,7 @@
                     {{dialogText}}
                 </span>
                 <div style="margin-top: 45px">
-                    <button style="margin-right: 10px" ng-click="value.click()"
+                    <button style="margin-right: 10px;font-size: 20px" ng-click="value.click()"
                             class="btn bg-{{_colors[$index]}} btn-large"
                             ng-repeat="(key,value) in dialogButtons">
                         <img
@@ -115,14 +115,19 @@
         </div>
     </div>
 
-    <div style="position: absolute;display: none" id="notify" onclick="$('#notify').hide(200)">
-        <div class="DialogWindow" style="min-width: 300px" onclick="$('#notify').hide(200)">
-            <div class="DialogTitle" style="text-align: center;margin-bottom: 0px" onclick="$('#notify').hide(200)">
-                <span style="font-size: 18px;" onclick="$('#notify').hide(200)">
+    <div style="position: absolute;display: none" id="notify" onclick="$('#notify').hide()">
+        <div class="DialogWindow" style="min-width: 300px" onclick="$('#notify').hide()">
+            <div class="DialogTitle" style="text-align: center;margin-bottom: 0px" onclick="$('#notify').hide()">
+                <span style="font-size: 18px;" onclick="$('#notify').hide()">
                     {{notificationText}}
                 </span>
             </div>
         </div>
+    </div>
+
+
+    <div class="speech-bubble" style="position: absolute;display: block" id="bubble">
+        {{bubbleText}}
     </div>
 
 </section>

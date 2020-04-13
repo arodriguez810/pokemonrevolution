@@ -3,7 +3,7 @@
 <?php $path = 'layout/'; ?>
 <?php include_once($path . '/head.php') ?>
 
-<body class="theme-blue">
+<body class="theme-amber">
 <!-- Page Loader -->
 <?php include_once($path . '/loader.php') ?>
 <!-- #END# Page Loader -->
@@ -22,15 +22,15 @@
 
 </style>
 
-<section class="content" id="mapcontroller" ng-app="pokemon" ng-controller="map">
+<section class="content" id="animationcontroller" ng-app="pokemon" ng-controller="animation">
 
     <!-- Form  -->
-    <div class="modal fade" id="map_form" tabindex="-1" role="dialog">
+    <div class="modal fade" id="animation_form" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lgx" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="largeModalLabel">Mapa</h4>
-                    <div class="header-dropdown m-r--5 " loading="avatar">
+                    <h4 class="modal-title" id="largeModalLabel">Animación</h4>
+                    <div class="header-dropdown m-r--5 " loading="animation">
                         Cargando datos...
                         <div class="preloader pl-size-x2">
                             <div class="spinner-layer">
@@ -49,7 +49,7 @@
                         <div class="col-sm-2">
                             <div class="form-group form-float">
                                 <div class="form-line focused">
-                                    <input id="charactername" type="text" ng-model="form.data.name"
+                                    <input id="animationname" type="text" ng-model="form.data.name"
                                            class="form-control">
                                     <label class="form-label">Nombre </label>
                                 </div>
@@ -78,7 +78,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="card">
                                     <div class="header">
-                                        <h2>Map</h2>
+                                        <h2>Animación</h2>
 
                                     </div>
 
@@ -103,7 +103,7 @@
 
     <div class="container-fluid">
         <div class="block-header">
-            <h2>Personajes</h2>
+            <h2>Animaciones</h2>
 
         </div>
         <!-- Widgets -->
@@ -120,7 +120,7 @@
                                 class="btn btn-primary btn-circle-lg waves-effect waves-circle waves-float">
                             <i class="material-icons">refresh</i>
                         </button>
-                        <div class="header-dropdown m-r--5 " loading="character" style="display: none">
+                        <div class="header-dropdown m-r--5 " loading="animation" style="display: none">
                             Cargando datos...
                             <div class="preloader pl-size-x2">
                                 <div class="spinner-layer">
@@ -152,14 +152,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="(key, character) in list | filter:search">
-                                <td>{{character.data.name}}</td>
+                            <tr ng-repeat="(key, animation) in list | filter:search">
+                                <td>{{animation.data.name}}</td>
                                 <th>
-                                    <button type="button" ng-click="edit(character)"
+                                    <button type="button" ng-click="edit(animation)"
                                             class="btn btn-default waves-effect">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                    <button type="button" ng-click="delete(character)"
+                                    <button type="button" ng-click="delete(animation)"
                                             class="btn btn-default waves-effect">
                                         <i class="material-icons">delete</i>
                                     </button>
@@ -177,7 +177,7 @@
 
 <?php include_once($path . '/js.php') ?>
 
-<script src="js/controller/map.js"></script>
+<script src="js/controller/animation.js"></script>
 </body>
 
 </html>

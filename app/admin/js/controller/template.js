@@ -1,34 +1,34 @@
-MAP = function () {
+ANIMATION = function () {
     this.data = {
         name: ""
     }
 };
-MAP_ = {
+ANIMATION_ = {
     ALL: () => new Promise(async (resolve, reject) => {
         var data = await API.POST("data.php", {
-            "folder": "maps"
+            "folder": "animations"
         });
-        resolve(data.data || MAP);
+        resolve(data.data || ANIMATION);
     }),
     SAVE: (name, dataset, gender) => new Promise(async (resolve, reject) => {
         var data = await API.POST("save.php", {
-            "folder": "maps",
+            "folder": "animations",
             "name": name,
             "data": dataset
         });
         await CHARACTER_.UPLOAD(name, gender);
-        resolve(data.data || MAP);
+        resolve(data.data || ANIMATION);
     }),
     DELETE: (name) => new Promise(async (resolve, reject) => {
         var data = await API.POST("delete.php", {
-            "folder": "maps",
+            "folder": "animations",
             "name": name
         });
-        resolve(data.data || MAP);
+        resolve(data.data || ANIMATION);
     }),
     UPLOAD: (name, gender) => new Promise(async (resolve, reject) => {
         // var dataTUM = {
-        //     "folder": "characters_file/" + name,
+        //     "folder": "animations_file/" + name,
         //     "name": name,
         //     face: FACE.toDataURL(),
         //     sv: SV.toDataURL(),
@@ -43,31 +43,30 @@ MAP_ = {
         //     resolve(true);
         // });
         resolve(true);
-
     })
 };
 
-pokemon.controller('map', ['$scope', function ($scope) {
+pokemon.controller('animation', ['$scope', function ($scope) {
     $scope.clearData = function () {
         $scope.prop = {mode: "new"};
-        $scope.form = new MAP;
+        $scope.form = new ANIMATION;
     };
     $scope.clear = function () {
         $scope.clearData();
-        $('#map_form').modal('hide');
+        $('#animation_form').modal('hide');
     };
 
     $scope.edit = function (edit) {
-        $("[loading='map']").show();
+        $("[loading='animation']").show();
         $(".modal-body").hide();
 
         $scope.prop = {mode: "edit"};
-        $scope.form = new MAP;
-        $('#map_form').modal('show');
+        $scope.form = new ANIMATION;
+        $('#animation_form').modal('show');
         setTimeout(() => {
             $scope.$digest();
-            $("[loading='map']").hide(200);
-            $("select").selectpicker('refresh');
+            $("[loading='animation']").hide(200);
+
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
             });
@@ -76,9 +75,9 @@ pokemon.controller('map', ['$scope', function ($scope) {
     };
     $scope.new = function () {
         $scope.clearData();
-        $('#character_form').modal('show');
-        $("[loading='map']").hide();
-        $("select").selectpicker('refresh');
+        $('#animation_form').modal('show');
+        $("[loading='animation']").hide();
+
     };
     $scope.delete = function (data) {
         swal({
@@ -91,10 +90,10 @@ pokemon.controller('map', ['$scope', function ($scope) {
             closeOnConfirm: false,
             showLoaderOnConfirm: true,
         }, function () {
-            MAP_.DELETE(data.data.name).then(function () {
+            ANIMATION_.DELETE(data.data.name).then(function () {
                 $scope.clear();
                 $scope.refresh().then(function () {
-                    $("select").selectpicker('refresh');
+
                     $scope.$digest();
                     swal("deleted!");
                 });
@@ -103,20 +102,20 @@ pokemon.controller('map', ['$scope', function ($scope) {
         });
     };
     $scope.save = async function () {
-        await MAP_.SAVE($scope.form.data.name, $scope.form, $scope.form.data.gender);
-        $("[loading='map']").show();
-        $("[loading='map']").hide(200);
+        await ANIMATION_.SAVE($scope.form.data.name, $scope.form, $scope.form.data.gender);
+        $("[loading='animation']").show();
+        $("[loading='animation']").hide(200);
         $scope.clear();
         await $scope.refresh();
     };
     $scope.refresh = async function () {
-        $("[loading='map']").show();
+        $("[loading='animation']").show();
         $scope.list = [];
-        $scope.list = await MAP_.ALL();
+        $scope.list = await ANIMATION_.ALL();
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
-        $("[loading='map']").hide(200);
-        $("select").selectpicker('refresh');
+        $("[loading='animation']").hide(200);
+
         $scope.$digest();
     };
     $scope.clear();

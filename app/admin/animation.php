@@ -3,7 +3,7 @@
 <?php $path = 'layout/'; ?>
 <?php include_once($path . '/head.php') ?>
 
-<body class="theme-blue">
+<body class="theme-amber">
 <!-- Page Loader -->
 <?php include_once($path . '/loader.php') ?>
 <!-- #END# Page Loader -->
@@ -22,15 +22,15 @@
 
 </style>
 
-<section class="content" id="mapcontroller" ng-app="pokemon" ng-controller="map">
+<section class="content" id="animationcontroller" ng-app="pokemon" ng-controller="animation">
 
     <!-- Form  -->
-    <div class="modal fade" id="map_form" tabindex="-1" role="dialog">
+    <div class="modal fade" id="animation_form" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lgx" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="largeModalLabel">Mapa</h4>
-                    <div class="header-dropdown m-r--5 " loading="avatar">
+                    <h4 class="modal-title" id="largeModalLabel">Animación</h4>
+                    <div class="header-dropdown m-r--5 " loading="animation">
                         Cargando datos...
                         <div class="preloader pl-size-x2">
                             <div class="spinner-layer">
@@ -49,47 +49,89 @@
                         <div class="col-sm-2">
                             <div class="form-group form-float">
                                 <div class="form-line focused">
-                                    <input id="charactername" type="text" ng-model="form.data.name"
+                                    <input id="animationname" type="text" ng-model="form.data.name"
                                            class="form-control">
                                     <label class="form-label">Nombre </label>
                                 </div>
                             </div>
                         </div>
-                        <!--                        <div class="col-sm-2">-->
-                        <!--                                                    <div class="form-group form-float ">-->
-                        <!--                                                        <select class="form-control show-tick" ng-model="form.data.personality">-->
-                        <!--                                                            <option ng-repeat="(key,value) in personalities">{{value}}</option>-->
-                        <!--                                                        </select>-->
-                        <!--                                                    </div>-->
-                        <!--                                                </div>-->
-                        <!--                        <div class="col-sm-6">-->
-                        <!--                            <div class="form-group form-float ">-->
-                        <!--                                <div class="form-line">-->
-                        <!--                                    <textarea rows="1" ng-model="form.data.biography" class="form-control"></textarea>-->
-                        <!--                                    <label class="form-label">Biografía</label>-->
-                        <!--                                </div>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
-                    </div>
-
-
-                    <div class="row clearfix">
-                        <center>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="card">
-                                    <div class="header">
-                                        <h2>Map</h2>
-
-                                    </div>
-
-                                    <div class="body">
-
-
-                                    </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select title="Category" class="form-control show-tick" ng-model="form.category">
+                                    <option ng-repeat="(key,value) in sprites">{{key}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select class="form-control show-tick" ng-model="form.file">
+                                    <option selected value="">Seleccione</option>
+                                    <option value="{{value.url}}" ng-repeat="(key,value) in sprites[form.category]">
+                                        {{value.file}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <input type="text" ng-model="form.rows"
+                                           class="form-control">
+                                    <label class="form-label">Rows </label>
                                 </div>
                             </div>
-                        </center>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <input type="text" ng-model="form.columns"
+                                           class="form-control">
+                                    <label class="form-label">Columns </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select required title="Pasos" class="form-control show-tick"
+                                        ng-model="form.sound">
+                                    <option selected value="">Sonido</option>
+                                    <option value="{{value}}" ng-repeat="(key,value) in SOUNDSDB">
+                                        {{value.replace('.ogg','').split('/')[value.split('/').length-1]}}
+                                    </option>
+                                </select>
+                                <audio ng-show="form.sound" id="sound" controls>
+                                    <source ng-src="{{form.sound}}" type="audio/ogg">
+                                </audio>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group form-float ">
+                                <pre ng-dblclick="form.frames = [];">{{form.frames}} </pre>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row clearfix">
+                        <canvas width="{{img().w}}" height="{{img().h}}" style="border: #2C009F 1px solid"
+                                id="player"></canvas>
+                    </div>
+                    <div class="row clearfix">
+                        <button type="button"
+                                class="btn bg-amber  waves-effect">
+                            <i class="material-icons">play_circle_filled</i>
+                        </button>
+                    </div>
+                    <div style="width: {{bound().w}}px;height: {{bound().h}}px;position: relative">
+
+                        <img id="currentImage" style="position: absolute;z-index: 1;" src="{{form.file}}">
+                        <div ng-click="form.frames.push(value)"
+                             style="position: relative;z-index: 999999;background-color: transparent;padding: 0 0 0 0;width: {{img().w}}px;height: {{img().h}}px;float: left;border: {{form.frames.indexOf(value)!==-1?'red':'blue'}} solid 1px;"
+                             ng-repeat="(key, value) in getObjects()"></div>
+
+                    </div>
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-link waves-effect" ng-click="save()">Guardar</button>
@@ -103,7 +145,7 @@
 
     <div class="container-fluid">
         <div class="block-header">
-            <h2>Personajes</h2>
+            <h2>Animaciones</h2>
 
         </div>
         <!-- Widgets -->
@@ -120,7 +162,7 @@
                                 class="btn btn-primary btn-circle-lg waves-effect waves-circle waves-float">
                             <i class="material-icons">refresh</i>
                         </button>
-                        <div class="header-dropdown m-r--5 " loading="character" style="display: none">
+                        <div class="header-dropdown m-r--5 " loading="animation" style="display: none">
                             Cargando datos...
                             <div class="preloader pl-size-x2">
                                 <div class="spinner-layer">
@@ -152,14 +194,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="(key, character) in list | filter:search">
-                                <td>{{character.data.name}}</td>
+                            <tr ng-repeat="(key, animation) in list | filter:search">
+                                <td>{{animation.data.name}}</td>
                                 <th>
-                                    <button type="button" ng-click="edit(character)"
+                                    <button type="button" ng-click="edit(animation)"
                                             class="btn btn-default waves-effect">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                    <button type="button" ng-click="delete(character)"
+                                    <button type="button" ng-click="delete(animation)"
                                             class="btn btn-default waves-effect">
                                         <i class="material-icons">delete</i>
                                     </button>
@@ -177,7 +219,7 @@
 
 <?php include_once($path . '/js.php') ?>
 
-<script src="js/controller/map.js"></script>
+<script src="js/controller/animation.js"></script>
 </body>
 
 </html>

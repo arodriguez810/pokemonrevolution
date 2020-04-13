@@ -158,7 +158,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
             $scope.form.data.avatar.draw($scope.form.data.gender);
             $scope.$digest();
             $("[loading='avatar']").hide(200);
-            $("select").selectpicker('refresh');
+
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
             });
@@ -173,7 +173,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $scope.clearAvatar();
         $('#character_form').modal('show');
         $("[loading='avatar']").hide();
-        $("select").selectpicker('refresh');
+
     };
     $scope.delete = function (data) {
         swal({
@@ -190,7 +190,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
                 $scope.clear();
                 $scope.refresh().then(function () {
 
-                    $("select").selectpicker('refresh');
+
                     $scope.$digest();
                     swal("deleted!");
                 });
@@ -264,7 +264,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
         $("[loading='character']").hide(200);
-        $("select").selectpicker('refresh');
+
         $scope.$digest();
     };
     $scope.clear();

@@ -27,7 +27,7 @@
     <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
 
     <!-- Bootstrap Select Css -->
-    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"/>
+<!--    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"/>-->
 
     <link rel="stylesheet" href="css/angularjs-color-picker.min.css"/>
     <!-- only include if you use bootstrap -->

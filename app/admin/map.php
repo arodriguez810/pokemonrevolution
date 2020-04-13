@@ -191,127 +191,137 @@
                                 </div>
                             </div>
                             <div class="col-sm-2" ng-show="currentEvent.isActor=='1'>
-                                <div class="form-group form-float ">
-                                    <select  class="form-control show-tick"  ng-model="currentEvent.look">
-                                        <option value="DOWN">Abajo</option>
-                                        <option value="UP">Arriba</option>
-                                        <option value="LEFT">Izquierda</option>
-                                        <option value="RIGHT">Derecha</option>
-                                    </select>
-                                    <label class="form-label">Mirada</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="form-group form-float">
-                                    <div class="form-line focused">
-                                        <input type="text" ng-model="currentEvent.conditions"
-                                               class="form-control">
-                                        <label class="form-label">Condiciones</label>
-                                    </div>
-                                </div>
+                                <div class=" form-group form-float
+                            ">
+                            <select class="form-control show-tick" ng-model="currentEvent.look">
+                                <option value="DOWN">Abajo</option>
+                                <option value="UP">Arriba</option>
+                                <option value="LEFT">Izquierda</option>
+                                <option value="RIGHT">Derecha</option>
+                            </select>
+                            <label class="form-label">Mirada</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" ng-model="currentEvent.conditions"
+                                       class="form-control">
+                                <label class="form-label">Condiciones</label>
                             </div>
                         </div>
-                        <div class="row clearfix">
-
-                            <h4 class="form-label">Rutas: Condicion - Script</h4>
-                            <div class="col-sm-3">
-                                <div class="form-group form-float">
-                                    <div class="form-line focused">
-                                        <input type="text" ng-model="CCCR"
-                                               class="form-control">
-                                        <label class="form-label">Condición </label>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" ng-model="currentEvent.visible"
+                                       class="form-control">
+                                <label class="form-label">Visible</label>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line focused">
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+
+                    <h4 class="form-label">Rutas: Condicion - Script</h4>
+                    <div class="col-sm-3">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" ng-model="CCCR"
+                                       class="form-control">
+                                <label class="form-label">Condición </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
                                         <textarea type="text" ng-model="NNNR"
                                                   class="form-control"></textarea>
-                                        <label class="form-label">Script </label>
-                                    </div>
-                                    <button type="button" ng-click="currentEvent.route.push({CC:CCCR,script:NNNR})"
-                                            class="btn btn-default waves-effect">
-                                        <i class="material-icons">note_add</i>
-                                    </button>
-                                </div>
+                                <label class="form-label">Script </label>
                             </div>
-                            <div class="col-sm-6">
-                                <ul class="list-group">
-                                    <li ng-repeat="(key,value) in currentEvent.route" class="list-group-item">
-                                        <pre ng-dblclick="editaccionshita=!editaccionshita">if ({{value.CC}}) { {{value.script}} }</pre>
-                                        <div ng-show="editaccionshita">
-                                            <textarea ng-model="value.script"></textarea>
-                                            <textarea ng-model="value.CC"></textarea>
-                                        </div>
-                                        <button type="button" ng-click="currentEvent.route.splice($index,1)"
-                                                class="btn btn-default waves-effect">
-                                            <i class="material-icons">delete_sweep</i>
-                                        </button>
-                                    </li>
-                                </ul>
+                            <button type="button" ng-click="currentEvent.route.push({CC:CCCR,script:NNNR})"
+                                    class="btn btn-default waves-effect">
+                                <i class="material-icons">note_add</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-group">
+                            <li ng-repeat="(key,value) in currentEvent.route" class="list-group-item">
+                                <pre ng-dblclick="editaccionshita=!editaccionshita">if ({{value.CC}}) { {{value.script}} }</pre>
+                                <div ng-show="editaccionshita">
+                                    <textarea ng-model="value.script"></textarea>
+                                    <textarea ng-model="value.CC"></textarea>
+                                </div>
+                                <button type="button" ng-click="currentEvent.route.splice($index,1)"
+                                        class="btn btn-default waves-effect">
+                                    <i class="material-icons">delete_sweep</i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+
+                    <h4 class="form-label">Acciones: Condicion - Script</h4>
+                    <div class="col-sm-3">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" ng-model="CCC"
+                                       class="form-control">
+                                <label class="form-label">Condición </label>
                             </div>
                         </div>
-
-                        <div class="row clearfix">
-
-                            <h4 class="form-label">Acciones: Condicion - Script</h4>
-                            <div class="col-sm-3">
-                                <div class="form-group form-float">
-                                    <div class="form-line focused">
-                                        <input type="text" ng-model="CCC"
-                                               class="form-control">
-                                        <label class="form-label">Condición </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line focused">
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
                                         <textarea type="text" ng-model="NNN"
                                                   class="form-control"></textarea>
-                                        <label class="form-label">Script </label>
-                                    </div>
-                                    <button type="button" ng-click="currentEvent.actions.push({CC:CCC,script:NNN})"
-                                            class="btn btn-default waves-effect">
-                                        <i class="material-icons">note_add</i>
-                                    </button>
-                                </div>
+                                <label class="form-label">Script </label>
                             </div>
-
-                            <div class="col-sm-6">
-                                <ul class="list-group">
-                                    <li ng-repeat="(key,value) in currentEvent.actions" class="list-group-item">
-                                        <pre ng-dblclick="editaccionshita=!editaccionshita">if ({{value.CC}}) { {{value.script}} }</pre>
-                                        <div ng-show="editaccionshita">
-                                            <textarea ng-model="value.script"></textarea>
-                                            <textarea ng-model="value.CC"></textarea>
-                                        </div>
-                                        <button type="button" ng-click="currentEvent.actions.splice($index,1)"
-                                                class="btn btn-default waves-effect">
-                                            <i class="material-icons">delete_sweep</i>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <button type="button" ng-click="currentEvent.actions.push({CC:CCC,script:NNN})"
+                                    class="btn btn-default waves-effect">
+                                <i class="material-icons">note_add</i>
+                            </button>
                         </div>
-
                     </div>
 
-
+                    <div class="col-sm-6">
+                        <ul class="list-group">
+                            <li ng-repeat="(key,value) in currentEvent.actions" class="list-group-item">
+                                <pre ng-dblclick="editaccionshita=!editaccionshita">if ({{value.CC}}) { {{value.script}} }</pre>
+                                <div ng-show="editaccionshita">
+                                    <textarea ng-model="value.script"></textarea>
+                                    <textarea ng-model="value.CC"></textarea>
+                                </div>
+                                <button type="button" ng-click="currentEvent.actions.splice($index,1)"
+                                        class="btn btn-default waves-effect">
+                                    <i class="material-icons">delete_sweep</i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link waves-effect" ng-click="saveEvent()">Guardar
-                    </button>
-                    <button type="button" class="btn btn-red waves-effect" ng-click="clearEvent()"
-                            data-dismiss="modal">
-                        Eliminar
-                    </button>
-                </div>
             </div>
+
+
         </div>
+
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-link waves-effect" ng-click="saveEvent()">Guardar
+            </button>
+            <button type="button" class="btn btn-red waves-effect" ng-click="clearEvent()"
+                    data-dismiss="modal">
+                Eliminar
+            </button>
+        </div>
+    </div>
+    </div>
     </div>
     </div>
 
@@ -457,6 +467,17 @@
                                 <audio ng-show="form.data.steps" id="stepsmusic" controls>
                                     <source ng-src="{{form.data.steps}}" type="audio/ogg">
                                 </audio>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select required title="Mapas Vecinos" multiple class="form-control show-tick"
+                                        ng-model="form.data.vecinos">
+                                    <option ng-show="value.data.name!==form.data.name" value="{{value.data.name}}" ng-repeat="(key,value) in list">
+                                        {{value.data.name}}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 

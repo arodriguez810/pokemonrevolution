@@ -42,8 +42,14 @@
                 </li>
                 <li>
                     <a href="map.php" class="toggled waves-effect waves-block">
-                        <i class="material-icons">public</i>
+                        <i class="material-icons">border_all</i>
                         <span>Mapas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="animation.php" class="toggled waves-effect waves-block">
+                        <i class="material-icons">crop_rotate</i>
+                        <span>Animaciones</span>
                     </a>
                 </li>
                 <li>
@@ -52,14 +58,12 @@
                         <span>Pokedex</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="character.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">whatshot</i>
                         <span>Movimientos</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="character.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">child_care</i>

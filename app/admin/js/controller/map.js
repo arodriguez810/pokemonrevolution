@@ -5,6 +5,7 @@ MAP = function () {
         name: "Sin Nombre " + new Date().getTime(),
         displayName: "",
         description: "",
+        vecinos: [],
         width: 17,
         height: 13,
         bgm: "",
@@ -16,7 +17,8 @@ MAP = function () {
             back: "",
             music: ""
         },
-        background: ""
+        background: "",
+        version: new Date().getTime()
     }
 };
 EVENT = function () {
@@ -28,6 +30,7 @@ EVENT = function () {
     this.trigger_step = 1;
     this.conditions = "1==1";
     this.actions = [];
+    this.visible = "1==1";
     this.object = {
         url: "",
         animation: [],
@@ -493,10 +496,10 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.currentEventY = y;
         $('#event_form').modal('show');
         setTimeout(() => {
-            $("select").selectpicker('refresh');
+
         }, 1000);
         setTimeout(function () {
-            $("select").selectpicker('refresh');
+
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
             });
@@ -1959,7 +1962,6 @@ pokemon.controller('map', ['$scope', function ($scope) {
 
             }
         }
-
         return false;
     };
 
@@ -1990,14 +1992,11 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 }
             }
         }
-
         var base = eval(`W_${l}A.getChildByName("${l}_${x}_${y}")`);
         var bro1 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_1")`);
         var bro2 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_2")`);
         var bro3 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_3")`);
         var bro4 = eval(`W_${l}A.getChildByName("${l}_${x}_${y}_4")`);
-
-
         if (base) {
             eval(`W_${l}A.removeChild(base)`);
         }
@@ -2012,8 +2011,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
         if (update)
             eval(`W_${l}A.update()`);
 
-
     };
+
     $scope.addOne = function (l, x, y, update) {
         $scope.deleteOne(l, x, y);
         $scope.createOne(l, x, y, true);
@@ -2236,7 +2235,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.drawEvents();
         $("[loading='map']").hide(200);
         setTimeout(function () {
-            $("select").selectpicker('refresh');
+
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
             });
@@ -2258,7 +2257,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.drawBattle();
         $scope.draw();
         setTimeout(() => {
-            $("select").selectpicker('refresh');
+
             $scope.drawTools();
         }, 2000);
     };
@@ -2276,7 +2275,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
             MAP_.DELETE(data.data.name).then(function () {
                 $scope.clear();
                 $scope.refresh().then(function () {
-                    $("select").selectpicker('refresh');
+
                     $scope.$digest();
                     swal("deleted!");
                 });
@@ -2285,6 +2284,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         });
     };
     $scope.save = async function () {
+        $scope.form.data.version = new Date().getTime();
         await MAP_.SAVE($scope.form.data.name, $scope.form, $scope.form.data.gender);
         $("[loading='map']").show();
         $("[loading='map']").hide(200);
@@ -2297,7 +2297,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.list = [];
         $scope.list = await MAP_.ALL();
         $("[loading='map']").hide(200);
-        $("select").selectpicker('refresh');
+
         $scope.$digest();
     };
     $scope.init(function () {
@@ -2372,7 +2372,6 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 sel.color = $scope.overlay
             }
     });
-
     $scope.$watchCollection('currentEvent', function (newValue, oldValue, scope) {
 
 
