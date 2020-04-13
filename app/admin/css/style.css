@@ -10415,7 +10415,6 @@ fieldset[disabled] .form-control {
 
 /* Bootstrap Notify ============================ */
 .bootstrap-notify-container {
-    max-width: 320px;
     text-align: center;
 }
 

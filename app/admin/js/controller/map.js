@@ -2,19 +2,14 @@ MAP = function () {
     this.data = {
         map: {},
         event: {},
-        name: "",
+        name: "Sin Nombre " + new Date().getTime(),
         displayName: "",
         description: "",
         width: 17,
         height: 13,
-        virtual: {
-            right: "",
-            left: "",
-            up: "",
-            down: "",
-        },
         bgm: "",
         bgs: "",
+        steps: "",
         type: "Outside",
         battleback: {
             floor: "",
@@ -24,6 +19,38 @@ MAP = function () {
         background: ""
     }
 };
+EVENT = function () {
+    this.name = "Sin Nombre " + new Date().getTime();
+    this.description = "";
+    this.movement = "fixed";
+    this.look = "DOWN";
+    this.trigger = "click";
+    this.trigger_step = 1;
+    this.conditions = "1==1";
+    this.actions = [];
+    this.object = {
+        url: "",
+        animation: [],
+        framerate: 3,
+        width: 48,
+        height: 48,
+        sound: ""
+    };
+    this.isActor = "0";
+    this.route = [];
+    this.hero = {
+        name: "",
+        x: 0,
+        y: 0,
+        l: 1,
+        body: null,
+        shadow: null,
+        speed: 300,
+        walking: false
+    };
+};
+
+
 MAP_ = {
     ALL: () => new Promise(async (resolve, reject) => {
         var data = await API.POST("data.php", {
@@ -80,6 +107,14 @@ MAP_ = {
         var data = await API.POST("bgmdb.php", {});
         resolve(data.data || {});
     }),
+    sounddb: () => new Promise(async (resolve, reject) => {
+        var data = await API.POST("sounddb.php", {});
+        resolve(data.data || {});
+    }),
+    objects: () => new Promise(async (resolve, reject) => {
+        var data = await API.POST("objectdb.php", {});
+        resolve(data.data || {});
+    }),
     bgsdb: () => new Promise(async (resolve, reject) => {
         var data = await API.POST("bgsdb.php", {});
         resolve(data.data || {});
@@ -98,9 +133,14 @@ MAP_ = {
     }),
 };
 
+_colors = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey", "black"];
+_colorsReal = ["#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B", "#000000"];
 
 pokemon.controller('map', ['$scope', function ($scope) {
     //Draw tools
+    createjs.Ticker.framerate = 3;
+    $scope.E_movement = ["fixed", "random", "fallow"];
+    $scope.E_trigger = ["click", "near", "auto", "collision"];
     $scope.selectorImage = "../resources/selectors/red.png";
     $scope.selectorImageBlue = "../resources/selectors/bluep.png?v=1";
     $scope.baseWidth = 48;
@@ -115,8 +155,9 @@ pokemon.controller('map', ['$scope', function ($scope) {
     $scope.selectedsBMPS = [];
     $scope.selectorLimit = 8;
     $scope.squareClick = [];
-
-
+    WORLD = new createjs.Stage("canvas_world");
+    createjs.Ticker.addEventListener("tick", WORLD);
+    createjs.Touch.enable(WORLD);
     $scope.clearAll = function () {
         $scope.form.data.map = {};
         for (var l = 0; l < $scope.layers.length; l++) {
@@ -404,10 +445,102 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.deleteOne(l, x, y, true, true);
         delete $scope.form.data.map[`${l}_${x}_${y}`];
     };
+    $scope.currentEvent = new EVENT;
+    $scope.currentEventX = 0;
+    $scope.currentEventY = 0;
+    $scope.clearEvent = function () {
+        delete $scope.form.data.event[`${$scope.selection.layer}_${$scope.currentEventX}_${$scope.currentEventY}`];
+        $scope.drawEvents();
+    };
+    $scope.saveEvent = function () {
+        $('#event_form').modal('hide');
+        $scope.drawEvents();
+    };
+    $scope.getObjectsBound = function () {
+        if ($scope.currentEvent) {
+            if ($scope.currentEvent.object.url) {
+                var width = queueTILETS.getResult($scope.currentEvent.object.url).width;
+                var height = queueTILETS.getResult($scope.currentEvent.object.url).height;
+                return {w: width, h: height};
+            }
+        }
+        return {w: 0, h: 0};
+    };
+
+    $scope.getObjects = function () {
+        if ($scope.currentEvent) {
+            if ($scope.currentEvent.object.url) {
+                var width = queueTILETS.getResult($scope.currentEvent.object.url).width / $scope.currentEvent.object.width;
+                var height = queueTILETS.getResult($scope.currentEvent.object.url).height / $scope.currentEvent.object.height;
+                var cubes = [];
+                var index = 0;
+                for (var yy = 0; yy < height; yy++) {
+                    for (var xx = 0; xx < width; xx++) {
+                        cubes.push(index);
+                        index++;
+                    }
+                }
+                return cubes;
+            }
+        }
+        return [0];
+    };
+    $scope.newEvent = function (x, y) {
+        if (!$scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`])
+            $scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`] = new EVENT;
+        $scope.currentEvent = $scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`];
+        $scope.currentEventX = x;
+        $scope.currentEventY = y;
+        $('#event_form').modal('show');
+        setTimeout(() => {
+            $("select").selectpicker('refresh');
+        }, 1000);
+        setTimeout(function () {
+            $("select").selectpicker('refresh');
+            $('.form-control').each(function () {
+                $(this).parents('.form-line').addClass('focused');
+            });
+        }, 2000);
+
+
+        setTimeout(() => {
+            $scope.$digest();
+        }, 500);
+    };
+    $scope.eventForMove = undefined;
     $scope.drawTiles = function (event) {
+        var x = Math.floor(event.stageX / $scope.baseWidth);
+        var y = Math.floor(event.stageY / $scope.baseHeight);
+        if ($scope.selection.tool === "select") {
+            if (PRESS.SHIFT) {
+                if (!$scope.eventForMove) {
+                    if ($scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`])
+                        $scope.eventForMove = OSO($scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`]);
+                    return;
+                } else {
+                    $scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`] = OSO($scope.eventForMove);
+                    delete $scope.eventForMove;
+                    $scope.drawEvents();
+                }
+                return;
+            }
+            if (PRESS.CTRL) {
+                if (!$scope.eventForMove) {
+                    if ($scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`])
+                        $scope.eventForMove = OSO($scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`]);
+
+                } else {
+                    $scope.form.data.event[`${$scope.selection.layer}_${x}_${y}`] = OSO($scope.eventForMove);
+                    delete $scope.eventForMove;
+                    $scope.drawEvents();
+                }
+                return;
+            }
+            $scope.newEvent(x, y);
+            return;
+        }
         if ($scope.hideLayers.indexOf($scope.selection.layer) === -1) {
-            var x = Math.floor(event.stageX / $scope.baseWidth);
-            var y = Math.floor(event.stageY / $scope.baseHeight);
+
             var e = $scope.getTile($scope.selection.layer, x, y);
             if (PRESS.SHIFT) {
                 $scope.selecteds = [];
@@ -534,14 +667,10 @@ pokemon.controller('map', ['$scope', function ($scope) {
         }
     };
 
-    redf = new createjs.ColorFilter(1, 1, 1, 1, 200, 50, 50, 0);
-    bluf = new createjs.ColorFilter(1, 1, 1, 1, 50, 200, 50, 0);
-    greenf = new createjs.ColorFilter(1, 1, 1, 1, 50, 50, 200, 0);
-    yellowf = new createjs.ColorFilter(1, 1, 1, 1, 50, 100, 200, 0);
 
     //Canvas
     $scope.layers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    $scope.canvas = ["canvas_bg", "canvas_world"];
+    $scope.canvas = ["canvas_bg"];
     for (var can of $scope.canvas) {
         eval(`${can.split('_')[1].toUpperCase()} = new createjs.Stage("${can}");`);
     }
@@ -549,17 +678,16 @@ pokemon.controller('map', ['$scope', function ($scope) {
         eval(`W_${$scope.layers[l]}A = new createjs.Stage("W_${$scope.layers[l]}A");`);
     }
 
-    WORLD.on("stagemousedown", $scope.drawTiles);
-    WORLD.on('pressmove', function (event) {
-        $scope.drawTiles(event);
-    });
-    var queueTILETS = new createjs.LoadQueue(false);
+
+    queueTILETS = new createjs.LoadQueue(false);
     $scope.init = async function (callback) {
         $scope.characters = await CHARACTER_.ALL();
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
         BGM = await MAP_.bgmdb();
         $scope.BGM = BGM;
+        SOUNDSDB = await MAP_.sounddb();
+        $scope.SOUNDSDB = SOUNDSDB;
         BGS = await MAP_.bgsdb();
         $scope.BGS = BGS;
         BATTLEMUSIC = await MAP_.battlemusicdb();
@@ -570,7 +698,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.BATTLEFLOOR = BATTLEFLOOR;
         TILESET = await MAP_.tilesetdb();
         $scope.TILESET = TILESET;
-
+        OBJECTS = await MAP_.objects();
+        $scope.OBJECTS = OBJECTS;
         for (var can of $scope.canvas) {
             eval(`${can.split('_')[1].toUpperCase()} = new createjs.Stage("${can}");`);
 
@@ -578,8 +707,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
         for (var l = 0; l < $scope.layers.length; l++) {
             eval(`W_${$scope.layers[l]}A = new createjs.Stage("W_${$scope.layers[l]}A");`);
             eval(`createjs.Ticker.addEventListener("tick", W_${$scope.layers[l]}A);`);
-        }
 
+        }
         var loadJson = [];
         for (var i in $scope.TILESET) {
             var tiles = $scope.TILESET[i];
@@ -588,18 +717,28 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 loadJson.push({id: image.url, src: image.url});
             }
         }
-
+        for (var i of $scope.OBJECTS) {
+            loadJson.push({id: i, src: i});
+        }
         queueTILETS.loadManifest(loadJson);
         queueTILETS.on("complete", function (event) {
+
             callback();
         }, this);
         queueTILETS.load();
     };
     $scope.bounds = function () {
-        return {
-            width: $scope.form.data.width * $scope.baseWidth,
-            height: $scope.form.data.height * $scope.baseHeight
-        };
+        if ($scope.form) {
+            return {
+                width: ($scope.form.data.width * $scope.baseWidth) || 0,
+                height: ($scope.form.data.height * $scope.baseHeight) || 0
+            };
+        } else {
+            return {
+                width: 0,
+                height: 0
+            };
+        }
     };
     $scope.drawBattle = function () {
         BG.removeAllChildren();
@@ -780,7 +919,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
                         var rect = new createjs.Shape();
                         rect.name = `${l}_${x}_${y}_4`;
                         rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
-                        eval(`W_${l}A.addChild(rect);`);
+                        eval(`W_${1}A.addChild(rect);`);
                     }
                 }
 
@@ -851,7 +990,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     var rect = new createjs.Shape();
                     rect.name = `${l}_${x}_${y}_4`;
                     rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
-                    eval(`W_${l}A.addChild(rect);`);
+                    eval(`W_${1}A.addChild(rect);`);
 
                     return true;
                 }
@@ -863,7 +1002,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
                         var rect = new createjs.Shape();
                         rect.name = `${l}_${x}_${y}_4`;
                         rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
-                        eval(`W_${l}A.addChild(rect);`);
+                        eval(`W_${1}A.addChild(rect);`);
                     }
                 }
             }
@@ -1099,6 +1238,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         return $scope.broRightLeft(e, l, x, y, floor, filter);
     };
     $scope.shadowq = createjs.Graphics.getRGB(0, 0, 0, 0.7);
+
     //3
     $scope.broRightLeft = function (e, l, x, y, floor, filter) {
         var mx = (e.x - 1);
@@ -1200,7 +1340,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     rect.name = `${l}_${x}_${y}_4`;
                     rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
 
-                    eval(`W_${l}A.addChild(rect);`);
+                    eval(`W_${1}A.addChild(rect);`);
                     return true;
                 }
             }
@@ -1333,7 +1473,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     rect.name = `${l}_${x}_${y}_1`;
                     rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
 
-                    eval(`W_${l}A.addChild(rect);`);
+                    eval(`W_${1}A.addChild(rect);`);
                     return true;
                 }
             }
@@ -1541,7 +1681,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     rect.name = `${l}_${x}_${y}_4`;
                     rect.graphics.beginFill($scope.shadowq).drawRect(floor.x + $scope.baseWidth, floor.y, $scope.midWidth, $scope.baseHeight);
 
-                    eval(`W_${l}A.addChild(rect);`);
+                    eval(`W_${1}A.addChild(rect);`);
 
                     return true;
                 }
@@ -1977,13 +2117,8 @@ pokemon.controller('map', ['$scope', function ($scope) {
                         for (var yy2 = (y - 1); yy2 <= (y + 1); yy2++) {
                             if (xx2 !== x || yy2 !== y) {
                                 if (l - 1 > 0) {
-                                    var x = $scope.createOneBase(l - 1, xx2, yy2);
-                                    if (x) {
-                                        if (x.mode === "A3") {
-                                            $scope.deleteOne(l - 1, xx2, yy2);
-                                            $scope.createOneBase(l - 1, xx2, yy2);
-                                        }
-                                    }
+                                    $scope.deleteOne(l - 1, xx2, yy2);
+                                    $scope.createOneBase(l - 1, xx2, yy2);
                                 }
                             }
                         }
@@ -2004,13 +2139,68 @@ pokemon.controller('map', ['$scope', function ($scope) {
                     $scope.createOneBase(l, x, y);
                 }
             }
-            eval(`W_${$scope.selection.layer}A.update();`);
+            eval(`W_${l}A.update();`);
         }
+
+    };
+    $scope.drawEvents = function () {
+        WORLD.removeAllChildren();
+        var width = $scope.form.data.width;
+        var height = $scope.form.data.height;
+        for (var l = 1; l <= 9; l++) {
+            for (var x = 0; x < width; x++) {
+                for (var y = 0; y < height; y++) {
+                    var e = $scope.form.data.event[`${l}_${x}_${y}`];
+                    if (e) {
+                        if (e.isActor == "1") {
+                            var floor = new createjs.Bitmap(`data/characters_file/${e.hero.name}/face.png`);
+                            floor.x = x * $scope.baseWidth;
+                            floor.y = y * $scope.baseHeight;
+                            floor.scaleX = $scope.baseWidth / 144;
+                            floor.scaleY = $scope.baseWidth / 144;
+                            //floor.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
+                            WORLD.addChild(floor);
+                        } else {
+                            var w = queueTILETS.getResult(e.object.url).width;
+                            var h = queueTILETS.getResult(e.object.url).width;
+                            var r = (w / e.object.width) * (h / e.object.height);
+                            var SpriteSheet = new createjs.SpriteSheet({
+                                framerate: e.object.framerate,
+                                "images": [queueTILETS.getResult(e.object.url)],
+                                "frames": {width: parseInt(e.object.width), height: parseInt(e.object.height)},
+                                "animations": {
+                                    "run": {frames: e.object.animation}
+                                }
+                            });
+                            var sprite = new createjs.Sprite(SpriteSheet, "run");
+                            sprite.x = x * $scope.baseWidth;
+                            sprite.y = y * $scope.baseHeight;
+                            WORLD.addChild(sprite);
+                        }
+                    }
+                }
+            }
+
+        }
+        WORLD.update();
     };
     $scope.drawTools = function () {
         $scope.selectors = $scope.getSelectors();
         if (!$scope.$$phase)
             $scope.$digest();
+    };
+
+    //Starters and Loadings
+    $scope.playLoading = function (text) {
+        _colors.forEach(d => {
+            $(".spinner-layer").removeClass(`pl-${d}`)
+        });
+        $(".spinner-layer").addClass(`pl-${_colors[getRandomInt(_colors.length - 1)]}`);
+        $("#loadingtext").html(text);
+        $("#globalload").show();
+    };
+    $scope.stopLoading = function () {
+        $("#globalload").fadeOut(5000);
     };
 
     //CRUD
@@ -2043,6 +2233,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         };
         $scope.draw();
         $scope.drawBattle();
+        $scope.drawEvents();
         $("[loading='map']").hide(200);
         setTimeout(function () {
             $("select").selectpicker('refresh');
@@ -2125,18 +2316,23 @@ pokemon.controller('map', ['$scope', function ($scope) {
 
     //Watchers
     $scope.$watch('form.data.bgm', function (newValue, oldValue, scope) {
-
-        document.getElementById("bgm").src = $scope.form.data.bgm;
+        if ($scope.form)
+            document.getElementById("bgm").src = $scope.form.data.bgm;
     });
     $scope.$watch('form.data.bgs', function (newValue, oldValue, scope) {
-        if ($('#map_form').is(":visible"))
+        if ($scope.form)
             document.getElementById("bgs").src = $scope.form.data.bgs;
     });
+    $scope.$watch('form.data.steps', function (newValue, oldValue, scope) {
+        if ($scope.form)
+            document.getElementById("stepsmusic").src = $scope.form.data.steps;
+    });
     $scope.$watchCollection('form.data.battleback', function (newValue, oldValue, scope) {
-        if ($('#map_form').is(":visible")) {
+        if ($scope.form) {
             document.getElementById("battlemusic").src = $scope.form.data.battleback.music;
             $scope.drawBattle();
         }
+
     });
     $scope.$watch('form.data.type', function (newValue, oldValue, scope) {
         if ($('#map_form').is(":visible"))
@@ -2176,5 +2372,14 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 sel.color = $scope.overlay
             }
     });
+
+    $scope.$watchCollection('currentEvent', function (newValue, oldValue, scope) {
+
+
+    });
+
+
+    WORLD.on("stagemousedown", $scope.drawTiles);
+    WORLD.on('pressmove', $scope.drawTiles);
 }
 ]);

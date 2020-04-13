@@ -48,6 +48,8 @@
 <script src="js/script.js"></script>
 <script src="js/models/pokedex.js"></script>
 <script src="js/controller/language.js"></script>
+<script src="js/tools/toastr.min.js"></script>
+<script src="js/tools/jquery-ui.js"></script>
 
 
 

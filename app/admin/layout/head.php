@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="css/angularjs-color-picker.min.css"/>
     <!-- only include if you use bootstrap -->
     <link rel="stylesheet" href="css/angularjs-color-picker-bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/toastr.css"/>
 
 
     <!-- Custom Css -->
