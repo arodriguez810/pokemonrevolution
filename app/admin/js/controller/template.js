@@ -16,7 +16,7 @@ ANIMATION_ = {
             "name": name,
             "data": dataset
         });
-        await CHARACTER_.UPLOAD(name, gender);
+        //await CHARACTER_.UPLOAD(name, gender);
         resolve(data.data || ANIMATION);
     }),
     DELETE: (name) => new Promise(async (resolve, reject) => {
@@ -61,7 +61,7 @@ pokemon.controller('animation', ['$scope', function ($scope) {
         $(".modal-body").hide();
 
         $scope.prop = {mode: "edit"};
-        $scope.form = new ANIMATION;
+        $scope.form = edit;
         $('#animation_form').modal('show');
         setTimeout(() => {
             $scope.$digest();

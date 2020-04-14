@@ -49,7 +49,7 @@
                         <div class="col-sm-2">
                             <div class="form-group form-float">
                                 <div class="form-line focused">
-                                    <input id="animationname" type="text" ng-model="form.data.name"
+                                    <input id="animationname" type="text" ng-model="form.name"
                                            class="form-control">
                                     <label class="form-label">Nombre </label>
                                 </div>
@@ -104,24 +104,41 @@
                                 </audio>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="form-group form-float ">
                                 <pre ng-dblclick="form.frames = [];">{{form.frames}} </pre>
                             </div>
+                            <button type="button" ng-click="setall()"
+                                    class="btn bg-blue-grey  waves-effect">
+                                <i class="material-icons">filter_9_plus</i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <input type="number" ng-model="form.framerate"
+                                           class="form-control"/>
+                                    <label class="form-label">Framerate</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row clearfix">
-                        <canvas width="{{img().w}}" height="{{img().h}}" style="border: #2C009F 1px solid"
-                                id="player"></canvas>
-                    </div>
-                    <div class="row clearfix">
-                        <button type="button"
-                                class="btn bg-amber  waves-effect">
-                            <i class="material-icons">play_circle_filled</i>
-                        </button>
-                    </div>
+                    <center>
+                        <div class="row clearfix">
+                            <canvas width="{{img().w}}" height="{{img().h}}" style="border: #2C009F 1px solid"
+                                    id="player"></canvas>
+                        </div>
+                        <div class="row clearfix">
+                            <button type="button" ng-click="play()"
+                                    class="btn bg-amber  waves-effect">
+                                <i class="material-icons">play_circle_filled</i>
+                                <span id="loadingAni" style="display: none">loading</span>
+                            </button>
+                        </div>
+                    </center>
+                    <br><br><br>
                     <div style="width: {{bound().w}}px;height: {{bound().h}}px;position: relative">
 
                         <img id="currentImage" style="position: absolute;z-index: 1;" src="{{form.file}}">
@@ -195,7 +212,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="(key, animation) in list | filter:search">
-                                <td>{{animation.data.name}}</td>
+                                <td>{{animation.name}}</td>
                                 <th>
                                     <button type="button" ng-click="edit(animation)"
                                             class="btn btn-default waves-effect">

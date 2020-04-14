@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="character.php" class="toggled waves-effect waves-block">
+                    <a href="pokedex.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">adb</i>
                         <span>Pokedex</span>
                     </a>
@@ -62,12 +62,6 @@
                     <a href="character.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">whatshot</i>
                         <span>Movimientos</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="character.php" class="toggled waves-effect waves-block">
-                        <i class="material-icons">child_care</i>
-                        <span>Maestros</span>
                     </a>
                 </li>
                 <li>

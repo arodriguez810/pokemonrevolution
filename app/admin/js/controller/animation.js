@@ -6,6 +6,7 @@ ANIMATION = function () {
     this.sound = "";
     this.rows = 1;
     this.columns = 1;
+    this.framerate = 30;
 };
 ANIMATION_ = {
     ALL: () => new Promise(async (resolve, reject) => {
@@ -20,7 +21,6 @@ ANIMATION_ = {
             "name": name,
             "data": dataset
         });
-        await CHARACTER_.UPLOAD(name, gender);
         resolve(data.data || ANIMATION);
     }),
     DELETE: (name) => new Promise(async (resolve, reject) => {
@@ -42,8 +42,9 @@ ANIMATION_ = {
 
 pokemon.controller('animation', ['$scope', function ($scope) {
     //Variables
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
     PLAYER = new createjs.Stage("player");
-    SELECTOR = new createjs.Stage("selector");
+    createjs.Ticker.addEventListener("tick", PLAYER);
     //Logic
     $scope.bound = function () {
         return {
@@ -86,7 +87,7 @@ pokemon.controller('animation', ['$scope', function ($scope) {
         $(".modal-body").hide();
 
         $scope.prop = {mode: "edit"};
-        $scope.form = new ANIMATION;
+        $scope.form = edit;
         $('#animation_form').modal('show');
         setTimeout(() => {
             $scope.$digest();
@@ -124,7 +125,7 @@ pokemon.controller('animation', ['$scope', function ($scope) {
         });
     };
     $scope.save = async function () {
-        await ANIMATION_.SAVE($scope.form.data.name, $scope.form, $scope.form.data.gender);
+        await ANIMATION_.SAVE($scope.form.name, $scope.form, '');
         $("[loading='animation']").show();
         $("[loading='animation']").hide(200);
         $scope.clear();
@@ -143,6 +144,61 @@ pokemon.controller('animation', ['$scope', function ($scope) {
     };
     $scope.clear();
     $scope.refresh();
+
+    $scope.loadedSounds = [];
+    $scope.sounds = [];
+    $scope.existSound = function (url) {
+        return $scope.loadedSounds.indexOf(url) !== -1;
+    };
+    $scope.addSound = function (id, url) {
+        $scope.loadedSounds.push(url);
+        $scope.sounds[id] = url;
+    };
+    $scope.playSound = function (id, config) {
+        if ($scope.sounds[id])
+            createjs.Sound.play($scope.sounds[id], config);
+    };
+    $scope.setall = function () {
+        $scope.form.frames = $scope.getObjects();
+    };
+    $scope.play = function () {
+        $("#loadingAni").show();
+        PLAYER.removeAllChildren();
+        var queue = new createjs.LoadQueue(false);
+        queue.installPlugin(createjs.Sound);
+        var loadJson = [];
+        loadJson.push({id: "image", src: $scope.form.file});
+
+        if (!$scope.existSound($scope.form.sound)) {
+            loadJson.push({id: $scope.form.sound, src: $scope.form.sound});
+        }
+        $scope.addSound($scope.form.sound, $scope.form.sound);
+        queue.loadManifest(loadJson);
+        queue.on("complete", function (event) {
+            var SpriteSheet = new createjs.SpriteSheet({
+                framerate: $scope.form.framerate,
+                "images": [queue.getResult(`image`)],
+                "frames": {width: parseInt($scope.img().w), height: parseInt($scope.img().h)},
+                "animations": {
+                    "run": {frames: $scope.form.frames}
+                }
+            });
+            sprite = new createjs.Sprite(SpriteSheet);
+            sprite.x = 0;
+            sprite.y = 0;
+            PLAYER.addChild(sprite);
+            PLAYER.update();
+            sprite.addEventListener("animationend", function () {
+                PLAYER.removeChild(sprite);
+            });
+            sprite.gotoAndPlay("run");
+            $scope.playSound($scope.form.sound);
+            $("#loadingAni").hide();
+
+
+        }, this);
+        queue.load();
+    };
 
     //Watchers
     $scope.$watch('form.sound', function (newValue, oldValue, scope) {
