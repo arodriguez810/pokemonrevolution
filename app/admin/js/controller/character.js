@@ -3,7 +3,10 @@ CHARACTER = function () {
         name: "",
         gender: "Female",
         title: "pueblerino",
-        avatar: new AVATAR()
+        avatar: new AVATAR(),
+        types: [],
+        level: "",
+        version: 1,
     }
 };
 
@@ -16,6 +19,7 @@ CHARACTER_ = {
         resolve(data.data || CHARACTER);
     }),
     SAVE: (name, dataset, gender) => new Promise(async (resolve, reject) => {
+        dataset.data.version = new Date().getTime();
         var data = await API.POST("save.php", {
             "folder": "characters",
             "name": name,
@@ -49,11 +53,18 @@ CHARACTER_ = {
         });
 
 
-    })
+    }),
+    TYPES: () => new Promise(async (resolve, reject) => {
+        var data4 = await API.POST("data.php?e=TYPES", {
+            "folder": "pokemon_data/types"
+        });
+        resolve(data4.data[0] || {});
+    }),
 };
 GRADIENTS = [];
 pokemon.controller('character', ['$scope', function ($scope) {
     //CRUD
+    $scope.POKEMON = POKEMON;
     $scope.clearData = function () {
         $scope.prop = {mode: "new"};
         $scope.form = new CHARACTER;
@@ -261,6 +272,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
         COLORS = await AVATAR_.colors();
         $scope.AVATARDB = await AVATAR_.db();
         $scope.COLORS = await AVATAR_.colors();
+        $scope.TYPES = await CHARACTER_.TYPES();
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
         $("[loading='character']").hide(200);

@@ -1,4 +1,42 @@
+HOME_ = {
+    PLAYERPROFILE: (id, set) => new Promise(async (resolve, reject) => {
+        var folder = `players/${id}`;
+        var data = await API.POST("dataplayer.php", {
+            "folder": folder
+        });
+        if (data.data[0]) {
+            if (set) {
+                var currment = data.data[0];
+                for (var i in set) {
+                    currment[i] = set[i];
+                }
+                await API.POST("save.php", {
+                    "folder": folder,
+                    "name": "data",
+                    "data": currment
+                });
+                resolve(currment);
+            } else {
+                resolve(data.data[0]);
+            }
+
+        } else {
+            await API.POST("save.php", {
+                "folder": folder,
+                "name": "data",
+                "data": PROFILE
+            });
+            resolve(PROFILE)
+        }
+    }),
+};
 GAME = {
+    START: {x: 0, y: 0, l: 1, map: "Castillo"},
+    DATA: {
+        medals: {},
+        pokemon: {},
+        config: {},
+    },
     GETMAP: (name) => new Promise(async (resolve, reject) => {
         var data = await API.POST("data.php", {
             "folder": "maps",
@@ -6,12 +44,34 @@ GAME = {
         });
         resolve(data.data[0].data || undefined);
     }),
-    GETPLAYER: (name) => new Promise(async (resolve, reject) => {
+    GETPLAYER: () => new Promise(async (resolve, reject) => {
+        var data = await API.POST("dataplayer.php", {
+            "folder": `players/${SESSION.MU}/indentity`
+        });
+        resolve(data.data[0].data || undefined);
+    }),
+    GETNPC: (name) => new Promise(async (resolve, reject) => {
         var data = await API.POST("data.php", {
             "folder": "characters",
             "files": [name]
         });
         resolve(data.data[0].data || undefined);
+    }),
+    PLAYERPOSITION: () => new Promise(async (resolve, reject) => {
+        var folder = `players/${SESSION.MU}/position`;
+        var data = await API.POST("dataplayer.php", {
+            "folder": folder
+        });
+        if (data.data[0]) {
+            resolve(data.data[0]);
+        } else {
+            await API.POST("save.php", {
+                "folder": folder,
+                "name": "data",
+                "data": GAME.START
+            });
+            resolve(GAME.START)
+        }
     }),
     systemSounds: () => new Promise(async (resolve, reject) => {
         var data = await API.POST("systemdb.php", {});
@@ -50,6 +110,28 @@ pokemon.controller('play', ['$scope', function ($scope) {
         system: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_NONE, volume: 0.5}),
         steps: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, volume: 0.2})
     };
+    $scope.medals1 = [
+        {type: 'Bicho', name: 'BugCatcher'},
+        {type: 'Ave', name: 'BirdKeeper'},
+        {type: 'Oscuro', name: 'Delinquent'},
+        {type: 'Acero', name: 'DepotAgent'},
+        {type: 'Ada', name: 'FairyTaleGirl'},
+        {type: 'Fantasma', name: 'HexManiac'},
+        {type: 'Normal', name: 'PunkGirl'},
+        {type: 'Tierra', name: 'RuinManiac'},
+        {type: 'Hielo', name: 'Skier'}
+    ];
+    $scope.medals2 = [
+        {type: 'Fuego', name: 'Kindler'},
+        {type: 'Agua', name: 'Swimmer'},
+        {type: 'Planta', name: 'Gardener'},
+        {type: 'Electrico', name: 'Rocker'},
+        {type: 'Roca', name: 'Hiker'},
+        {type: 'Síquico', name: 'Psychic'},
+        {type: 'Dragón  ', name: 'DragonTamer'},
+        {type: 'Peleador', name: 'BlackBelt'},
+        {type: 'Veneno', name: 'PunkGirl'},
+    ];
     $scope._colors = _colors;
     $scope._colorsReal = _colorsReal;
     $scope.routesTick = 3;
@@ -58,10 +140,11 @@ pokemon.controller('play', ['$scope', function ($scope) {
     $scope.sounds = {};
     $scope.extras = {};
     $scope.indexTick = 0;
-    $scope.spriteFrames = 1;
-    $scope.playerFrames = 6;
+    $scope.spriteFrames = 3;
+    $scope.playerFrames = 12;
     $scope.width = 12;
     $scope.pause = false;
+    $scope.block = false;
     $scope.height = 6;
     $scope.baseHeight = 48;
     $scope.baseWidth = 48;
@@ -109,7 +192,6 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             var limitY = ((maps[FIRSTMAP].height * $scope.baseHeight) - ($scope.height * $scope.baseHeight));
                             regY = regY > limitY ? limitY : regY;
                         }
-
                         STAGE.regX = regX;
                         STAGE.regY = regY;
                     }
@@ -134,6 +216,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
         canJump: true,
         canDive: true,
         deeping: false,
+        isPlayer: true,
+        name: ""
     };
     $scope.NPCS = [];
     $scope.OBJECTS = [];
@@ -245,7 +329,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     }
 
                 if (collisions.indexOf(true) !== -1) {
-                    $scope.play("Collision", SOUNDS.system);
+                    $scope.numberCollisions++;
+                    if ($scope.numberCollisions % 70 === 0)
+                        $scope.play("Collision", SOUNDS.system);
                 }
                 setTimeout(async () => {
                     await $scope.clickEvent(hero, cx, cy, E_trigger.collision);
@@ -254,7 +340,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
             return collisions.indexOf(true) !== -1;
         }
     };
-
+    $scope.numberCollisions = 0;
     //Animations
     $scope.traslades = function (hero, events, callback) {
         if (events.length > 0) {
@@ -343,18 +429,40 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body.gotoAndPlay(animation);
     };
     $scope.moveMe = function (event) {
+        if ($scope.block)
+            return;
         if ($scope.pause)
             return;
         if ($scope.hero.body)
-            $scope.move($scope.hero, event, true);
+            $scope.moveOld($scope.hero, event, true);
     };
     $scope.moveMeMove = function (event) {
+        if ($scope.block)
+            return;
         if ($scope.pause)
             return;
         if ($scope.hero.body)
             $scope.move($scope.hero, event);
     };
+    $scope.moveOld = async function (hero, event, actions, callback) {
+        if (hero) {
+            if ($scope.pause)
+                return;
+            if (!hero.walking) {
+                var local = STAGE.globalToLocal(event.stageX, event.stageY);
+                var cx = Math.floor(local.x / $scope.baseWidth);
+                var cy = Math.floor(local.y / $scope.baseHeight);
+                ACTIONS.PLAYER.LOOKDIR(cx, cy);
+                if (actions) {
+                    var wasEvent = await $scope.clickEvent(hero, cx, cy, E_trigger.click);
+                    if (wasEvent)
+                        return;
+                }
+            }
+        }
+    };
     $scope.move = async function (hero, event, actions, callback) {
+
         if (hero) {
             if ($scope.pause)
                 return;
@@ -539,6 +647,29 @@ pokemon.controller('play', ['$scope', function ($scope) {
         eval(`layer${L}.addChild(hero.body);`);
         STAGE.update();
     };
+    $scope.reDrawObject = function (hero, filters) {
+        var name = hero.body.name.replace("object_", "");
+        hero.style = new createjs.Bitmap(mapQueues["object_" + name].getResult("image"));
+        if (filters)
+            hero.style.filters = filters;
+        hero.style.cache(0, 0, hero.style.image.width, hero.style.image.height);
+        var SpriteSheet = new createjs.SpriteSheet({
+            framerate: hero.event.object.framerate,
+            "images": [hero.style.cacheCanvas],
+            "frames": {width: parseInt(hero.event.object.width), height: parseInt(hero.event.object.height)},
+            "animations": {
+                "run": {frames: hero.event.object.animation}
+            }
+        });
+        var old = {x: hero.x, y: hero.y, l: hero.l};
+        eval(`layer${old.l}.removeChild(hero.body);`);
+        hero.body = new createjs.Sprite(SpriteSheet, "run");
+        hero.body.x = old.x * $scope.baseWidth;
+        hero.body.y = old.y * $scope.baseHeight;
+        hero.body.name = `object_` + name;
+        eval(`layer${old.l}.addChild(hero.body);`);
+        STAGE.update();
+    };
     $scope.reDrawPlayer = function (hero, filters) {
         var name = hero.body.name.replace("player_", "");
         hero.style = new createjs.Bitmap(mapQueues["player_" + name].getResult(`TV`));
@@ -564,12 +695,15 @@ pokemon.controller('play', ['$scope', function ($scope) {
         eval(`layer${old.l}.removeChild(hero.body);`);
         hero.body = new createjs.Sprite(Sprite, ACTIONS.GAME.POSITION(hero));
         hero.body.mouseEnabled = true;
-        hero.body.on("click", function (evt) {
-            ACTIONS.PLAYER.JUMPING();
-        });
+        if (!hero.isNPC && !hero.isObject)
+            hero.body.on("click", function (evt) {
+                ACTIONS.PLAYER.JUMPING();
+            });
         hero.body.x = old.x * $scope.baseWidth;
         hero.body.y = old.y * $scope.baseHeight;
         hero.body.name = `player_` + name;
+        hero.name = name;
+        hero.version = players[name].version;
         eval(`layer${old.l}.addChild(hero.body);`);
         STAGE.update();
     };
@@ -607,12 +741,15 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body = new createjs.Sprite(Sprite, "down");
 
         hero.body.mouseEnabled = true;
-        hero.body.on("click", function (evt) {
-            ACTIONS.PLAYER.JUMPING();
-        });
+        if (!hero.isNPC && !hero.isObject)
+            hero.body.on("click", function (evt) {
+                ACTIONS.PLAYER.JUMPING();
+            });
         hero.body.x = x * $scope.baseWidth;
         hero.body.y = y * $scope.baseHeight;
         hero.body.name = `player_` + name;
+        hero.name = players[name].name;
+        hero.version = players[name].version;
 
         eval(`layer${L === 0 ? 1 : L}.addChild(hero.body);`);
         if (L === 0) {
@@ -739,7 +876,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
 
     //Base
     STAGE.on("stagemousedown", $scope.moveMe);
-    STAGE.on("pressmove", $scope.moveMeMove);
+    // STAGE.on("pressmove", $scope.moveMeMove);
 
     //Starters and Loadings
 
@@ -826,12 +963,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
             for (var event in maps[name].event) {
                 var e = maps[name].event[event];
                 if (e.isActor == "1") {
-                    await $scope.loadPlayer(e.hero.name);
+                    await $scope.loadNPC(e.hero.name);
                     $scope.playLoading("Cargando " + name);
 
                 } else {
                     await $scope.loadObject(e);
-                    $scope.playLoading("Cargando " + name);
+                    $scope.playLoading("Dibujando " + name);
                 }
             }
             mapQueues[name].loadManifest(loadJson);
@@ -840,7 +977,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     if (maps[name].vecinos.length > 0) {
                         for (var vecino of maps[name].vecinos) {
                             await $scope.loadMap(vecino);
-                            $scope.playLoading("Cargando " + name);
+                            $scope.playLoading("Dibujando " + name);
                         }
                     }
                 resolve(true);
@@ -850,16 +987,38 @@ pokemon.controller('play', ['$scope', function ($scope) {
             resolve(true);
         }
     });
-    $scope.loadPlayer = (name) => new Promise(async (resolve, reject) => {
+    $scope.loadNPC = (name) => new Promise(async (resolve, reject) => {
         if (!mapQueues["player_" + name]) {
             mapQueues["player_" + name] = new createjs.LoadQueue(false);
             mapQueues["player_" + name].installPlugin(createjs.Sound);
-            players[name] = await GAME.GETPLAYER(name);
+            players[name] = await GAME.GETNPC(name);
             var loadJson = [];
-            loadJson.push({id: "FACE", src: `data/characters_file/${name}/face.png`});
-            loadJson.push({id: "SV", src: `data/characters_file/${name}/sv.png`});
-            loadJson.push({id: "TV", src: `data/characters_file/${name}/tv.png`});
-            loadJson.push({id: "TVD", src: `data/characters_file/${name}/tvd.png`});
+            loadJson.push({id: "FACE", src: `data/characters_file/${name}/face.png?v=${players[name].version}`});
+            loadJson.push({id: "SV", src: `data/characters_file/${name}/sv.png?v=${players[name].version}`});
+            loadJson.push({id: "TV", src: `data/characters_file/${name}/tv.png?v=${players[name].version}`});
+            loadJson.push({id: "TVD", src: `data/characters_file/${name}/tvd.png?v=${players[name].version}`});
+            loadJson.push({id: "SHADOW", src: `../resources/system/Shadow1.png`});
+            mapQueues["player_" + name].loadManifest(loadJson);
+            mapQueues["player_" + name].on("complete", function (event) {
+                resolve(true);
+            }, this);
+            mapQueues["player_" + name].load();
+        } else {
+            resolve(true);
+        }
+    });
+    $scope.loadPlayer = () => new Promise(async (resolve, reject) => {
+        var name = $scope.session.MU;
+        if (!mapQueues["player_" + name]) {
+            mapQueues["player_" + name] = new createjs.LoadQueue(false);
+            mapQueues["player_" + name].installPlugin(createjs.Sound);
+            players[name] = await GAME.GETPLAYER($scope.session);
+            console.log(players[name]);
+            var loadJson = [];
+            loadJson.push({id: "FACE", src: `data/players/${name}/images/face.png?v=${players[name].version}`});
+            loadJson.push({id: "SV", src: `data/players/${name}/images/sv.png?v=${players[name].version}`});
+            loadJson.push({id: "TV", src: `data/players/${name}/images/tv.png?v=${players[name].version}`});
+            loadJson.push({id: "TVD", src: `data/players/${name}/images/tvd.png?v=${players[name].version}`});
             loadJson.push({id: "SHADOW", src: `../resources/system/Shadow1.png`});
             mapQueues["player_" + name].loadManifest(loadJson);
             mapQueues["player_" + name].on("complete", function (event) {
@@ -896,7 +1055,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
     });
     $scope.loadSystem = () => new Promise(async (resolve, reject) => {
         if (!mapQueues["resources_system"]) {
-            $scope.loadingPage = new createjs.Text("Loading", "40px monospaced", _colorsReal[getRandomInt(_colorsReal.length - 1)]);
+            $scope.loadingPage = new createjs.Text("Cargando", "40px monospaced", _colorsReal[getRandomInt(_colorsReal.length - 1)]);
             $scope.loadingPage.set({
                 textAlign: "center",
                 textBaseline: "middle",
@@ -912,6 +1071,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
             $scope.bubble.x = 0;
             $scope.bubble.y = 0;
             $scope.bubble.visible = false;
+            layer9.mouseEnabled = false;
             layer9.addChild($scope.transitions);
             layer9.addChild($scope.loadingPage);
             layer9.addChild($scope.bubble);
@@ -926,7 +1086,6 @@ pokemon.controller('play', ['$scope', function ($scope) {
             for (var f = 0; f < reforced.length; f++) {
                 $scope.animations[reforced[f].name] = reforced[f];
             }
-            console.log($scope.animations);
             for (var sound of systemsounds) {
                 var url = sound;
                 var nameFile = sound.split('/')[sound.split('/').length - 1].replace(".ogg", "");
@@ -951,29 +1110,59 @@ pokemon.controller('play', ['$scope', function ($scope) {
     });
     $scope.loadingPage = null;
     $scope.init = async function () {
+        var position = await GAME.PLAYERPOSITION();
+        FIRSTMAP = position.map;
         await $scope.loadSystem();
-        $scope.playLoading("Cargando Texto");
+        $scope.playLoading("Cargando 20%");
         LAN = await LANGUAGE_.ALL();
+        $scope.playLoading("Cargando 40%");
         $scope.LAN = LANGUAGE;
-        $scope.stopLoading();
-        $scope.playLoading("Cargando Juego");
+        $scope.playLoading("Cargando 50%");
         await $scope.loadMap(FIRSTMAP);
-        await $scope.loadPlayer(PLAYER);
+        $scope.playLoading("Cargando 80%");
+        await $scope.loadPlayer();
+        $scope.playLoading("Dibujando Tu Aventura");
         $scope.drawMap(FIRSTMAP);
-        $scope.drawPlayer($scope.hero, PLAYER, 0, 0, 1);
+        $scope.drawPlayer($scope.hero, $scope.session.MU, parseInt(position.x), parseInt(position.y), parseInt(position.l));
         $scope.stopLoading();
+        $scope.menu = true;
+        if (!$scope.$$phase)
+            $scope.$digest();
     };
-    $scope.init();
 
 
     //Actions
-
+    $scope.menuOpen = false;
+    $scope.menu = false;
     ACTIONS = {
         GAME: {
-            TEST: function () {
-                ACTIONS.ANIMATION.PLAY_OBJECT("FuegoBlue2", "Fire3");
-                ACTIONS.OBJECT.CHANGE_FRAMES("FuegoBlue2", [105, 106, 107]);
-                ACTIONS.OBJECT.CHANGE_FRAMES("FuegoBlue1", [117, 118, 119]);
+            PLAY: async function () {
+                $scope.session = await HOME_.PLAYERPROFILE(PROFILE.getId());
+                SESSION = $scope.session;
+                $scope.init();
+            },
+            MENU: function () {
+                ACTIONS.GAME.SCREEN(1, "#000", 0.9);
+                ACTIONS.GAME.PAUSE();
+                $scope.menuOpen = true;
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
+            MENUTOGGLE: function () {
+                ACTIONS.GAME.SCREENOFF(1);
+                if ($scope.menuOpen)
+                    ACTIONS.GAME.MENUOFF();
+                else
+                    ACTIONS.GAME.MENU();
+            },
+            MENUOFF: function () {
+                ACTIONS.GAME.RESUME();
+                $scope.menuOpen = false;
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
+            TEST: function (num) {
+
             },
             DOCUMENTATION: function () {
                 var text = "";
@@ -1009,6 +1198,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             PAUSE() {
                 $scope.pause = true;
+            },
+            BLOCK() {
+                $scope.block = true;
+            },
+            UNBLOCK() {
+                $scope.block = false;
             },
             RESUME() {
                 $scope.pause = false;
@@ -1084,8 +1279,16 @@ pokemon.controller('play', ['$scope', function ($scope) {
                         callback();
                 }, seconds * 1000);
             },
+            WAITBLOCK: function (seconds, callback) {
+                ACTIONS.GAME.BLOCK();
+                setTimeout(function () {
+                    ACTIONS.GAME.UNBLOCK();
+                    if (callback)
+                        callback();
+                }, seconds * 1000);
+            },
             SCREEN: function (seconds, color, alpha, callback) {
-                $scope.transitions.graphics.clear().beginFill(color || "#000").drawRect(0, 0, $scope.width * $scope.baseWidth, $scope.height * $scope.baseHeight).endFill();
+                $scope.transitions.graphics.clear().beginFill(color || "#000").drawRect(0, 0, maps[FIRSTMAP].width * $scope.baseWidth, maps[FIRSTMAP].height * $scope.baseHeight).endFill();
                 createjs.Tween.get($scope.transitions).to({alpha: alpha || 1}, seconds * 1000).call(function () {
                     if (callback) {
                         callback();
@@ -1158,6 +1361,29 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             callback();
                     }
                 }
+            },
+            TELEPORT_TO: async function (object, object2, dir, mapname, animation, callback) {
+                var nextx = object2.x;
+                var nexty = object2.y;
+                switch (dir) {
+                    case "UP": {
+                        nexty -= 1;
+                        break;
+                    }
+                    case "DOWN": {
+                        nexty += 1;
+                        break;
+                    }
+                    case "LEFT": {
+                        nextx -= 1;
+                        break;
+                    }
+                    case "RIGHT": {
+                        nextx += 1;
+                        break;
+                    }
+                }
+                await ACTIONS.GAME.TELEPORT(object, nextx, nexty, mapname, animation, callback);
             },
             MOVE: function (object, name, x, y, callback) {
                 if (object[name]) {
@@ -1300,18 +1526,29 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             FILTER: function (object, light, alpha, color) {
                 var color = tinycolor(color);
-                $scope.reDrawPlayer(object);
-                $scope.reDrawPlayer(object, [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)]);
+                if (object.isObject) {
+                    $scope.reDrawObject(object);
+                    $scope.reDrawObject(object, [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)]);
+                } else {
+                    $scope.reDrawPlayer(object);
+                    $scope.reDrawPlayer(object, [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)]);
+                }
             },
             CLEAR_FILTER: function (object) {
-                var color = tinycolor(color);
-                $scope.reDrawPlayer(object);
+                if (object.isObject) {
+                    $scope.reDrawObject(object);
+                } else
+                    $scope.reDrawPlayer(object);
             },
             TEXT: function (text, seconds) {
-                $scope.playLoading("Hola Mundo");
-                setTimeout(function () {
-                    $scope.stopLoading();
-                }, seconds * 1000);
+                ACTIONS.GAME.SCREEN(0.1, "#000", 1, function () {
+                    $scope.playLoading(text);
+                    setTimeout(function () {
+                        $scope.stopLoading();
+                        ACTIONS.GAME.SCREENOFF(0.1);
+                    }, seconds * 1000);
+                });
+
             }
         },
         PLAYER: {
@@ -1341,16 +1578,20 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     }, undefined, callback);
             },
             MOVE_UP: function (callback) {
-                ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y - 1, callback);
+                if ($scope.hero.y - 1 >= 0)
+                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y - 1, callback);
             },
             MOVE_DOWN: function (callback) {
-                ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y + 1, callback);
+                if ($scope.hero.y + 1 < maps[FIRSTMAP].height)
+                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y + 1, callback);
             },
             MOVE_RIGHT: function (callback) {
-                ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x + 1, $scope.hero.y, callback);
+                if ($scope.hero.x + 1 < maps[FIRSTMAP].width)
+                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x + 1, $scope.hero.y, callback);
             },
             MOVE_LEFT: function (callback) {
-                ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x - 1, $scope.hero.y, callback);
+                if ($scope.hero.x - 1 >= 0)
+                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x - 1, $scope.hero.y, callback);
             },
             UP: function () {
                 if ($scope.hero)
@@ -1400,6 +1641,36 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     }
                 }
             },
+            LOOKDIR: function (x, y) {
+                var to = {x: x, y: y};
+                if ($scope.hero && to) {
+                    var xd = difference($scope.hero.x, to.x);
+                    var yd = difference($scope.hero.y, to.y);
+                    if (xd === yd) {
+                        if ($scope.hero.x < to.x) {
+                            $scope.hero.body.gotoAndPlay("right");
+                        } else if ($scope.hero.x > to.x) {
+                            $scope.hero.body.gotoAndPlay("left");
+                        } else if ($scope.hero.y < to.y) {
+                            $scope.hero.body.gotoAndPlay("down");
+                        } else if ($scope.hero.y > to.y) {
+                            $scope.hero.body.gotoAndPlay("up");
+                        }
+                    } else if (xd > yd) {
+                        if ($scope.hero.x < to.x) {
+                            $scope.hero.body.gotoAndPlay("right");
+                        } else if ($scope.hero.x > to.x) {
+                            $scope.hero.body.gotoAndPlay("left");
+                        }
+                    } else {
+                        if ($scope.hero.y < to.y) {
+                            $scope.hero.body.gotoAndPlay("down");
+                        } else if ($scope.hero.y > to.y) {
+                            $scope.hero.body.gotoAndPlay("up");
+                        }
+                    }
+                }
+            },
             LOOKNPC: function (name) {
                 ACTIONS.PLAYER.LOOK($scope.NPCS[name]);
             },
@@ -1408,6 +1679,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             TELEPORT: async function (x, y, mapname, animation, callback) {
                 await ACTIONS.GAME.TELEPORT($scope.hero, x, y, mapname, animation, callback);
+            },
+            TELEPORT_NPC: async function (name, dir, mapname, animation, callback) {
+                ACTIONS.GAME.TELEPORT_TO($scope.hero, $scope.NPCS[name], dir, mapname, animation, callback);
+            },
+            TELEPORT_OBJECT: async function (name, dir, mapname, animation, callback) {
+                ACTIONS.GAME.TELEPORT_TO($scope.hero, $scope.OBJECTS[name], dir, mapname, animation, callback);
             },
             JUMP: function (x, y) {
                 if ($scope.hero.canJump)
@@ -1470,6 +1747,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             TELEPORT: async function (name, x, y, animation, callback) {
                 ACTIONS.GAME.TELEPORT($scope.NPCS[name], x, y, undefined, animation, callback);
+            },
+            TELEPORT_PLAYER: async function (name, dir, mapname, animation, callback) {
+                ACTIONS.GAME.TELEPORT_TO($scope.NPCS[name], $scope.hero, dir, mapname, animation, callback);
+            },
+            TELEPORT_OBJECT: async function (npc, name, dir, mapname, animation, callback) {
+                ACTIONS.GAME.TELEPORT_TO($scope.NPCS[npc], $scope.OBJECTS[name], dir, mapname, animation, callback);
             },
             MOVE: function (name, x, y, callback) {
                 ACTIONS.GAME.MOVE($scope.NPCS, name, x, y, callback);
@@ -1579,6 +1862,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
             TELEPORT: async function (name, x, y, animation, callback) {
                 ACTIONS.GAME.TELEPORT($scope.OBJECTS[name], x, y, undefined, animation, callback);
             },
+            TELEPORT_PLAYER: async function (name, dir, mapname, animation, callback) {
+                ACTIONS.GAME.TELEPORT_TO($scope.OBJECTS[name], $scope.hero, dir, mapname, animation, callback);
+            },
+            TELEPORT_NPC: async function (name, npc, dir, mapname, animation, callback) {
+                ACTIONS.GAME.TELEPORT_TO($scope.OBJECTS[name], $scope.NPCS[npc], dir, mapname, animation, callback);
+            },
             GET: function (name) {
                 return $scope.OBJECTS[name];
             },
@@ -1663,6 +1952,10 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 else
                     $scope.messageQuee.push({hero: hero, message: message});
             },
+            ADDPLAY: function (hero, message, time, callback) {
+                ACTIONS.MESSAGE.ADD(hero, message);
+                ACTIONS.MESSAGE.PLAY(time, callback);
+            },
             CLEAR: function () {
                 $scope.messageQuee = [];
             },
@@ -1732,14 +2025,16 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 }, time || (ACTIONS.MESSAGE.CONFIG.TIME.NOTI * 1000));
             },
             BUBBLE: function (x, y, message, time, callback) {
+                if ($scope.bubbleTimeOut)
+                    clearInterval($scope.bubbleTimeOut);
                 $scope.bubbleText = message || "...";
                 if (!$scope.$$phase)
                     $scope.$digest();
-                $scope.bubble.x = (x * $scope.baseWidth) + 8;
-                $scope.bubble.y = y * $scope.baseWidth;
+                $scope.bubble.x = ((x * $scope.baseWidth) + 8);
+                $scope.bubble.y = ((y - 1) * $scope.baseHeight) + $scope.midHeight;
                 $scope.bubble.visible = true;
                 $scope.play("Talk", SOUNDS.system);
-                setTimeout(function () {
+                $scope.bubbleTimeOut = setTimeout(function () {
                     $scope.bubble.visible = false;
                     if (callback)
                         callback();

@@ -59,9 +59,15 @@
                     </a>
                 </li>
                 <li>
-                    <a href="character.php" class="toggled waves-effect waves-block">
+                    <a href="move.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">whatshot</i>
                         <span>Movimientos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="abilities.php" class="toggled waves-effect waves-block">
+                        <i class="material-icons">brightness_auto</i>
+                        <span>Habilidades</span>
                     </a>
                 </li>
                 <li>

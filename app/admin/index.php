@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <?php $path = 'layout/'; ?>
-<?php include_once($path . '/head.php') ?>
+<?php include_once($path . '/headgame.php') ?>
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id"
+      content="1002650457102-g4ah8p7emgshiodlnohdj9dr7jb6ldca.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 
-<body class="theme-red">
+<body class="theme-light-green">
 <!-- Page Loader -->
 <?php include_once($path . '/loader.php') ?>
 <!-- #END# Page Loader -->
@@ -14,75 +18,62 @@
 
 <!-- #END# Search Bar -->
 <!-- Top Bar -->
-<?php include_once($path . '/navbar.php') ?>
 <!-- #Top Bar -->
+<style>
 
 
-<?php include_once($path . '/sidebar.php') ?>
+    body {
+        background-image: url('../resources/titles/Plain.png');
+        background-size: cover;
+    }
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="block-header">
-            <h2>DASHBOARD</h2>
-        </div>
+    canvas {
+        width: 100%;
+    }
 
-        <!-- Widgets -->
-        <div class="row clearfix">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-pink hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">playlist_add_check</i>
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<?PHP
+
+?>
+<body oncontextmenu="return false;" style="overflow: hidden" onload="autoNotify()" onclick="autoNotify()">
+<audio id="sound" src="../resources/audio/pokemon/title.ogg" style="display: none"></audio>
+<section id="play" ng-app="pokemon" ng-controller="home">
+    <center>
+        <div class="card" style="width: 70%;margin-top: 10%;opacity: 0.8">
+            <div class="body">
+                <form id="sign_in" method="POST" novalidate="novalidate">
+                    <h3>Mangalos Todos!</h3>
+                    <div class="input-group">
+                        <div class="g-signin2" data-ux_mode="redirect" data-onsuccess="onSignIn" data-theme="dark"></div>
                     </div>
-                    <div class="content">
-                        <div class="text">Nuevos Usuarios</div>
-                        <div class="number count-to" data-from="0" data-to="125" data-speed="15"
-                             data-fresh-interval="20"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-cyan hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">help</i>
-                    </div>
-                    <div class="content">
-                        <div class="text">Nuevas Dudas</div>
-                        <div class="number count-to" data-from="0" data-to="257" data-speed="1000"
-                             data-fresh-interval="20"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-blue hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">forum</i>
-                    </div>
-                    <div class="content">
-                        <div class="text">Nuevos Comentarios</div>
-                        <div class="number count-to" data-from="0" data-to="243" data-speed="1000"
-                             data-fresh-interval="20"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box bg-green hover-expand-effect">
-                    <div class="icon">
-                        <i class="material-icons">person_add</i>
-                    </div>
-                    <div class="content">
-                        <div class="text">Online</div>
-                        <div class="number count-to" data-from="0" data-to="1225" data-speed="1000"
-                             data-fresh-interval="20"></div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
-
-    </div>
+    </center>
 </section>
-
 <?php include_once($path . '/js.php') ?>
 
+<script src="js/controller/home.js"></script>
+<script>
+
+    function autoNotify() {
+        var popupsound = document.getElementById("sound");
+        popupsound.play(); //play the audio file
+    }
+</script>
+<script>
+    function onSignIn(googleUser) {
+        PROFILE = googleUser.getBasicProfile();
+        HOME_.PLAYERPROFILE(PROFILE.getId()).then(function (profile) {
+            if (!profile.avatar) {
+                location.href = "face.php";
+            } else {
+                location.href = "play.php";
+            }
+        });
+    }
+</script>
 </body>
 
 </html>

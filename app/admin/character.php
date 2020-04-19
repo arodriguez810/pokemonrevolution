@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="row clearfix">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="form-group form-float ">
                                 <div class="form-line">
                                     <textarea rows="1" ng-model="form.data.objective" class="form-control"></textarea>
@@ -110,7 +110,25 @@
                                 <select class="form-control show-tick" ng-model="form.data.personality">
                                     <option ng-repeat="(key,value) in personalities">{{value}}</option>
                                 </select>
+                                <label class="form-label">Personalidad</label>
+                            </div>
+                        </div>
 
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select class="form-control show-tick" ng-model="form.data.level">
+                                    <option ng-repeat="(key,value) in POKEMON.trainersRange">{{key}}</option>
+                                </select>
+                                <label class="form-label">Nivel</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select multiple class="form-control show-tick" ng-model="form.data.types">
+                                    <option ng-repeat="(key,value) in TYPES">{{key}}</option>
+                                </select>
+                                <label class="form-label">Tipos</label>
                             </div>
                         </div>
                     </div>
@@ -357,6 +375,7 @@
 <?php include_once($path . '/js.php') ?>
 <script src="js/controller/avatares.js"></script>
 <script src="js/controller/character.js"></script>
+<script src="js/controller/pokemon.js"></script>
 </body>
 
 </html>

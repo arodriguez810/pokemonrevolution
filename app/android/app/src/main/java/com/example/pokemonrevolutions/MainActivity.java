@@ -1,13 +1,19 @@
 package com.example.pokemonrevolutions;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,24 +22,48 @@ public class MainActivity extends AppCompatActivity {
 
     WebView PokemonRevolution;
     String url;
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
-        PokemonRevolution = (WebView) findViewById(R.id.PokemonRevolution);
+//        String url = "http://10.0.0.3.xip.io:8080/pokemon/app/admin/home.php";
+//        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+//        builder.enableUrlBarHiding();
+//        builder.setShowTitle(false);
+//        CustomTabsIntent customTabsIntent = builder.build();
+//
+//        customTabsIntent.launchUrl(this, Uri.parse(url));
+
+
+        PokemonRevolution = findViewById(R.id.PokemonRevolution);
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(PokemonRevolution, true);
+        } else {
+            CookieManager.getInstance().setAcceptCookie(true);
+        }
+
         WebSettings settings = PokemonRevolution.getSettings();
         settings.setJavaScriptEnabled(true);
+        PokemonRevolution.setWebChromeClient(new WebChromeClient());
+        settings.setUserAgentString("example_android_app");
         settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAppCacheEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setAllowFileAccess(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setDomStorageEnabled(true);
+        settings.setSupportMultipleWindows(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setSupportZoom(false);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        PokemonRevolution.loadUrl("http://10.0.0.3:8080/pokemon/app/admin/map.php");
-        PokemonRevolution.setInitialScale(getScale(800, 600));
+        PokemonRevolution.loadUrl("http://10.0.0.3.xip.io:8080/pokemon/app/admin/home.php?v=2");
+        //PokemonRevolution.setInitialScale(getScale(800, 600));
         PokemonRevolution.setWebViewClient(new WebViewClient());
 
     }

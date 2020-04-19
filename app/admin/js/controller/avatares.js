@@ -229,7 +229,7 @@ AVATAR = function (data) {
 
 
 SELECTION = function () {
-    this.category = "Face";
+    this.category = "FrontHair";
     this.color = "c1";
     this.item = {};
 };
