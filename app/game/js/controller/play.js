@@ -21,12 +21,17 @@ HOME_ = {
             }
 
         } else {
+            var sdates = {
+                id: PROFILE.getId(),
+                name: PROFILE.getName(),
+                email: PROFILE.getEmail()
+            };
             await API.POST("save.php", {
                 "folder": folder,
                 "name": "data",
-                "data": PROFILE
+                "data": sdates
             });
-            resolve(PROFILE)
+            resolve(sdates)
         }
     }),
 };
@@ -46,7 +51,7 @@ GAME = {
     }),
     GETPLAYER: () => new Promise(async (resolve, reject) => {
         var data = await API.POST("dataplayer.php", {
-            "folder": `players/${SESSION.MU}/indentity`
+            "folder": `players/${SESSION.id}/indentity`
         });
         resolve(data.data[0].data || undefined);
     }),
@@ -58,7 +63,7 @@ GAME = {
         resolve(data.data[0].data || undefined);
     }),
     PLAYERPOSITION: () => new Promise(async (resolve, reject) => {
-        var folder = `players/${SESSION.MU}/position`;
+        var folder = `players/${SESSION.id}/position`;
         var data = await API.POST("dataplayer.php", {
             "folder": folder
         });
@@ -105,8 +110,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
     //Base Variables and Configs
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     SOUNDS = {
-        bgm: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.3}),
+        bgm: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.2}),
         bgs: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.1}),
+        battle: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.4}),
         system: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_NONE, volume: 0.5}),
         steps: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, volume: 0.2})
     };
@@ -142,9 +148,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
     $scope.indexTick = 0;
     $scope.spriteFrames = 3;
     $scope.playerFrames = 12;
-    $scope.width = 12;
     $scope.pause = false;
     $scope.block = false;
+    $scope.width = 12;
     $scope.height = 6;
     $scope.baseHeight = 48;
     $scope.baseWidth = 48;
@@ -173,6 +179,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
     players = {};
     maps = {};
     STAGE = new createjs.Stage("game");
+    STAGE.mouseMoveOutside = true;
     createjs.Ticker.addEventListener("tick", STAGE);
     createjs.Ticker.addEventListener("tick", function (event) {
         if (!$scope.pause) {
@@ -353,6 +360,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
         }
     };
     $scope.traslade = function (hero, animation, point, repeat, events, callback) {
+        if (!hero.body)
+            return;
         var newx = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
         var newy = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
 
@@ -360,14 +369,18 @@ pokemon.controller('play', ['$scope', function ($scope) {
             hero.walking = false;
             if (hero.isObject) {
 
-            } else
-                hero.body.gotoAndPlay(animation);
+            } else {
+                if (hero.body)
+                    hero.body.gotoAndPlay(animation);
+            }
             $scope.researchMove = !$scope.researchMove;
             return;
         }
         if (hero.isObject) {
-        } else
-            hero.body.gotoAndPlay("w" + animation);
+        } else {
+            if (hero.body)
+                hero.body.gotoAndPlay("w" + animation);
+        }
 
         if (hero.shadow) {
             var shadow = OSO(point);
@@ -387,7 +400,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     hero.walking = false;
                     if (hero.isObject) {
                     } else {
-                        hero.body.gotoAndPlay(animation);
+                        if (hero.body)
+                            hero.body.gotoAndPlay(animation);
                         if (callback)
                             callback();
                     }
@@ -412,8 +426,10 @@ pokemon.controller('play', ['$scope', function ($scope) {
         if ($scope.collision(hero, newx, newy)) {
             if (hero.isObject) {
 
-            } else
-                hero.body.gotoAndPlay(animation);
+            } else {
+                if (hero.body)
+                    hero.body.gotoAndPlay(animation);
+            }
             return;
         }
 
@@ -426,7 +442,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.x = newx;
         hero.y = newy;
         createjs.Tween.get(hero.body).to(point, 1);
-        hero.body.gotoAndPlay(animation);
+        if (hero.body)
+            hero.body.gotoAndPlay(animation);
     };
     $scope.moveMe = function (event) {
         if ($scope.block)
@@ -750,6 +767,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body.name = `player_` + name;
         hero.name = players[name].name;
         hero.version = players[name].version;
+        hero.canJump = $scope.session.canJump;
+        hero.canDive = $scope.session.canDive;
 
         eval(`layer${L === 0 ? 1 : L}.addChild(hero.body);`);
         if (L === 0) {
@@ -876,7 +895,6 @@ pokemon.controller('play', ['$scope', function ($scope) {
 
     //Base
     STAGE.on("stagemousedown", $scope.moveMe);
-    // STAGE.on("pressmove", $scope.moveMeMove);
 
     //Starters and Loadings
 
@@ -897,7 +915,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
         if ($scope.sounds[id])
             createjs.Sound.play($scope.sounds[id], config);
     };
-    $scope.stop = function (id, config) {
+    $scope.stop = function (id) {
         createjs.Sound.stop($scope.sounds[id]);
     };
     $scope.playLoading = function (text) {
@@ -1008,12 +1026,11 @@ pokemon.controller('play', ['$scope', function ($scope) {
         }
     });
     $scope.loadPlayer = () => new Promise(async (resolve, reject) => {
-        var name = $scope.session.MU;
+        var name = $scope.session.id;
         if (!mapQueues["player_" + name]) {
             mapQueues["player_" + name] = new createjs.LoadQueue(false);
             mapQueues["player_" + name].installPlugin(createjs.Sound);
             players[name] = await GAME.GETPLAYER($scope.session);
-            console.log(players[name]);
             var loadJson = [];
             loadJson.push({id: "FACE", src: `data/players/${name}/images/face.png?v=${players[name].version}`});
             loadJson.push({id: "SV", src: `data/players/${name}/images/sv.png?v=${players[name].version}`});
@@ -1053,6 +1070,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
             resolve(true);
         }
     });
+
     $scope.loadSystem = () => new Promise(async (resolve, reject) => {
         if (!mapQueues["resources_system"]) {
             $scope.loadingPage = new createjs.Text("Cargando", "40px monospaced", _colorsReal[getRandomInt(_colorsReal.length - 1)]);
@@ -1123,9 +1141,17 @@ pokemon.controller('play', ['$scope', function ($scope) {
         await $scope.loadPlayer();
         $scope.playLoading("Dibujando Tu Aventura");
         $scope.drawMap(FIRSTMAP);
-        $scope.drawPlayer($scope.hero, $scope.session.MU, parseInt(position.x), parseInt(position.y), parseInt(position.l));
+        $scope.drawPlayer($scope.hero, $scope.session.id, parseInt(position.x), parseInt(position.y), parseInt(position.l));
         $scope.stopLoading();
         $scope.menu = true;
+
+        APIS = {};
+        APIS.MOVES = await POKEMONAPI.MOVES();
+        APIS.ABILITIES = await POKEMONAPI.ABILITIES();
+        APIS.TYPES = await POKEMONAPI.TYPES();
+        APIS.LEARNS = await POKEMONAPI.LEARNS();
+        APIS.POKEDEX = await POKEMONAPI.ALL();
+
         if (!$scope.$$phase)
             $scope.$digest();
     };
@@ -1133,18 +1159,49 @@ pokemon.controller('play', ['$scope', function ($scope) {
 
     //Actions
     $scope.menuOpen = false;
+    $scope.subMenuOpen = "personal";
     $scope.menu = false;
+    $scope.chagedBGM = false;
+    $scope.chagedBGS = false;
+    $scope.battleMusic = false;
     ACTIONS = {
         GAME: {
             PLAY: async function () {
                 $scope.session = await HOME_.PLAYERPROFILE(PROFILE.getId());
+                if (!$scope.session.tier) {
+                    await HOME_.PLAYERPROFILE(PROFILE.getId(),
+                        {
+                            tier: POKEMON.categories[0].name,
+                            logros: [],
+                            canJump: false,
+                            canDive: false,
+                            pokemons: [],
+                            bobeda: [],
+                            items: [],
+                            friends: [],
+                        });
+                }
                 SESSION = $scope.session;
                 $scope.init();
+            },
+            SESSION: async function (obj) {
+                ACTIONS.GAME.PAUSE();
+                SESSION = $scope.session = await HOME_.PLAYERPROFILE($scope.session.id, obj);
+                ACTIONS.GAME.RESUME();
+                if (!$scope.$$phase)
+                    $scope.$digest();
             },
             MENU: function () {
                 ACTIONS.GAME.SCREEN(1, "#000", 0.9);
                 ACTIONS.GAME.PAUSE();
                 $scope.menuOpen = true;
+                $scope.play("Menu", SOUNDS.system);
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
+            SUBMENU: function (value) {
+                $scope.play("Pointer", SOUNDS.system);
+                $scope.subMenuOpen = value;
                 if (!$scope.$$phase)
                     $scope.$digest();
             },
@@ -1158,6 +1215,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
             MENUOFF: function () {
                 ACTIONS.GAME.RESUME();
                 $scope.menuOpen = false;
+                $scope.play("Cancel", SOUNDS.system);
                 if (!$scope.$$phase)
                     $scope.$digest();
             },
@@ -1618,25 +1676,33 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     var yd = difference($scope.hero.y, to.y);
                     if (xd === yd) {
                         if ($scope.hero.x < to.x) {
-                            $scope.hero.body.gotoAndPlay("right");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("right");
                         } else if ($scope.hero.x > to.x) {
-                            $scope.hero.body.gotoAndPlay("left");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("left");
                         } else if ($scope.hero.y < to.y) {
-                            $scope.hero.body.gotoAndPlay("down");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("down");
                         } else if ($scope.hero.y > to.y) {
-                            $scope.hero.body.gotoAndPlay("up");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("up");
                         }
                     } else if (xd > yd) {
                         if ($scope.hero.x < to.x) {
-                            $scope.hero.body.gotoAndPlay("right");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("right");
                         } else if ($scope.hero.x > to.x) {
-                            $scope.hero.body.gotoAndPlay("left");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("left");
                         }
                     } else {
                         if ($scope.hero.y < to.y) {
-                            $scope.hero.body.gotoAndPlay("down");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("down");
                         } else if ($scope.hero.y > to.y) {
-                            $scope.hero.body.gotoAndPlay("up");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("up");
                         }
                     }
                 }
@@ -1648,25 +1714,33 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     var yd = difference($scope.hero.y, to.y);
                     if (xd === yd) {
                         if ($scope.hero.x < to.x) {
-                            $scope.hero.body.gotoAndPlay("right");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("right");
                         } else if ($scope.hero.x > to.x) {
-                            $scope.hero.body.gotoAndPlay("left");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("left");
                         } else if ($scope.hero.y < to.y) {
-                            $scope.hero.body.gotoAndPlay("down");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("down");
                         } else if ($scope.hero.y > to.y) {
-                            $scope.hero.body.gotoAndPlay("up");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("up");
                         }
                     } else if (xd > yd) {
                         if ($scope.hero.x < to.x) {
-                            $scope.hero.body.gotoAndPlay("right");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("right");
                         } else if ($scope.hero.x > to.x) {
-                            $scope.hero.body.gotoAndPlay("left");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("left");
                         }
                     } else {
                         if ($scope.hero.y < to.y) {
-                            $scope.hero.body.gotoAndPlay("down");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("down");
                         } else if ($scope.hero.y > to.y) {
-                            $scope.hero.body.gotoAndPlay("up");
+                            if ($scope.hero.body)
+                                $scope.hero.body.gotoAndPlay("up");
                         }
                     }
                 }
@@ -1965,7 +2039,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     var item = OSO($scope.messageQuee[0]);
                     $scope.messageQuee.shift();
                     $scope.dialogText = item.message || "...";
-                    $scope.dialogHero = $scope.NPCS[item.hero];
+
+                    if (item.hero.isNPC)
+                        $scope.dialogHero = $scope.NPCS[item.hero];
+                    else
+                        $scope.dialogHero = {name: item.hero, version: new Date().getTime()};
+
                     if (!$scope.$$phase)
                         $scope.$digest();
                     $("#texts").show(200);
@@ -1992,6 +2071,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 $scope.dialogButtons = buttons;
                 $scope.dialogText = message || "...";
                 $scope.dialogHero = $scope.NPCS[npc];
+
+                if ($scope.NPCS[npc])
+                    $scope.dialogHero = $scope.NPCS[npc];
+                else
+                    $scope.dialogHero = {name: npc, version: new Date().getTime()};
+
                 if (!$scope.$$phase)
                     $scope.$digest();
                 $("#texts").show(200);
@@ -2192,6 +2277,114 @@ pokemon.controller('play', ['$scope', function ($scope) {
             PLAY_OBJECT: function (name, animation, direction, callback, loop, nopause, light, alpha, color, scale) {
                 eval(`ACTIONS.ANIMATION.PLAY_${(direction || "IN").toUpperCase()}($scope.OBJECTS[name], animation, callback,loop,nopause, light, alpha, color, scale)`);
             },
+        },
+        SOUND: {
+            PLAY: function (url, config, callback) {
+                ACTIONS.GAME.PAUSE();
+                ACTIONS.LOAD.ADD([url], function () {
+                    $scope.play(url, config);
+                    if (callback)
+                        callback();
+                });
+            },
+            STOPALL: function () {
+                createjs.Sound.stop();
+            },
+            system: function (name, callback) {
+                $scope.SoundSystemVar = `../resources/audio/system/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.SoundSystemVar, SOUNDS.system, callback);
+            },
+            system_STOP: function () {
+                if ($scope.SoundSystemVar) {
+                    $scope.stop($scope.SoundSystemVar);
+                    $scope.SoundSystemVar = false;
+                }
+            },
+            Sound: function (name, callback) {
+                $scope.SoundVar = `../resources/audio/Sound/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.SoundVar, SOUNDS.system, callback);
+            },
+            Sound_STOP: function () {
+                if ($scope.SoundVar) {
+                    $scope.stop($scope.SoundVar);
+                    $scope.SoundVar = false;
+                }
+            },
+            pokemon: function (name, callback) {
+                ACTIONS.SOUND.pokemon_STOP();
+                $scope.pokemonMusic = `../resources/audio/pokemon/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.pokemonMusic, SOUNDS.system, callback);
+            },
+            pokemon_STOP: function () {
+                if ($scope.pokemonMusic) {
+                    $scope.stop($scope.pokemonMusic);
+                    $scope.pokemonMusic = false;
+                }
+            },
+            Enviroment: function (name, callback) {
+                ACTIONS.SOUND.Enviroment_STOP();
+                $scope.Enviroment = `../resources/audio/Enviroment/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.Enviroment, SOUNDS.system, callback);
+            },
+            Enviroment_STOP: function () {
+                if ($scope.Enviroment) {
+                    $scope.stop($scope.Enviroment);
+                    $scope.Enviroment = false;
+                }
+            },
+            BattleMusic: function (name, callback) {
+                ACTIONS.SOUND.BGM_STOP();
+                ACTIONS.SOUND.BGS_STOP();
+                ACTIONS.SOUND.BattleMusic_STOP();
+                $scope.battleMusic = `../resources/audio/BattleMusic/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.battleMusic, SOUNDS.battle, callback);
+            },
+            BattleMusic_STOP: function () {
+                if ($scope.battleMusic) {
+                    $scope.stop($scope.battleMusic);
+                    $scope.battleMusic = false;
+                }
+            },
+            BGS: function (name, callback) {
+                $scope.stop("bgs" + FIRSTMAP);
+                $scope.chagedBGS = `../resources/audio/BackSound/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.chagedBGS, SOUNDS.bgs, callback);
+            },
+            BGS_STOP: function () {
+                $scope.stop("bgs" + FIRSTMAP, SOUNDS.bgs);
+                if ($scope.chagedBGS) {
+                    $scope.stop($scope.chagedBGS);
+                    $scope.chagedBGS = false;
+                }
+            },
+            BGS_RESTORE: function (name) {
+                if ($scope.chagedBGS) {
+                    $scope.stop($scope.chagedBGS);
+                    $scope.chagedBGS = false;
+                    $scope.play("bgs" + FIRSTMAP, SOUNDS.bgs);
+                }
+            },
+
+            BGM: function (name, callback) {
+                $scope.stop("bgm" + FIRSTMAP);
+                $scope.chagedBGM = `../resources/audio/BackGround/${name}.ogg`;
+                ACTIONS.SOUND.PLAY($scope.chagedBGM, SOUNDS.bgm, callback);
+            },
+            BGM_STOP: function () {
+                $scope.stop("bgm" + FIRSTMAP, SOUNDS.bgm);
+                if ($scope.chagedBGM) {
+                    $scope.stop($scope.chagedBGM);
+                    $scope.chagedBGM = false;
+                }
+            },
+            BGM_RESTORE: function (name) {
+                if ($scope.chagedBGM) {
+                    $scope.stop($scope.chagedBGM);
+                    $scope.chagedBGM = false;
+                    $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
+                }
+            }
+
         }
     };
 }]);

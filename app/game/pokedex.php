@@ -152,7 +152,7 @@
                                         <h2>Movimientos</h2>
                                         <div class="list-group" style="width: 50%">
 
-                                            <div class="col-sm-2" ng-repeat="(mkey,moves) in learns[form.keyname]"
+                                            <div class="col-sm-2" ng-repeat="(mkey,moves) in move_learns()"
                                                  style="border: 1px solid #ccc;text-transform: capitalize;">
                                                 {{moves}}
                                             </div>

@@ -2,10 +2,6 @@
 <html>
 <?php $path = 'layout/'; ?>
 <?php include_once($path . '/head.php') ?>
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id"
-      content="1002650457102-g4ah8p7emgshiodlnohdj9dr7jb6ldca.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
 <body class="theme-red">
 <!-- Page Loader -->
 <?php include_once($path . '/loader.php') ?>
@@ -34,7 +30,7 @@
     }
 
 </style>
-<div style="display: none" class="g-signin2" data-onsuccess="onSignIn"></div>
+
 <section id="charactercontroller" ng-app="pokemon" ng-controller="character" style="overflow: hidden">
     <img ng-repeat="(key,value) in COLORS"
          src="{{value}}" title="1"
@@ -60,7 +56,8 @@
                 <option selected value="Female">Chica</option>
                 <option value="Male">Chico</option>
             </select>
-            <input ng-disabled="prop.mode==='edit'" style="width: 146px" id="charactername" placeholder="Nombre" type="text" ng-model="form.data.name"
+            <input ng-disabled="prop.mode==='edit'" style="width: 146px" id="charactername" placeholder="Nombre"
+                   type="text" ng-model="form.data.name"
                    class="form-control">
         </div>
         <div class="col-xs-9">
@@ -198,6 +195,7 @@
         </div>
     </div>
     <!-- Form  -->
+    <div style="display: none" class="g-signin2" data-onsuccess="onSignIn"></div>
 </section>
 
 <?php include_once($path . '/js.php') ?>

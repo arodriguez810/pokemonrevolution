@@ -21,12 +21,17 @@ HOME_ = {
             }
 
         } else {
+            var sdates = {
+                id: PROFILE.getId(),
+                name: PROFILE.getName(),
+                email: PROFILE.getEmail()
+            };
             await API.POST("save.php", {
                 "folder": folder,
                 "name": "data",
-                "data": PROFILE
+                "data": sdates
             });
-            resolve(PROFILE)
+            resolve(sdates)
         }
     }),
 };

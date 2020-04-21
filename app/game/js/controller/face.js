@@ -33,12 +33,17 @@ HOME_ = {
             }
 
         } else {
+            var sdates = {
+                id: PROFILE.getId(),
+                name: PROFILE.getName(),
+                email: PROFILE.getEmail()
+            };
             await API.POST("save.php", {
                 "folder": folder,
                 "name": "data",
-                "data": PROFILE
+                "data": sdates
             });
-            resolve(PROFILE)
+            resolve(sdates)
         }
     }),
 };
@@ -205,7 +210,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $scope.clearAvatar();
         $('#character_form').modal('show');
         $("[loading='avatar']").hide();
-        $scope.form.data.name = $scope.session.pW || $scope.session.Ad || "";
+        $scope.form.data.name = $scope.session.name || "";
         if (!$scope.$$phase)
             $scope.$digest();
         $scope.stopLoading();
@@ -235,9 +240,9 @@ pokemon.controller('character', ['$scope', function ($scope) {
     };
     $scope.save = async function () {
         $scope.playLoading("Guardando Avatar");
-        await CHARACTER_.SAVE($scope.form.data.name, $scope.form, $scope.session.MU);
+        await CHARACTER_.SAVE($scope.form.data.name, $scope.form, $scope.session.id);
         $scope.playLoading("Guardando Perfil");
-        await HOME_.PLAYERPROFILE($scope.session.MU, {avatar: 1});
+        await HOME_.PLAYERPROFILE($scope.session.id, {avatar: 1});
         $scope.playLoading("Redireccionando");
         location.href = "play.php";
         // $scope.form.data.avatar.clear();
@@ -317,7 +322,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $("[loading='character']").hide(200);
         $scope.$digest();
         if ($scope.session.avatar) {
-            var exist = await CHARACTER_.GET($scope.session.MU);
+            var exist = await CHARACTER_.GET($scope.session.id);
             if (exist)
                 $scope.edit({data: exist})
         } else

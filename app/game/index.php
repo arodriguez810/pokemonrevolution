@@ -2,10 +2,7 @@
 <html>
 <?php $path = 'layout/'; ?>
 <?php include_once($path . '/headgame.php') ?>
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id"
-      content="1002650457102-g4ah8p7emgshiodlnohdj9dr7jb6ldca.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 
 <body class="theme-light-green">
 <!-- Page Loader -->
@@ -45,7 +42,8 @@
                 <form id="sign_in" method="POST" novalidate="novalidate">
                     <h3>Mangalos Todos!</h3>
                     <div class="input-group">
-                        <div class="g-signin2" data-ux_mode="redirect" data-onsuccess="onSignIn" data-theme="dark"></div>
+                        <div class="g-signin2" data-ux_mode="redirect" data-onsuccess="onSignIn"
+                             data-theme="dark"></div>
                     </div>
                 </form>
             </div>

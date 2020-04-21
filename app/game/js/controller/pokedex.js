@@ -59,7 +59,9 @@ pokemon.controller('pokedex', ['$scope', function ($scope) {
         await POKEDEX_F.SAVE($scope.pokedex);
         await $scope.refresh();
     };
-
+    $scope.move_learns = function () {
+        return $scope.learns[($scope.form.baseSpecies ? $scope.form.baseSpecies.toLowerCase() : $scope.form.keyname)];
+    };
     $scope.abilitiesDesc = function (ability) {
         var ab = $scope.abilities.filter(d => {
             return d.name === ability
@@ -69,7 +71,6 @@ pokemon.controller('pokedex', ['$scope', function ($scope) {
         return {name: "Not Found"};
     };
     $scope.statStyle = function (stat) {
-
         if (stat === Object.keys($scope.form.baseStats).reduce((a, b) => $scope.form.baseStats[a] > $scope.form.baseStats[b] ? a : b))
             return `text-success`;
         if (stat === Object.keys($scope.form.baseStats).reduce((a, b) => $scope.form.baseStats[a] < $scope.form.baseStats[b] ? a : b))

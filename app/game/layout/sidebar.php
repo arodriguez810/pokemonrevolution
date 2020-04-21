@@ -26,10 +26,10 @@
             <ul class="list">
 
 
-                <li class="active">
-                    <a href="index.php">
-                        <i class="material-icons">home</i>
-                        <span>Home</span>
+                <li>
+                    <a href="character.php" class="toggled waves-effect waves-block">
+                        <i class="material-icons">child_care</i>
+                        <span>Usuarios</span>
                     </a>
                 </li>
 

@@ -35,7 +35,7 @@ oseaX = function (obj) {
     return (
         obj === '[NULL]' || obj === undefined || obj === null || obj === "" || obj <= 0 || obj === "0"
     );
-}
+};
 OSO = function (object) {
     return eval("(" + JSON.stringify(object) + ")");
 };
@@ -220,6 +220,24 @@ Object.size = function (obj) {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+function randomArray(array) {
+    return array[getRandomInt(array.length)];
+}
+
+function randomObject(obj) {
+    var arr = objToArray(obj);
+    return arr[getRandomInt(arr.length)];
+}
+
+function objToArray(array) {
+    var arry = array;
+    var arr = [];
+    for (var a in arry) {
+        arr.push(arry[a]);
+    }
+    return arr;
 }
 
 function getRandomIntRange(min, max) {

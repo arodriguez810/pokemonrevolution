@@ -1,0 +1,954 @@
+{
+  "id": "118386964647976498542",
+  "name": "Angel Rodriguez",
+  "email": "arodriguez@eisdr.com",
+  "avatar": 1,
+  "tier": "Omega",
+  "logros": [],
+  "canJump": false,
+  "canDive": false,
+  "pokemons": [
+    {
+      "quality": 3,
+      "shiny": false,
+      "superShiny": false,
+      "imageUrl": "..\/resources\/poekemon\/gif\/front\/cosmog.gif",
+      "date": "2020-04-21T07:05:07.310Z",
+      "nick": "cosmog",
+      "name": "cosmog",
+      "types": [
+        "Psychic"
+      ],
+      "moves": [
+        {
+          "num": 150,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "shortDesc": "No competitive use.",
+          "id": "splash",
+          "name": "Splash",
+          "pp": 40,
+          "priority": 0,
+          "flags": {
+            "gravity": 1
+          },
+          "secondary": null,
+          "target": "self",
+          "type": "Normal",
+          "zMoveBoost": {
+            "atk": 3
+          },
+          "contestType": "Cute",
+          "keyname": "splash"
+        },
+        {
+          "num": 100,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "If this move is successful and the user has not fainted, the user switches out even if it is trapped and is replaced immediately by a selected party member. The user does not switch out if there are no unfainted party members.",
+          "shortDesc": "User switches out.",
+          "id": "teleport",
+          "name": "Teleport",
+          "pp": 20,
+          "priority": -6,
+          "flags": {},
+          "selfSwitch": true,
+          "onTryHit": true,
+          "secondary": null,
+          "target": "self",
+          "type": "Psychic",
+          "zMoveEffect": "heal",
+          "contestType": "Cool",
+          "keyname": "teleport"
+        }
+      ],
+      "stats": {
+        "hp": 43,
+        "atk": 29,
+        "def": 31,
+        "spa": 29,
+        "spd": 31,
+        "spe": 37
+      },
+      "ability": {
+        "desc": "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.",
+        "shortDesc": "This Pokemon ignores other Pokemon's stat stages when taking or doing damage.",
+        "id": "unaware",
+        "name": "Unaware",
+        "rating": 3.5,
+        "num": 109,
+        "keyname": "unaware"
+      },
+      "heightm": 0.2,
+      "weightkg": 0.1,
+      "evos": [
+        "cosmoem"
+      ],
+      "giga": false,
+      "mega": false,
+      "battle": {
+        "temp": {
+          "stats": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "spa": 0,
+            "spd": 0,
+            "spe": 0
+          },
+          "typesBust": {
+            "Bug": 0,
+            "Dark": 0,
+            "Dragon": 0,
+            "Electric": 0,
+            "Fairy": 0,
+            "Fighting": 0,
+            "Fire": 0,
+            "Flying": 0,
+            "Ghost": 0,
+            "Grass": 0,
+            "Ground": 0,
+            "Ice": 0,
+            "Normal": 0,
+            "Poison": 0,
+            "Psychic": 0,
+            "Rock": 0,
+            "Steel": 0,
+            "Water": 0
+          },
+          "accuracy": 0,
+          "status_turns": 0
+        },
+        "status": null
+      },
+      "tier": "Omega",
+      "next": 0
+    },
+    {
+      "quality": 8,
+      "shiny": false,
+      "superShiny": false,
+      "imageUrl": "..\/resources\/poekemon\/gif\/front\/scatterbug.gif",
+      "date": "2020-04-21T07:05:09.263Z",
+      "nick": "scatterbug",
+      "name": "scatterbug",
+      "types": [
+        "Bug"
+      ],
+      "moves": [
+        {
+          "num": 450,
+          "accuracy": 100,
+          "basePower": 60,
+          "category": "Physical",
+          "desc": "If this move is successful and the user has not fainted, it steals the target's held Berry if it is holding one and eats it immediately, gaining its effects even if the user's item is being ignored. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
+          "shortDesc": "User steals and eats the target's Berry.",
+          "id": "bugbite",
+          "name": "Bug Bite",
+          "pp": 20,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": null,
+          "target": "normal",
+          "type": "Bug",
+          "contestType": "Cute",
+          "keyname": "bugbite"
+        },
+        {
+          "num": 33,
+          "accuracy": 100,
+          "basePower": 40,
+          "category": "Physical",
+          "shortDesc": "No additional effect.",
+          "id": "tackle",
+          "name": "Tackle",
+          "pp": 35,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": null,
+          "target": "normal",
+          "type": "Normal",
+          "contestType": "Tough",
+          "keyname": "tackle"
+        }
+      ],
+      "stats": {
+        "hp": 38,
+        "atk": 35,
+        "def": 40,
+        "spa": 27,
+        "spd": 25,
+        "spe": 35
+      },
+      "ability": {
+        "shortDesc": "This Pokemon's moves have their accuracy multiplied by 1.3.",
+        "id": "compoundeyes",
+        "name": "Compound Eyes",
+        "rating": 3,
+        "num": 14,
+        "keyname": "compoundeyes"
+      },
+      "heightm": 0.3,
+      "weightkg": 2.5,
+      "evos": [
+        "spewpa"
+      ],
+      "giga": false,
+      "mega": false,
+      "battle": {
+        "temp": {
+          "stats": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "spa": 0,
+            "spd": 0,
+            "spe": 0
+          },
+          "typesBust": {
+            "Bug": 0,
+            "Dark": 0,
+            "Dragon": 0,
+            "Electric": 0,
+            "Fairy": 0,
+            "Fighting": 0,
+            "Fire": 0,
+            "Flying": 0,
+            "Ghost": 0,
+            "Grass": 0,
+            "Ground": 0,
+            "Ice": 0,
+            "Normal": 0,
+            "Poison": 0,
+            "Psychic": 0,
+            "Rock": 0,
+            "Steel": 0,
+            "Water": 0
+          },
+          "accuracy": 0,
+          "status_turns": 0
+        },
+        "status": null
+      },
+      "tier": "Omega",
+      "next": 0
+    },
+    {
+      "quality": 0,
+      "shiny": false,
+      "superShiny": false,
+      "imageUrl": "..\/resources\/poekemon\/gif\/front\/cascoon.gif",
+      "date": "2020-04-21T07:05:10.724Z",
+      "nick": "cascoon",
+      "name": "cascoon",
+      "types": [
+        "Bug"
+      ],
+      "moves": [
+        {
+          "num": 450,
+          "accuracy": 100,
+          "basePower": 60,
+          "category": "Physical",
+          "desc": "If this move is successful and the user has not fainted, it steals the target's held Berry if it is holding one and eats it immediately, gaining its effects even if the user's item is being ignored. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
+          "shortDesc": "User steals and eats the target's Berry.",
+          "id": "bugbite",
+          "name": "Bug Bite",
+          "pp": 20,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": null,
+          "target": "normal",
+          "type": "Bug",
+          "contestType": "Cute",
+          "keyname": "bugbite"
+        },
+        {
+          "num": 527,
+          "accuracy": 95,
+          "basePower": 55,
+          "category": "Special",
+          "desc": "Has a 100% chance to lower the target's Speed by 1 stage.",
+          "shortDesc": "100% chance to lower the foe(s) Speed by 1.",
+          "id": "electroweb",
+          "name": "Electroweb",
+          "pp": 15,
+          "priority": 0,
+          "flags": {
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": {
+            "chance": 100,
+            "boosts": {
+              "spe": -1
+            }
+          },
+          "target": "allAdjacentFoes",
+          "type": "Electric",
+          "contestType": "Beautiful",
+          "keyname": "electroweb"
+        },
+        {
+          "num": 106,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "Raises the user's Defense by 1 stage.",
+          "shortDesc": "Raises the user's Defense by 1.",
+          "id": "harden",
+          "name": "Harden",
+          "pp": 30,
+          "priority": 0,
+          "flags": {
+            "snatch": 1
+          },
+          "boosts": {
+            "def": 1
+          },
+          "secondary": null,
+          "target": "self",
+          "type": "Normal",
+          "zMoveBoost": {
+            "def": 1
+          },
+          "contestType": "Tough",
+          "keyname": "harden"
+        },
+        {
+          "num": 81,
+          "accuracy": 95,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "Lowers the target's Speed by 2 stages.",
+          "shortDesc": "Lowers the foe(s) Speed by 2.",
+          "id": "stringshot",
+          "name": "String Shot",
+          "pp": 40,
+          "priority": 0,
+          "flags": {
+            "protect": 1,
+            "reflectable": 1,
+            "mirror": 1
+          },
+          "boosts": {
+            "spe": -2
+          },
+          "secondary": null,
+          "target": "allAdjacentFoes",
+          "type": "Bug",
+          "zMoveBoost": {
+            "spe": 1
+          },
+          "contestType": "Clever",
+          "keyname": "stringshot"
+        }
+      ],
+      "stats": {
+        "hp": 50,
+        "atk": 35,
+        "def": 55,
+        "spa": 25,
+        "spd": 25,
+        "spe": 15
+      },
+      "ability": {
+        "desc": "This Pokemon has a 33% chance to have its major status condition cured at the end of each turn.",
+        "shortDesc": "This Pokemon has a 33% chance to have its status cured at the end of each turn.",
+        "onResidualOrder": 5,
+        "onResidualSubOrder": 1,
+        "id": "shedskin",
+        "name": "Shed Skin",
+        "rating": 3,
+        "num": 61,
+        "keyname": "shedskin"
+      },
+      "heightm": 0.7,
+      "weightkg": 11.5,
+      "evos": [
+        "dustox"
+      ],
+      "giga": false,
+      "mega": false,
+      "battle": {
+        "temp": {
+          "stats": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "spa": 0,
+            "spd": 0,
+            "spe": 0
+          },
+          "typesBust": {
+            "Bug": 0,
+            "Dark": 0,
+            "Dragon": 0,
+            "Electric": 0,
+            "Fairy": 0,
+            "Fighting": 0,
+            "Fire": 0,
+            "Flying": 0,
+            "Ghost": 0,
+            "Grass": 0,
+            "Ground": 0,
+            "Ice": 0,
+            "Normal": 0,
+            "Poison": 0,
+            "Psychic": 0,
+            "Rock": 0,
+            "Steel": 0,
+            "Water": 0
+          },
+          "accuracy": 0,
+          "status_turns": 0
+        },
+        "status": null
+      },
+      "tier": "Omega",
+      "next": 0
+    },
+    {
+      "quality": 6,
+      "shiny": false,
+      "superShiny": false,
+      "imageUrl": "..\/resources\/poekemon\/gif\/front\/wooper.gif",
+      "date": "2020-04-21T07:05:11.881Z",
+      "nick": "wooper",
+      "name": "wooper",
+      "types": [
+        "Water",
+        "Ground"
+      ],
+      "moves": [
+        {
+          "num": 127,
+          "accuracy": 100,
+          "basePower": 80,
+          "category": "Physical",
+          "desc": "Has a 20% chance to flinch the target.",
+          "shortDesc": "20% chance to flinch the target.",
+          "id": "waterfall",
+          "isViable": true,
+          "name": "Waterfall",
+          "pp": 15,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": {
+            "chance": 20,
+            "volatileStatus": "flinch"
+          },
+          "target": "normal",
+          "type": "Water",
+          "contestType": "Tough",
+          "keyname": "waterfall"
+        },
+        {
+          "num": 426,
+          "accuracy": 85,
+          "basePower": 65,
+          "category": "Special",
+          "desc": "Has a 30% chance to lower the target's accuracy by 1 stage.",
+          "shortDesc": "30% chance to lower the target's accuracy by 1.",
+          "id": "mudbomb",
+          "isNonstandard": "Past",
+          "name": "Mud Bomb",
+          "pp": 10,
+          "priority": 0,
+          "flags": {
+            "bullet": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": {
+            "chance": 30,
+            "boosts": {
+              "accuracy": -1
+            }
+          },
+          "target": "normal",
+          "type": "Ground",
+          "contestType": "Cute",
+          "keyname": "mudbomb"
+        },
+        {
+          "num": 104,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "Raises the user's evasiveness by 1 stage.",
+          "shortDesc": "Raises the user's evasiveness by 1.",
+          "id": "doubleteam",
+          "name": "Double Team",
+          "pp": 15,
+          "priority": 0,
+          "flags": {
+            "snatch": 1
+          },
+          "boosts": {
+            "evasion": 1
+          },
+          "secondary": null,
+          "target": "self",
+          "type": "Normal",
+          "zMoveEffect": "clearnegativeboost",
+          "contestType": "Cool",
+          "keyname": "doubleteam"
+        },
+        {
+          "num": 114,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "Resets the stat stages of all active Pokemon to 0.",
+          "shortDesc": "Eliminates all stat changes.",
+          "id": "haze",
+          "isViable": true,
+          "name": "Haze",
+          "pp": 30,
+          "priority": 0,
+          "flags": {
+            "authentic": 1
+          },
+          "secondary": null,
+          "target": "all",
+          "type": "Ice",
+          "zMoveEffect": "heal",
+          "contestType": "Beautiful",
+          "keyname": "haze"
+        }
+      ],
+      "stats": {
+        "hp": 55,
+        "atk": 45,
+        "def": 45,
+        "spa": 25,
+        "spd": 25,
+        "spe": 15
+      },
+      "ability": {
+        "desc": "This Pokemon is immune to Water-type moves and restores 1\/4 of its maximum HP, rounded down, when hit by a Water-type move.",
+        "shortDesc": "This Pokemon heals 1\/4 of its max HP when hit by Water moves; Water immunity.",
+        "id": "waterabsorb",
+        "name": "Water Absorb",
+        "rating": 3.5,
+        "num": 11,
+        "keyname": "waterabsorb"
+      },
+      "heightm": 0.4,
+      "weightkg": 8.5,
+      "evos": [
+        "quagsire"
+      ],
+      "giga": false,
+      "mega": false,
+      "battle": {
+        "temp": {
+          "stats": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "spa": 0,
+            "spd": 0,
+            "spe": 0
+          },
+          "typesBust": {
+            "Bug": 0,
+            "Dark": 0,
+            "Dragon": 0,
+            "Electric": 0,
+            "Fairy": 0,
+            "Fighting": 0,
+            "Fire": 0,
+            "Flying": 0,
+            "Ghost": 0,
+            "Grass": 0,
+            "Ground": 0,
+            "Ice": 0,
+            "Normal": 0,
+            "Poison": 0,
+            "Psychic": 0,
+            "Rock": 0,
+            "Steel": 0,
+            "Water": 0
+          },
+          "accuracy": 0,
+          "status_turns": 0
+        },
+        "status": null
+      },
+      "tier": "Omega",
+      "next": 0
+    },
+    {
+      "quality": 5,
+      "shiny": false,
+      "superShiny": false,
+      "imageUrl": "..\/resources\/poekemon\/gif\/front\/lotad.gif",
+      "date": "2020-04-21T07:05:12.918Z",
+      "nick": "lotad",
+      "name": "lotad",
+      "types": [
+        "Water",
+        "Grass"
+      ],
+      "moves": [
+        {
+          "num": 352,
+          "accuracy": 100,
+          "basePower": 60,
+          "category": "Special",
+          "desc": "Has a 20% chance to confuse the target.",
+          "shortDesc": "20% chance to confuse the target.",
+          "id": "waterpulse",
+          "name": "Water Pulse",
+          "pp": 20,
+          "priority": 0,
+          "flags": {
+            "protect": 1,
+            "pulse": 1,
+            "mirror": 1,
+            "distance": 1
+          },
+          "secondary": {
+            "chance": 20,
+            "volatileStatus": "confusion"
+          },
+          "target": "any",
+          "type": "Water",
+          "contestType": "Beautiful",
+          "keyname": "waterpulse"
+        },
+        {
+          "num": 76,
+          "accuracy": 100,
+          "basePower": 120,
+          "category": "Special",
+          "desc": "This attack charges on the first turn and executes on the second. Power is halved if the weather is Hail, Primordial Sea, Rain Dance, or Sandstorm and the user is not holding Utility Umbrella. If the user is holding a Power Herb or the weather is Desolate Land or Sunny Day, the move completes in one turn. If the user is holding Utility Umbrella and the weather is Desolate Land or Sunny Day, the move still requires a turn to charge.",
+          "shortDesc": "Charges turn 1. Hits turn 2. No charge in sunlight.",
+          "id": "solarbeam",
+          "name": "Solar Beam",
+          "pp": 10,
+          "priority": 0,
+          "flags": {
+            "charge": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": null,
+          "target": "normal",
+          "type": "Grass",
+          "contestType": "Cool",
+          "keyname": "solarbeam"
+        },
+        {
+          "num": 61,
+          "accuracy": 100,
+          "basePower": 65,
+          "category": "Special",
+          "desc": "Has a 10% chance to lower the target's Speed by 1 stage.",
+          "shortDesc": "10% chance to lower the target's Speed by 1.",
+          "id": "bubblebeam",
+          "name": "Bubble Beam",
+          "pp": 20,
+          "priority": 0,
+          "flags": {
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": {
+            "chance": 10,
+            "boosts": {
+              "spe": -1
+            }
+          },
+          "target": "normal",
+          "type": "Water",
+          "contestType": "Beautiful",
+          "keyname": "bubblebeam"
+        },
+        {
+          "num": 54,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "For 5 turns, the user and its party members are protected from having their stat stages lowered by other Pokemon. Fails if the effect is already active on the user's side.",
+          "shortDesc": "For 5 turns, protects user's party from stat drops.",
+          "id": "mist",
+          "name": "Mist",
+          "pp": 30,
+          "priority": 0,
+          "flags": {
+            "snatch": 1
+          },
+          "sideCondition": "mist",
+          "effect": {
+            "duration": 5,
+            "onResidualOrder": 21,
+            "onResidualSubOrder": 3
+          },
+          "secondary": null,
+          "target": "allySide",
+          "type": "Ice",
+          "zMoveEffect": "heal",
+          "contestType": "Beautiful",
+          "keyname": "mist"
+        }
+      ],
+      "stats": {
+        "hp": 40,
+        "atk": 30,
+        "def": 30,
+        "spa": 40,
+        "spd": 50,
+        "spe": 30
+      },
+      "ability": {
+        "desc": "If Rain Dance is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
+        "shortDesc": "If Rain Dance is active, this Pokemon's Speed is doubled.",
+        "id": "swiftswim",
+        "name": "Swift Swim",
+        "rating": 3,
+        "num": 33,
+        "keyname": "swiftswim"
+      },
+      "heightm": 0.5,
+      "weightkg": 2.6,
+      "evos": [
+        "lombre"
+      ],
+      "giga": false,
+      "mega": false,
+      "battle": {
+        "temp": {
+          "stats": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "spa": 0,
+            "spd": 0,
+            "spe": 0
+          },
+          "typesBust": {
+            "Bug": 0,
+            "Dark": 0,
+            "Dragon": 0,
+            "Electric": 0,
+            "Fairy": 0,
+            "Fighting": 0,
+            "Fire": 0,
+            "Flying": 0,
+            "Ghost": 0,
+            "Grass": 0,
+            "Ground": 0,
+            "Ice": 0,
+            "Normal": 0,
+            "Poison": 0,
+            "Psychic": 0,
+            "Rock": 0,
+            "Steel": 0,
+            "Water": 0
+          },
+          "accuracy": 0,
+          "status_turns": 0
+        },
+        "status": null
+      },
+      "tier": "Omega",
+      "next": 0
+    },
+    {
+      "quality": 9,
+      "shiny": false,
+      "superShiny": false,
+      "imageUrl": "..\/resources\/poekemon\/gif\/front\/wurmple.gif",
+      "date": "2020-04-21T07:05:13.933Z",
+      "nick": "wurmple",
+      "name": "wurmple",
+      "types": [
+        "Bug"
+      ],
+      "moves": [
+        {
+          "num": 450,
+          "accuracy": 100,
+          "basePower": 60,
+          "category": "Physical",
+          "desc": "If this move is successful and the user has not fainted, it steals the target's held Berry if it is holding one and eats it immediately, gaining its effects even if the user's item is being ignored. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
+          "shortDesc": "User steals and eats the target's Berry.",
+          "id": "bugbite",
+          "name": "Bug Bite",
+          "pp": 20,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": null,
+          "target": "normal",
+          "type": "Bug",
+          "contestType": "Cute",
+          "keyname": "bugbite"
+        },
+        {
+          "num": 33,
+          "accuracy": 100,
+          "basePower": 40,
+          "category": "Physical",
+          "shortDesc": "No additional effect.",
+          "id": "tackle",
+          "name": "Tackle",
+          "pp": 35,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": null,
+          "target": "normal",
+          "type": "Normal",
+          "contestType": "Tough",
+          "keyname": "tackle"
+        },
+        {
+          "num": 527,
+          "accuracy": 95,
+          "basePower": 55,
+          "category": "Special",
+          "desc": "Has a 100% chance to lower the target's Speed by 1 stage.",
+          "shortDesc": "100% chance to lower the foe(s) Speed by 1.",
+          "id": "electroweb",
+          "name": "Electroweb",
+          "pp": 15,
+          "priority": 0,
+          "flags": {
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": {
+            "chance": 100,
+            "boosts": {
+              "spe": -1
+            }
+          },
+          "target": "allAdjacentFoes",
+          "type": "Electric",
+          "contestType": "Beautiful",
+          "keyname": "electroweb"
+        },
+        {
+          "num": 81,
+          "accuracy": 95,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "Lowers the target's Speed by 2 stages.",
+          "shortDesc": "Lowers the foe(s) Speed by 2.",
+          "id": "stringshot",
+          "name": "String Shot",
+          "pp": 40,
+          "priority": 0,
+          "flags": {
+            "protect": 1,
+            "reflectable": 1,
+            "mirror": 1
+          },
+          "boosts": {
+            "spe": -2
+          },
+          "secondary": null,
+          "target": "allAdjacentFoes",
+          "type": "Bug",
+          "zMoveBoost": {
+            "spe": 1
+          },
+          "contestType": "Clever",
+          "keyname": "stringshot"
+        }
+      ],
+      "stats": {
+        "hp": 45,
+        "atk": 45,
+        "def": 35,
+        "spa": 20,
+        "spd": 30,
+        "spe": 20
+      },
+      "ability": {
+        "shortDesc": "This Pokemon is not affected by the secondary effect of another Pokemon's attack.",
+        "id": "shielddust",
+        "name": "Shield Dust",
+        "rating": 2,
+        "num": 19,
+        "keyname": "shielddust"
+      },
+      "heightm": 0.3,
+      "weightkg": 3.6,
+      "evos": [
+        "silcoon",
+        "cascoon"
+      ],
+      "giga": false,
+      "mega": false,
+      "battle": {
+        "temp": {
+          "stats": {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "spa": 0,
+            "spd": 0,
+            "spe": 0
+          },
+          "typesBust": {
+            "Bug": 0,
+            "Dark": 0,
+            "Dragon": 0,
+            "Electric": 0,
+            "Fairy": 0,
+            "Fighting": 0,
+            "Fire": 0,
+            "Flying": 0,
+            "Ghost": 0,
+            "Grass": 0,
+            "Ground": 0,
+            "Ice": 0,
+            "Normal": 0,
+            "Poison": 0,
+            "Psychic": 0,
+            "Rock": 0,
+            "Steel": 0,
+            "Water": 0
+          },
+          "accuracy": 0,
+          "status_turns": 0
+        },
+        "status": null
+      },
+      "tier": "Omega",
+      "next": 0
+    }
+  ],
+  "bobeda": [],
+  "items": [],
+  "friends": []
+}

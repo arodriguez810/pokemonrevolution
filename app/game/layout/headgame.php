@@ -22,7 +22,10 @@
     <link href="plugins/animate-css/animate.css" rel="stylesheet"/>
 
     <!-- Morris Chart Css-->
-
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+          content="1002650457102-m57p66ca2bnf2oe830bf1mvlfimscr79.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <!-- Bootstrap Select Css -->
 <!--    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"/>-->
