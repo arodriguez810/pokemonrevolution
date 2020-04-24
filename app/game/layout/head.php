@@ -1,3 +1,18 @@
+<?php
+
+$version = "1.0.0.14";
+
+function TitleImg()
+{
+    $time = date("H");
+    if ($time < 18) {
+        echo "Plain";
+    } else {
+        echo "Night";
+    }
+}
+
+?>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -27,7 +42,7 @@
     <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
 
     <!-- Bootstrap Select Css -->
-<!--    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"/>-->
+    <!--    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet"/>-->
 
     <link rel="stylesheet" href="css/angularjs-color-picker.min.css"/>
     <!-- only include if you use bootstrap -->
@@ -44,7 +59,11 @@
     <meta name="google-signin-client_id"
           content="1002650457102-m57p66ca2bnf2oe830bf1mvlfimscr79.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-
+    <style>
+        .swal2-container {
+            z-index: 999999999999;
+        }
+    </style>
     <script>
         LOADEDG = 0;
 

@@ -179,33 +179,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
     players = {};
     maps = {};
     STAGE = new createjs.Stage("game");
-    STAGE.mouseMoveOutside = true;
+    STAGE.snameToPixelsEnabled = true;
+    STAGE.snapToPixelEnabled = true;
     createjs.Ticker.addEventListener("tick", STAGE);
-    createjs.Ticker.addEventListener("tick", function (event) {
-        if (!$scope.pause) {
-            if ($scope.hero) {
-                if ($scope.hero.body) {
-                    if (maps[FIRSTMAP]) {
-                        var cameraX = $scope.hero.body.x - (($scope.width / 2) * $scope.baseWidth);
-                        var cameraY = $scope.hero.body.y - (($scope.height / 2) * $scope.baseHeight);
-
-                        var regX = cameraX < 0 ? 0 : cameraX;
-                        var regY = cameraY < 0 ? 0 : cameraY;
-                        if (regX !== 0) {
-                            var limitX = ((maps[FIRSTMAP].width * $scope.baseWidth) - ($scope.width * $scope.baseWidth));
-                            regX = regX > limitX ? limitX : regX;
-                        }
-                        if (regY !== 0) {
-                            var limitY = ((maps[FIRSTMAP].height * $scope.baseHeight) - ($scope.height * $scope.baseHeight));
-                            regY = regY > limitY ? limitY : regY;
-                        }
-                        STAGE.regX = regX;
-                        STAGE.regY = regY;
-                    }
-                }
-            }
-        }
-    });
     createjs.Touch.enable(STAGE);
     for (var l = 0; l <= 9; l++) {
         eval(`layer${l} = new createjs.Container();`);
@@ -218,11 +194,17 @@ pokemon.controller('play', ['$scope', function ($scope) {
         body: null,
         shadow: null,
         speed: 300,
+        base_speed: 300,
         walking: false,
         route: [],
         canJump: true,
         canDive: true,
+        canFly: true,
+        canBreak: true,
+        canHide: true,
+        canMove: true,
         deeping: false,
+        flying: false,
         isPlayer: true,
         name: ""
     };
@@ -240,11 +222,19 @@ pokemon.controller('play', ['$scope', function ($scope) {
         return Math.abs(a - b);
     };
     $scope.icon = function (index) {
+        index = parseInt(index);
         return {x: (Math.ceil((index - 0.01) % 16) - 1) * 32, y: (Math.ceil((index / 16) - 0.01) - 1) * 32};
     };
     $scope.collision = function (hero, cx, cy) {
+        if (cx < 0 || cy < 0)
+            return true;
+        if (cx >= maps[FIRSTMAP].width || cy >= maps[FIRSTMAP].height)
+            return true;
+        if (hero.flying)
+            return false;
         if (maps[FIRSTMAP]) {
             var collisions = [];
+
             if (hero.l === 0) {
                 var object = maps[FIRSTMAP].map[`${1}_${cx}_${cy}`];
                 collisions.push(object.mode !== "A1");
@@ -270,7 +260,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                         if (NPC.body.visible) {
                             if (NPC.x === cx && NPC.y === cy)
                                 if (NPC.l === hero.l || NPC.l === (hero.l + 1))
-                                    collisions.push(true)
+                                    collisions.push(true);
                             if (NPC.l === hero.l || NPC.l === (hero.l + 1)) {
                                 if (NPC.event.trigger === E_trigger.near) {
                                     var xrange = {
@@ -295,27 +285,27 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 }
 
                 for (var i in $scope.OBJECTS) {
-                    var NPC = $scope.OBJECTS[i];
-                    if (NPC) {
-                        if (NPC.body.visible) {
-                            if (NPC.x === cx && NPC.y === cy) {
-                                if (NPC.l === hero.l || NPC.l === (hero.l + 1))
-                                    collisions.push(true)
+                    var OBJ = $scope.OBJECTS[i];
+                    if (OBJ) {
+                        if (OBJ.body.visible) {
+                            if (OBJ.x === cx && OBJ.y === cy) {
+                                if (OBJ.l === hero.l || OBJ.l === (hero.l + 1))
+                                    collisions.push(true);
                             }
-                            if (NPC.l === hero.l || NPC.l === (hero.l + 1)) {
-                                if (NPC.event.trigger === E_trigger.near) {
+                            if (OBJ.l === hero.l || OBJ.l === (hero.l + 1)) {
+                                if (OBJ.event.trigger === E_trigger.near) {
                                     var xrange = {
-                                        min: NPC.x - NPC.event.trigger_step,
-                                        max: NPC.x + NPC.event.trigger_step
+                                        min: OBJ.x - OBJ.event.trigger_step,
+                                        max: OBJ.x + OBJ.event.trigger_step
                                     };
                                     var yrange = {
-                                        min: NPC.y - NPC.event.trigger_step,
-                                        max: NPC.y + NPC.event.trigger_step
+                                        min: OBJ.y - OBJ.event.trigger_step,
+                                        max: OBJ.y + OBJ.event.trigger_step
                                     };
                                     if (hero.x >= xrange.min && hero.x <= xrange.max)
                                         if (hero.y >= yrange.min && hero.y <= yrange.max) {
-                                            if (eval(NPC.event.conditions))
-                                                $scope.runActions(OSO(NPC.event.actions));
+                                            if (eval(OBJ.event.conditions))
+                                                $scope.runActions(OSO(OBJ.event.actions));
                                         }
                                 }
                             }
@@ -359,27 +349,54 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 callback();
         }
     };
+    $scope.runCamera = function (hero, newxN, newyN, speed) {
+        if (hero.isPlayer) {
+            var cameraX = newxN - (($scope.width / 2) * $scope.baseWidth);
+            var cameraY = newyN - (($scope.height / 2) * $scope.baseHeight);
+
+            var regX = cameraX < 0 ? 0 : cameraX;
+            var regY = cameraY < 0 ? 0 : cameraY;
+            if (regX !== 0) {
+                var limitX = ((maps[FIRSTMAP].width * $scope.baseWidth) - ($scope.width * $scope.baseWidth));
+                regX = regX > limitX ? limitX : regX;
+            }
+            if (regY !== 0) {
+                var limitY = ((maps[FIRSTMAP].height * $scope.baseHeight) - ($scope.height * $scope.baseHeight));
+                regY = regY > limitY ? limitY : regY;
+            }
+            createjs.Tween.get(STAGE).to({regX: regX, regY: regY}, speed);
+        }
+    };
     $scope.traslade = function (hero, animation, point, repeat, events, callback) {
         if (!hero.body)
             return;
         var newx = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
         var newy = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
 
+        var newxN = !isNaN(Math.floor(point.x)) ? Math.floor(point.x) : hero.body.x;
+        var newyN = !isNaN(Math.floor(point.y)) ? Math.floor(point.y) : hero.body.y;
+
         if ($scope.collision(hero, newx, newy)) {
             hero.walking = false;
             if (hero.isObject) {
 
             } else {
-                if (hero.body)
+                if (hero.body) {
                     hero.body.gotoAndPlay(animation);
+                    for (var wing of ["wing1", "wing2"])
+                        hero["body" + wing].gotoAndPlay(animation);
+                }
             }
             $scope.researchMove = !$scope.researchMove;
             return;
         }
         if (hero.isObject) {
         } else {
-            if (hero.body)
+            if (hero.body) {
                 hero.body.gotoAndPlay("w" + animation);
+                for (var wing of ["wing1", "wing2"])
+                    hero["body" + wing].gotoAndPlay("w" + animation);
+            }
         }
 
         if (hero.shadow) {
@@ -388,6 +405,17 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 shadow.y += $scope.shadowY;
             createjs.Tween.get(hero.shadow).to(shadow, hero.speed);
         }
+
+        for (var wing of ["wing1", "wing2"]) {
+            if (hero["body" + wing]) {
+                var shadowD = OSO(point);
+                createjs.Tween.get(hero["body" + wing]).to(shadowD, hero.speed);
+            }
+        }
+
+        $scope.runCamera(hero, newxN, newyN, hero.speed);
+
+
         createjs.Tween.get(hero.body).to(point, hero.speed).call(async function () {
             hero.x = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
             hero.y = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
@@ -400,8 +428,11 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     hero.walking = false;
                     if (hero.isObject) {
                     } else {
-                        if (hero.body)
+                        if (hero.body) {
                             hero.body.gotoAndPlay(animation);
+                            for (var wing of ["wing1", "wing2"])
+                                hero["body" + wing].gotoAndPlay(animation);
+                        }
                         if (callback)
                             callback();
                     }
@@ -423,6 +454,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
         var newx = !isNaN(Math.floor(point.x / $scope.baseWidth)) ? Math.floor(point.x / $scope.baseWidth) : hero.x;
         var newy = !isNaN(Math.floor(point.y / $scope.baseHeight)) ? Math.floor(point.y / $scope.baseHeight) : hero.y;
 
+        var newxN = !isNaN(Math.floor(point.x)) ? Math.floor(point.x) : hero.body.x;
+        var newyN = !isNaN(Math.floor(point.y)) ? Math.floor(point.y) : hero.body.y;
+
         if ($scope.collision(hero, newx, newy)) {
             if (hero.isObject) {
 
@@ -441,6 +475,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
         }
         hero.x = newx;
         hero.y = newy;
+
+        $scope.runCamera(hero, newxN, newyN, 1000);
+
         createjs.Tween.get(hero.body).to(point, 1);
         if (hero.body)
             hero.body.gotoAndPlay(animation);
@@ -565,10 +602,12 @@ pokemon.controller('play', ['$scope', function ($scope) {
                                 body: null,
                                 shadow: null,
                                 speed: e.hero.speed,
+                                base_speed: e.hero.speed,
                                 event: e,
                                 isNPC: true,
                                 canJump: true,
                                 canDive: true,
+                                canFly: true,
                                 deeping: false
                             };
                             $scope.drawPlayer($scope.NPCS[e.hero.name], e.hero.name, x, y, L);
@@ -583,9 +622,11 @@ pokemon.controller('play', ['$scope', function ($scope) {
                                 body: null,
                                 shadow: null,
                                 speed: 300,
+                                base_speed: 300,
                                 event: e,
                                 canJump: true,
                                 canDive: true,
+                                canFly: true,
                                 deeping: false
                             };
                             $scope.drawObject($scope.OBJECTS[e.name], e.name, x, y, L);
@@ -640,6 +681,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     $scope.indexTick++;
                 }
             }
+            ACTIONS.AMBIENT.RUN();
         }, $scope.routesTick * 1000);
     };
     $scope.drawObject = function (hero, name, x, y, L) {
@@ -661,9 +703,71 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body.x = x * $scope.baseWidth;
         hero.body.y = y * $scope.baseHeight;
         hero.body.name = `object_` + name;
+        if (hero.event.object.canBreak === "1") {
+            if ($scope.hero.canBreak) {
+                hero.body.on("click", function (evt) {
+                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                        return;
+                    if ($scope.hero.flying)
+                        return;
+                    if (!$scope.breaking) {
+                        $scope.breaking = true;
+                        ACTIONS.PLAYER.SHAKE(50, 24, 5, function () {
+                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Break", undefined, function () {
+
+                            });
+                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
+                                eval(`layer${L}.removeChild(hero.body);`);
+                                delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
+                                $scope.breaking = false;
+                            });
+                        });
+                    }
+                });
+            }
+        }
+        if (hero.event.object.canMove === "1") {
+
+            if ($scope.hero.canMove) {
+                hero.body.on("click", function (evt) {
+                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                        return;
+                    if ($scope.hero.flying)
+                        return;
+                    if (!$scope.breaking) {
+                        $scope.breaking = true;
+                        ACTIONS.GAME.BLOCK();
+                        ACTIONS.PLAYER.SHAKE(10, 12, 2, function () {
+                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Move", undefined, function () {
+                                var moveer = true;
+                                if (ACTIONS.PLAYER.POSITION() === "up")
+                                    if ($scope.collision(hero, hero.x, hero.y - 1))
+                                        moveer = false;
+                                if (ACTIONS.PLAYER.POSITION() === "down")
+                                    if ($scope.collision(hero, hero.x, hero.y + 1))
+                                        moveer = false;
+                                if (ACTIONS.PLAYER.POSITION() === "left")
+                                    if ($scope.collision(hero, hero.x - 1, hero.y))
+                                        moveer = false;
+                                if (ACTIONS.PLAYER.POSITION() === "right")
+                                    if ($scope.collision(hero, hero.x + 1, hero.y))
+                                        moveer = false;
+
+                                if (moveer) {
+                                    eval(`ACTIONS.OBJECT.MOVE_${ACTIONS.PLAYER.POSITION().toUpperCase().replace("W", "").replace("DON", "DOWN")}(hero.body.name.replace('object_', ''));`)
+                                }
+                                $scope.breaking = false;
+                                ACTIONS.GAME.UNBLOCK();
+                            });
+                        });
+                    }
+                });
+            }
+        }
         eval(`layer${L}.addChild(hero.body);`);
         STAGE.update();
     };
+    $scope.breaking = false;
     $scope.reDrawObject = function (hero, filters) {
         var name = hero.body.name.replace("object_", "");
         hero.style = new createjs.Bitmap(mapQueues["object_" + name].getResult("image"));
@@ -721,7 +825,41 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body.name = `player_` + name;
         hero.name = name;
         hero.version = players[name].version;
+
+        for (var wing of ["wing1", "wing2"]) {
+            hero[wing] = new createjs.Bitmap(mapQueues["player_" + name].getResult(wing));
+            if (filters)
+                hero[wing].filters = filters;
+            hero[wing].cache(0, 0, hero[wing].image.width, hero[wing].image.height);
+
+            var SpriteD = new createjs.SpriteSheet({
+                framerate: $scope.playerFrames,
+                "images": [hero[wing].cacheCanvas],
+                frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
+                "animations": {
+                    "down": {frames: [1]},
+                    "up": {frames: [10]},
+                    "left": {frames: [4]},
+                    "right": {frames: [7]},
+                    "wdown": {frames: [0, 1, 2, 1]},
+                    "wup": {frames: [9, 10, 11, 10]},
+                    "wleft": {frames: [3, 4, 5, 4]},
+                    "wright": {frames: [6, 7, 8, 7]}
+                },
+            });
+            var oldD = {x: hero.x, y: hero.y, l: hero.l};
+            eval(`layer${oldD.l}.removeChild(hero["body" + wing]);`);
+            hero["body" + wing] = new createjs.Sprite(SpriteD, ACTIONS.GAME.POSITION(hero));
+            hero["body" + wing].x = oldD.x * $scope.baseWidth;
+            hero["body" + wing].y = oldD.y * $scope.baseHeight;
+            hero["body" + wing].visible = false;
+            hero["body" + wing].name = `player_` + name + wing;
+        }
+
+
+        eval(`layer${old.l}.addChild(hero["body" + "wing2"]);`);
         eval(`layer${old.l}.addChild(hero.body);`);
+        eval(`layer${old.l}.addChild(hero["body" + "wing1"]);`);
         STAGE.update();
     };
     $scope.drawPlayer = function (hero, name, x, y, L) {
@@ -738,8 +876,10 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.shadow.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
         eval(`layer${L}.addChild(hero.shadow);`);
 
+
         hero.style = new createjs.Bitmap(mapQueues["player_" + name].getResult(`TV`));
         hero.style.cache(0, 0, hero.style.image.width, hero.style.image.height);
+
         var Sprite = new createjs.SpriteSheet({
             framerate: $scope.playerFrames,
             "images": [hero.style.image],
@@ -769,8 +909,41 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.version = players[name].version;
         hero.canJump = $scope.session.canJump;
         hero.canDive = $scope.session.canDive;
+        hero.canFly = $scope.session.canFly;
+        hero.canBreak = $scope.session.canBreak;
+        hero.canMove = $scope.session.canMove;
+        hero.canHide = $scope.session.canHide;
 
+        for (var wing of ["wing1", "wing2"]) {
+            hero[wing] = new createjs.Bitmap(mapQueues["player_" + name].getResult(wing));
+            hero[wing].cache(0, 0, hero[wing].image.width, hero[wing].image.height);
+
+            var SpriteD = new createjs.SpriteSheet({
+                framerate: $scope.playerFrames,
+                "images": [hero[wing].image],
+                frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
+                "animations": {
+                    "down": {frames: [1]},
+                    "up": {frames: [10]},
+                    "left": {frames: [4]},
+                    "right": {frames: [7]},
+                    "wdown": {frames: [0, 1, 2, 1]},
+                    "wup": {frames: [9, 10, 11, 10]},
+                    "wleft": {frames: [3, 4, 5, 4]},
+                    "wright": {frames: [6, 7, 8, 7]}
+                },
+            });
+            hero["body" + wing] = new createjs.Sprite(SpriteD, "down");
+            hero["body" + wing].x = x * $scope.baseWidth;
+            hero["body" + wing].y = y * $scope.baseHeight;
+            hero["body" + wing].visible = false;
+            hero["body" + wing].name = `player_` + name + wing;
+
+        }
+
+        eval(`layer${L === 0 ? 1 : L}.addChild(hero["body" + "wing2"]);`);
         eval(`layer${L === 0 ? 1 : L}.addChild(hero.body);`);
+        eval(`layer${L === 0 ? 1 : L}.addChild(hero["body" + "wing1"]);`);
         if (L === 0) {
             ACTIONS.GAME.ALPHABASE(layer1, 1, 0.5);
             ACTIONS.GAME.ALPHABASE(hero, 1, 0.5);
@@ -896,8 +1069,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
     //Base
     STAGE.on("stagemousedown", $scope.moveMe);
 
-    //Starters and Loadings
 
+    //Starters and Loadings
     $scope.addResource = function (url, object) {
         $scope.extras[url] = object;
     };
@@ -1016,6 +1189,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
             loadJson.push({id: "TV", src: `data/characters_file/${name}/tv.png?v=${players[name].version}`});
             loadJson.push({id: "TVD", src: `data/characters_file/${name}/tvd.png?v=${players[name].version}`});
             loadJson.push({id: "SHADOW", src: `../resources/system/Shadow1.png`});
+            loadJson.push({id: "wing1", src: `../resources/system/wing1.png`});
+            loadJson.push({id: "wing2", src: `../resources/system/wing2.png`});
             mapQueues["player_" + name].loadManifest(loadJson);
             mapQueues["player_" + name].on("complete", function (event) {
                 resolve(true);
@@ -1037,6 +1212,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
             loadJson.push({id: "TV", src: `data/players/${name}/images/tv.png?v=${players[name].version}`});
             loadJson.push({id: "TVD", src: `data/players/${name}/images/tvd.png?v=${players[name].version}`});
             loadJson.push({id: "SHADOW", src: `../resources/system/Shadow1.png`});
+            loadJson.push({id: "wing1", src: `../resources/system/wing1.png`});
+            loadJson.push({id: "wing2", src: `../resources/system/wing2.png`});
             mapQueues["player_" + name].loadManifest(loadJson);
             mapQueues["player_" + name].on("complete", function (event) {
                 resolve(true);
@@ -1070,7 +1247,6 @@ pokemon.controller('play', ['$scope', function ($scope) {
             resolve(true);
         }
     });
-
     $scope.loadSystem = () => new Promise(async (resolve, reject) => {
         if (!mapQueues["resources_system"]) {
             $scope.loadingPage = new createjs.Text("Cargando", "40px monospaced", _colorsReal[getRandomInt(_colorsReal.length - 1)]);
@@ -1085,11 +1261,18 @@ pokemon.controller('play', ['$scope', function ($scope) {
             $scope.transitions.set({name: "shape", x: 0, y: 0});
             $scope.transitions.graphics.beginFill("#000").drawRect(0, 0, $scope.width * $scope.baseWidth, $scope.height * $scope.baseHeight);
             $scope.transitions.alpha = 0;
+
+            $scope.ambients = new createjs.Shape();
+            $scope.ambients.set({name: "shape", x: 0, y: 0});
+            $scope.ambients.graphics.beginFill("#000").drawRect(0, 0, $scope.width * $scope.baseWidth, $scope.height * $scope.baseHeight);
+            $scope.ambients.alpha = 0;
+
             $scope.bubble = new createjs.DOMElement(document.getElementById("bubble"));
             $scope.bubble.x = 0;
             $scope.bubble.y = 0;
             $scope.bubble.visible = false;
             layer9.mouseEnabled = false;
+            layer9.addChild($scope.ambients);
             layer9.addChild($scope.transitions);
             layer9.addChild($scope.loadingPage);
             layer9.addChild($scope.bubble);
@@ -1144,7 +1327,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
         $scope.drawPlayer($scope.hero, $scope.session.id, parseInt(position.x), parseInt(position.y), parseInt(position.l));
         $scope.stopLoading();
         $scope.menu = true;
-
+        ACTIONS.AMBIENT.RUN();
         APIS = {};
         APIS.MOVES = await POKEMONAPI.MOVES();
         APIS.ABILITIES = await POKEMONAPI.ABILITIES();
@@ -1154,18 +1337,191 @@ pokemon.controller('play', ['$scope', function ($scope) {
 
         if (!$scope.$$phase)
             $scope.$digest();
+        console.clear();
     };
 
 
     //Actions
     $scope.menuOpen = false;
-    $scope.subMenuOpen = "personal";
+    $scope.subMenuOpen = "perfil";
     $scope.menu = false;
     $scope.chagedBGM = false;
     $scope.chagedBGS = false;
     $scope.battleMusic = false;
+    $scope.selectedPokemon = 0;
+    $scope.selectedBobeda = 0;
+    $scope.menuMessage = undefined;
+    $scope.interface = [
+        {name: 'perfil', icon: 'face', color: 'blue'},
+        {name: 'pokemons', icon: 'adb', color: 'green'},
+        {name: 'logros', icon: 'grade', color: 'orange'},
+        {name: 'bobeda', icon: 'desktop_windows', color: 'teal'},
+        {name: 'friends', icon: 'child_care', color: 'pink'},
+    ];
+    $scope.menuPokemon = function (index) {
+        $scope.selectedPokemon = index;
+        $scope.play("Pointer", SOUNDS.system);
+        ACTIONS.SOUND.PLAY($scope.selectedPokemonClick().cryUrl, SOUNDS.system);
+    };
+    $scope.menuBobeda = function (index) {
+        $scope.selectedBobeda = index;
+        $scope.play("Pointer", SOUNDS.system);
+        ACTIONS.SOUND.PLAY($scope.selectedBobedaClick().cryUrl, SOUNDS.system);
+    };
+    $scope.desc = function (term, name, desc) {
+        $scope.menuMessage = {term: term, name: name, desc: desc};
+        $scope.play("Pointer", SOUNDS.system);
+    };
+    $scope.descCancel = function (term, name, desc) {
+        $scope.menuMessage = undefined;
+        $scope.play("Cancel", SOUNDS.system);
+    };
+    $scope.subMenu = function (value) {
+        $scope.play("Pointer", SOUNDS.system);
+        $scope.subMenuOpen = value;
+    };
+    $scope.selectedPokemonClick = function () {
+        if ($scope.session)
+            if ($scope.session.pokemons)
+                if ($scope.session.pokemons[$scope.selectedPokemon]) {
+                    return $scope.session.pokemons[$scope.selectedPokemon];
+                }
+        return null;
+    };
+    $scope.selectedBobedaClick = function () {
+        if ($scope.session)
+            if ($scope.session.bobeda)
+                if ($scope.session.bobeda[$scope.selectedBobeda]) {
+                    return $scope.session.bobeda[$scope.selectedBobeda];
+                }
+        return null;
+    };
+    $scope.typeColor = TYPECOLOR;
+    $scope.deletePokemon = function (item, index) {
+        POKEMOMFIND.DELETE(item, index);
+    };
+    $scope.trasladePokemon = function (item, index) {
+        POKEMOMFIND.TRASLADE(item, index);
+    };
+    $scope.includePokemon = function (item, index) {
+        POKEMOMFIND.INCLUDE(item, index);
+    };
+    $scope.upPokemon = function (item, index) {
+        alert(1);
+    };
+    $scope.deleteBobeda = function (item, index) {
+        POKEMOMFIND.DELETE_BOBEDA(item, index);
+    };
+    $scope.ambient = "natural";
+    $scope.cacheAmbient = "";
+    $scope.runLogro = function (logro) {
+        ACTIONS.GAME.MENUOFF();
+        setTimeout(() => {
+            $scope.runQuickLogro(logro);
+        }, 1000);
+    };
+    $scope.runQuickLogro = function (logro) {
+        if (logro.script)
+            eval(logro.script)
+    };
+    $scope.shorter = function (string, length) {
+        if (string.length > length)
+            return string.substr(0, length) + "...";
+        else
+            return string;
+    };
     ACTIONS = {
+        AMBIENT: {
+            RUN: function () {
+                var color = "#000";
+                var alpha = 0;
+
+                var h = new Date().getHours();
+                if (h >= 0 && h <= 3) {
+                    color = "#00003f";
+                    alpha = 0.7;
+                } else if (h >= 4 && h <= 6) {
+                    color = "#00003f";
+                    alpha = 0.5;
+                } else if (h >= 7 && h <= 17) {
+                    color = "#fff";
+                    alpha = 0.001;
+                } else if (h >= 18 && h <= 18) {
+                    color = "#ff6700";
+                    alpha = 0.2;
+                } else if (h >= 19 && h <= 23) {
+                    color = "#00003f";
+                    alpha = 0.6;
+                }
+                if ($scope.ambient === "darkcave") {
+                    color = "#000";
+                    alpha = 0.9;
+                }
+                if ($scope.cacheAmbient !== $scope.ambient) {
+                    console.log("change ambient");
+                    $scope.ambients.graphics.clear().beginFill(color || "#000").drawRect(0, 0, maps[FIRSTMAP].width * $scope.baseWidth, maps[FIRSTMAP].height * $scope.baseHeight).endFill();
+                    createjs.Tween.get($scope.ambients).to({alpha: alpha}, 1 * 1000).call(function () {
+                    });
+                }
+                $scope.cacheAmbient = $scope.ambient;
+            },
+            TIME: function () {
+                var h = new Date().getHours();
+                if (h >= 0 && h <= 3) {
+                    ACTIONS.GAME.SCREEN(2, "#00003f", 0.7);
+                } else if (h >= 4 && h <= 6) {
+                    ACTIONS.GAME.SCREEN(2, "#00003f", 0.5);
+                } else if (h >= 7 && h <= 17) {
+                    ACTIONS.GAME.SCREEN(2, "#fff", 0.001);
+                } else if (h >= 18 && h <= 18) {
+                    ACTIONS.GAME.SCREEN(2, "#ff6700", 0.2);
+                } else if (h >= 19 && h <= 23) {
+                    ACTIONS.GAME.SCREEN(2, "#00003f", 0.6);
+                }
+            },
+            SET: function (name) {
+                $scope.ambient = name;
+                ACTIONS.AMBIENT.RUN();
+            }
+        },
         GAME: {
+            /**
+             * @return {boolean}
+             */
+            NEAR: function (from, to) {
+                if (from.x === to.x && from.y === to.y + 1)
+                    return true;
+                if (from.x === to.x && from.y === to.y - 1)
+                    return true;
+                if (from.x === to.x + 1 && from.y === to.y)
+                    return true;
+                return from.x === to.x - 1 && from.y === to.y;
+            },
+            CLICK: function () {
+                if (ACTIONS.PLAYER.POSITION() === "down") {
+                    $scope.moveOld($scope.hero, {
+                        stageX: (($scope.hero.x) * $scope.baseWidth) - STAGE.regX,
+                        stageY: (($scope.hero.y + 1) * $scope.baseHeight) - STAGE.regY
+                    }, true);
+                } else if (ACTIONS.PLAYER.POSITION() === "up") {
+                    $scope.moveOld($scope.hero, {
+                        stageX: (($scope.hero.x) * $scope.baseWidth) - STAGE.regX,
+                        stageY: (($scope.hero.y - 1) * $scope.baseHeight) - STAGE.regY
+                    }, true);
+                } else if (ACTIONS.PLAYER.POSITION() === "left") {
+                    $scope.moveOld($scope.hero, {
+                        stageX: (($scope.hero.x - 1) * $scope.baseWidth) - STAGE.regX,
+                        stageY: (($scope.hero.y) * $scope.baseHeight) - STAGE.regY
+                    }, true);
+                } else if (ACTIONS.PLAYER.POSITION() === "right") {
+                    $scope.moveOld($scope.hero, {
+                        stageX: (($scope.hero.x + 1) * $scope.baseWidth) - STAGE.regX,
+                        stageY: (($scope.hero.y) * $scope.baseHeight) - STAGE.regY
+                    }, true);
+                }
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
             PLAY: async function () {
                 $scope.session = await HOME_.PLAYERPROFILE(PROFILE.getId());
                 if (!$scope.session.tier) {
@@ -1175,6 +1531,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             logros: [],
                             canJump: false,
                             canDive: false,
+                            canFly: false,
                             pokemons: [],
                             bobeda: [],
                             items: [],
@@ -1188,6 +1545,16 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 ACTIONS.GAME.PAUSE();
                 SESSION = $scope.session = await HOME_.PLAYERPROFILE($scope.session.id, obj);
                 ACTIONS.GAME.RESUME();
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
+            MENUMESSAGE: function (term, name, desc) {
+                $scope.desc(term, name, desc);
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
+            MENUMESSAGE_CLOSE: function () {
+                $scope.descCancel();
                 if (!$scope.$$phase)
                     $scope.$digest();
             },
@@ -1206,13 +1573,27 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     $scope.$digest();
             },
             MENUTOGGLE: function () {
-                ACTIONS.GAME.SCREENOFF(1);
+
+                $scope.menuMessage = undefined;
                 if ($scope.menuOpen)
                     ACTIONS.GAME.MENUOFF();
                 else
                     ACTIONS.GAME.MENU();
             },
+            MUTE: function () {
+                createjs.Sound.muted = true;
+                $scope.muted = true;
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
+            MUTE_OFF: function () {
+                createjs.Sound.muted = false;
+                $scope.muted = false;
+                if (!$scope.$$phase)
+                    $scope.$digest();
+            },
             MENUOFF: function () {
+                ACTIONS.GAME.SCREENOFF(1);
                 ACTIONS.GAME.RESUME();
                 $scope.menuOpen = false;
                 $scope.play("Cancel", SOUNDS.system);
@@ -1256,6 +1637,15 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             PAUSE() {
                 $scope.pause = true;
+            },
+            /**
+             * @return {boolean}
+             */
+            ISPAUSE() {
+                return $scope.pause;
+            },
+            ISBLOCK() {
+                return $scope.block;
             },
             BLOCK() {
                 $scope.block = true;
@@ -1308,6 +1698,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             ALPHA: function (object, alpha, callback) {
                 if (object) {
+                    for (var wing of ["wing1", "wing2"])
+                        createjs.Tween.get(object["body" + wing]).to({alpha: alpha}, 300);
+
                     createjs.Tween.get(object.body).to({alpha: alpha}, 300).call(function () {
                         if (callback)
                             callback()
@@ -1459,7 +1852,112 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     }, undefined, callback);
                 }
             },
-            JUMP: function (object, x, y) {
+            DESPEGUE: function (object) {
+                var uperLayer = 8;
+                var upperObject = null;
+                for (var l = 8; l >= 1; l--) {
+                    var obj = maps[FIRSTMAP].map[`${l}_${(x)}_${(y)}`];
+                    if (obj) {
+                        uperLayer = l;
+                        upperObject = obj;
+                    }
+                }
+            },
+            FLY: function (object) {
+                if (object.deeping)
+                    return;
+                ACTIONS.GAME.BLOCK();
+                if (!object.flying) {
+                    object.flying = true;
+                    ACTIONS.PLAYER.UP();
+                    object["body" + "wing1"].gotoAndPlay('up');
+                    object["body" + "wing2"].gotoAndPlay('up');
+                    if (object.speed)
+                        object.speed = object.base_speed / 1.5;
+                    object.body.framerate = 1;
+                    createjs.Sound.stop();
+
+                    ACTIONS.ANIMATION.PLAY_PLAYER("wing1", undefined, function () {
+                        object["body" + "wing1"].visible = object["body" + "wing2"].visible = true;
+                        var uperLayer = 8;
+                        $scope.play("Wind", SOUNDS.bgm);
+
+                        eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                        eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                        eval(`layer${object.l}.removeChild(object.body);`);
+                        eval(`layer${object.l}.removeChild(object.shadow);`);
+                        object.l = uperLayer;
+                        eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                        eval(`layer${uperLayer}.addChild(object.body);`);
+                        eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                        eval(`layer${uperLayer}.addChild(object.shadow);`);
+                        if (object.shadow)
+                            $scope.shadowY = $scope.baseHeight;
+                        ACTIONS.PLAYER.MOVE(object.x, object.y - 1);
+                        if ($scope.hero.hidden) {
+                            $scope.hero.hidden = false;
+                            ACTIONS.ANIMATION.PLAY_PLAYER("Show", undefined, function () {
+
+                            });
+                            ACTIONS.PLAYER.ALPHA(1);
+                        }
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Tornade", undefined, function () {
+
+                            ACTIONS.GAME.UNBLOCK();
+                        }, undefined, true);
+
+
+                    }, undefined, true);
+                } else {
+                    var uperLayer = 1;
+                    var upperObject = null;
+                    for (var l = 8; l >= 1; l--) {
+                        var obj = maps[FIRSTMAP].map[`${l}_${(object.x)}_${(object.y + 1)}`];
+                        if (obj) {
+                            uperLayer = l;
+                            upperObject = obj;
+                            break;
+                        }
+                    }
+
+
+                    if (object.speed)
+                        object.speed = object.base_speed;
+                    object.body.framerate = $scope.playerFrames;
+
+                    if (!object.isNPC && !object.isObject) {
+                        createjs.Sound.stop();
+                        $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
+                        $scope.play("bgs" + FIRSTMAP, SOUNDS.bgs);
+                    }
+
+                    if (object.shadow)
+                        $scope.shadowY = 8;
+
+                    object["body" + "wing1"].visible = object["body" + "wing2"].visible = false;
+
+                    ACTIONS.ANIMATION.PLAY_PLAYER("wing1", undefined, function () {
+                        ACTIONS.PLAYER.MOVE(object.x, object.y + 1, function () {
+                            eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                            eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                            eval(`layer${object.l}.removeChild(object.body);`);
+                            eval(`layer${object.l}.removeChild(object.shadow);`);
+                            object.l = uperLayer;
+                            eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                            eval(`layer${uperLayer}.addChild(object.body);`);
+                            eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                            eval(`layer${uperLayer}.addChild(object.shadow);`);
+                            object.flying = false;
+                            ACTIONS.GAME.UNBLOCK();
+                            ACTIONS.GAME.JUMP(object, object.x, object.y, true);
+                        }, undefined, true);
+                    });
+
+                }
+            },
+            JUMP: function (object, x, y, nosound) {
+                if (object.flying)
+                    return;
                 for (var i in $scope.NPCS) {
                     var NPC = $scope.NPCS[i];
                     if (NPC) {
@@ -1504,6 +2002,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     if (!object.deeping) {
                         if (upperObject.mode === "A1") {
                             uperLayer = 0;
+
                             if (!object.isNPC && !object.isObject)
                                 ACTIONS.GAME.ALPHABASE(layer1, 1, 0.5);
 
@@ -1514,12 +2013,17 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             } else {
                                 ACTIONS.PLAYER.ALPHA(0.5);
                             }
+                            if (object.speed)
+                                object.speed = object.base_speed * 2;
                             object.body.framerate = 1;
                             if (!object.isNPC && !object.isObject) {
                                 createjs.Sound.stop();
                                 $scope.play("Deep", SOUNDS.bgm);
                             }
                             object.deeping = true;
+                            if ($scope.hero.hidden) {
+                                $scope.hero.hidden = false;
+                            }
                         }
                     } else {
                         if (uperLayer > 0) {
@@ -1533,7 +2037,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             } else {
                                 ACTIONS.PLAYER.ALPHA(1,);
                             }
-
+                            if (object.speed)
+                                object.speed = object.base_speed;
                             object.body.framerate = $scope.playerFrames;
                             $scope.play("Dive", SOUNDS.system);
                             if (!object.isNPC && !object.isObject) {
@@ -1548,28 +2053,53 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     if (uperLayer > object.l || uperLayer < object.l) {
                         object.l = uperLayer;
                         if (object.l !== 0) {
+                            eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                            eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
                             eval(`layer${object.l}.removeChild(object.body);`);
                             eval(`layer${object.l}.removeChild(object.shadow);`);
+
+                            eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
                             eval(`layer${uperLayer}.addChild(object.body);`);
+                            eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
                             eval(`layer${uperLayer}.addChild(object.shadow);`);
                         }
                     }
-                    $scope.play("Jump", SOUNDS.system);
+                    if (!nosound)
+                        $scope.play("Jump", SOUNDS.system);
+
+                    var jompeo = 1 + eval((`0.${distance}+1`));
+                    if (nosound)
+                        jompeo = 1;
+
                     createjs.Tween.get(object.shadow).to({
                         x: ((x) * $scope.baseWidth),
                         y: ((y) * $scope.baseWidth) + 8,
-                        scale: 1 + eval((`0.${distance}+1`))
+                        scale: jompeo
                     }, speed);
+
+                    for (var wing of ["wing1", "wing2"])
+                        createjs.Tween.get(object["body" + wing]).to({
+                            x: ((x) * $scope.baseWidth),
+                            y: ((y) * $scope.baseWidth),
+                            scale: jompeo
+                        }, speed);
+
+                    $scope.runCamera(object, ((x) * $scope.baseWidth), ((y) * $scope.baseWidth), speed);
                     createjs.Tween.get(object.body).to({
                         x: ((x) * $scope.baseWidth),
                         y: ((y) * ($scope.baseHeight)),
-                        scale: 1 + eval((`0.${distance}+1`))
+                        scale: jompeo
                     }, speed).call(function () {
                         createjs.Tween.get(object.body).to({scale: 1}, speed);
+                        for (var wing of ["wing1", "wing2"])
+                            createjs.Tween.get(object["body" + wing]).to({scale: 1}, speed);
+
+
                         createjs.Tween.get(object.shadow).to({scale: 1}, speed).call(function () {
                             object.x = x;
                             object.y = y;
                             if (object.deeping) {
+
                                 if (object.isNPC) {
                                     ACTIONS.ANIMATION.PLAY_NPC(object.name, "Dive", "UP");
                                 } else if (object.isObject) {
@@ -1580,6 +2110,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             }
                         });
                     });
+
                 }
             },
             FILTER: function (object, light, alpha, color) {
@@ -1591,6 +2122,10 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     $scope.reDrawPlayer(object);
                     $scope.reDrawPlayer(object, [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)]);
                 }
+            },
+            FILTER_STAGE: function (light, alpha, color) {
+                var color = tinycolor(color);
+                layer1.filters = [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)];
             },
             CLEAR_FILTER: function (object) {
                 if (object.isObject) {
@@ -1610,6 +2145,31 @@ pokemon.controller('play', ['$scope', function ($scope) {
             }
         },
         PLAYER: {
+            TELE: function () {
+                if (ACTIONS.PLAYER.POSITION() === "up") {
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.PLAYER.TELEPORT($scope.hero.x, 0);
+                    });
+                }
+
+                if (ACTIONS.PLAYER.POSITION() === "down") {
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.PLAYER.TELEPORT($scope.hero.x, maps[FIRSTMAP].height - 1);
+                    });
+                }
+
+                if (ACTIONS.PLAYER.POSITION() === "left") {
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.PLAYER.TELEPORT(0, $scope.hero.y);
+                    });
+                }
+
+                if (ACTIONS.PLAYER.POSITION() === "right") {
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.PLAYER.TELEPORT(maps[FIRSTMAP].width - 1, $scope.hero.y);
+                    });
+                }
+            },
             SHAKE: function (interval, distance, times, callback) {
                 if ($scope.hero) {
                     ACTIONS.GAME.SHAKE($scope.hero.body, interval, distance, times, callback);
@@ -1623,6 +2183,29 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 if ($scope.hero)
                     return $scope.hero.body.currentAnimation;
                 return null;
+            },
+            HIDE: function () {
+                if ($scope.hero.flying)
+                    return;
+                if ($scope.hero.deeping)
+                    return;
+                if (!$scope.hero.hidden) {
+                    $scope.hero.hidden = true;
+                    if ($scope.hero.speed)
+                        $scope.hero.speed = $scope.hero.base_speed * 1.50;
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Hide", undefined, function () {
+
+                    });
+                    ACTIONS.PLAYER.ALPHA(0.1);
+                } else {
+                    $scope.hero.hidden = false;
+                    if ($scope.hero.speed)
+                        $scope.hero.speed = $scope.hero.base_speed;
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Show", undefined, function () {
+
+                    });
+                    ACTIONS.PLAYER.ALPHA(1);
+                }
             },
             ALPHA: function (alpha, callback) {
                 if ($scope.hero)
@@ -1714,33 +2297,57 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     var yd = difference($scope.hero.y, to.y);
                     if (xd === yd) {
                         if ($scope.hero.x < to.x) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("right");
                                 $scope.hero.body.gotoAndPlay("right");
+                            }
                         } else if ($scope.hero.x > to.x) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("left");
                                 $scope.hero.body.gotoAndPlay("left");
+                            }
                         } else if ($scope.hero.y < to.y) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("down");
                                 $scope.hero.body.gotoAndPlay("down");
+                            }
                         } else if ($scope.hero.y > to.y) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("up");
                                 $scope.hero.body.gotoAndPlay("up");
+                            }
                         }
                     } else if (xd > yd) {
                         if ($scope.hero.x < to.x) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("right");
                                 $scope.hero.body.gotoAndPlay("right");
+                            }
                         } else if ($scope.hero.x > to.x) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("left");
                                 $scope.hero.body.gotoAndPlay("left");
+                            }
                         }
                     } else {
                         if ($scope.hero.y < to.y) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("down");
                                 $scope.hero.body.gotoAndPlay("down");
+                            }
                         } else if ($scope.hero.y > to.y) {
-                            if ($scope.hero.body)
+                            if ($scope.hero.body) {
+                                for (var wing of ["wing1", "wing2"])
+                                    $scope.hero["body" + wing].gotoAndPlay("up");
                                 $scope.hero.body.gotoAndPlay("up");
+                            }
                         }
                     }
                 }
@@ -1764,6 +2371,10 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 if ($scope.hero.canJump)
                     ACTIONS.GAME.JUMP($scope.hero, x, y);
             },
+            FLY: function () {
+                if ($scope.hero.canFly)
+                    ACTIONS.GAME.FLY($scope.hero);
+            },
             JUMP_UP: function () {
                 if ($scope.hero.canJump)
                     ACTIONS.GAME.JUMP($scope.hero, $scope.hero.x, $scope.hero.y - 1);
@@ -1784,6 +2395,23 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 if ($scope.hero.canJump)
                     if (ACTIONS.PLAYER.POSITION()[0] !== "w")
                         eval(`ACTIONS.PLAYER.JUMP_${ACTIONS.PLAYER.POSITION().toUpperCase()}();`);
+            },
+            LIGH: function (time) {
+                ACTIONS.GAME.FLASH("white", 1);
+                if ($scope.ambient === "darkcave") {
+                    ACTIONS.PLAYER.FILTER(2, 1, "#000");
+                    $scope.ambient = "natural";
+                    ACTIONS.AMBIENT.RUN();
+                    setTimeout(function () {
+                        ACTIONS.GAME.PAUSE();
+                        $scope.ambient = "darkcave";
+                        ACTIONS.AMBIENT.RUN();
+                        ACTIONS.PLAYER.CLEAR_FILTER();
+                        setTimeout(function () {
+                            ACTIONS.GAME.RESUME();
+                        }, 1000);
+                    }, time * 1000)
+                }
             },
             FILTER: function (light, alpha, color) {
                 ACTIONS.GAME.FILTER($scope.hero, light, alpha, color);
@@ -1844,20 +2472,32 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 ACTIONS.NPC.MOVE(name, $scope.NPCS[name].x - 1, $scope.NPCS[name].y, callback);
             },
             UP: function (name) {
-                if ($scope.NPCS[name])
+                if ($scope.NPCS[name]) {
+                    for (var wing of ["wing1", "wing2"])
+                        $scope.NPCS[name]["body" + wing].gotoAndPlay("up");
                     $scope.NPCS[name].body.gotoAndPlay("up");
+                }
             },
             DOWN: function (name) {
-                if ($scope.NPCS[name])
+                if ($scope.NPCS[name]) {
+                    for (var wing of ["wing1", "wing2"])
+                        $scope.NPCS[name]["body" + wing].gotoAndPlay("down");
                     $scope.NPCS[name].body.gotoAndPlay("down");
+                }
             },
             RIGHT: function (name) {
-                if ($scope.NPCS[name])
+                if ($scope.NPCS[name]) {
+                    for (var wing of ["wing1", "wing2"])
+                        $scope.NPCS[name]["body" + wing].gotoAndPlay("right");
                     $scope.NPCS[name].body.gotoAndPlay("right");
+                }
             },
             LEFT: function (name) {
-                if ($scope.NPCS[name])
+                if ($scope.NPCS[name]) {
+                    for (var wing of ["wing1", "wing2"])
+                        $scope.NPCS[name]["body" + wing].gotoAndPlay("left");
                     $scope.NPCS[name].body.gotoAndPlay("left");
+                }
             },
             GET: function (name) {
                 return $scope.NPCS[name];
@@ -1868,24 +2508,40 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     var yd = difference(from.y, to.y);
                     if (xd === yd) {
                         if (from.x < to.x) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("right");
                             from.body.gotoAndPlay("right");
                         } else if (from.x > to.x) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("left");
                             from.body.gotoAndPlay("left");
                         } else if (from.y < to.y) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("down");
                             from.body.gotoAndPlay("down");
                         } else if (from.y > to.y) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("up");
                             from.body.gotoAndPlay("up");
                         }
                     } else if (xd > yd) {
                         if (from.x < to.x) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("right");
                             from.body.gotoAndPlay("right");
                         } else if (from.x > to.x) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("left");
                             from.body.gotoAndPlay("left");
                         }
                     } else {
                         if (from.y < to.y) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("down");
                             from.body.gotoAndPlay("down");
                         } else if (from.y > to.y) {
+                            for (var wing of ["wing1", "wing2"])
+                                from["body" + wing].gotoAndPlay("up");
                             from.body.gotoAndPlay("up");
                         }
                     }
@@ -2198,12 +2854,14 @@ pokemon.controller('play', ['$scope', function ($scope) {
                         sprite.addEventListener("animationend", function () {
                             sprite.removeAllEventListeners();
                             layer9.removeChild(sprite);
-                            ACTIONS.GAME.RESUME();
+                            if (!nopause)
+                                ACTIONS.GAME.RESUME();
                             if (callback)
                                 callback();
                         });
                     } else {
-                        ACTIONS.GAME.RESUME();
+                        if (!nopause)
+                            ACTIONS.GAME.RESUME();
                     }
                     sprite.gotoAndPlay("run");
                     $scope.play(animation.sound, SOUNDS.system);
@@ -2242,7 +2900,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
 
                         sprite.removeAllEventListeners();
                         layer9.removeChild(sprite);
-                        ACTIONS.GAME.RESUME();
+                        if (!nopause)
+                            ACTIONS.GAME.RESUME();
                         if (callback)
                             callback();
                     });
@@ -2254,19 +2913,19 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 ACTIONS.ANIMATION.THROW(name, objectFrom.x, objectFrom.y, ObjectTo.x, ObjectTo.y, time, callback, nopause, light, alpha, color, scale);
             },
             PLAY_IN: function (object, animation, callback, loop, nopause, light, alpha, color, scale) {
-                ACTIONS.ANIMATION.PLAY(animation, object.x, object.y, callback, light, alpha, color, scale);
+                ACTIONS.ANIMATION.PLAY(animation, object.x, object.y, callback, loop, nopause, light, alpha, color, scale);
             },
             PLAY_UP: function (object, animation, callback, loop, nopause, light, alpha, color, scale) {
-                ACTIONS.ANIMATION.PLAY(animation, object.x, object.y - 1, callback, light, alpha, color, scale);
+                ACTIONS.ANIMATION.PLAY(animation, object.x, object.y - 1, callback, loop, nopause, light, alpha, color, scale);
             },
             PLAY_DOWN: function (object, animation, callback, loop, nopause, light, alpha, color, scale) {
-                ACTIONS.ANIMATION.PLAY(animation, object.x, object.y + 1, callback, light, alpha, color, scale);
+                ACTIONS.ANIMATION.PLAY(animation, object.x, object.y + 1, callback, loop, nopause, light, alpha, color, scale);
             },
             PLAY_RIGHT: function (object, animation, callback, loop, nopause, light, alpha, color, scale) {
-                ACTIONS.ANIMATION.PLAY(animation, object.x + 1, object.y, callback, light, alpha, color, scale);
+                ACTIONS.ANIMATION.PLAY(animation, object.x + 1, object.y, callback, loop, nopause, light, alpha, color, scale);
             },
             PLAY_LEFT: function (object, animation, callback, loop, nopause, light, alpha, color, scale) {
-                ACTIONS.ANIMATION.PLAY(animation, object.x - 1, object.y, callback, light, alpha, color, scale);
+                ACTIONS.ANIMATION.PLAY(animation, object.x - 1, object.y, callback, loop, nopause, light, alpha, color, scale);
             },
             PLAY_PLAYER: function (animation, direction, callback, loop, nopause, light, alpha, color, scale) {
                 eval(`ACTIONS.ANIMATION.PLAY_${(direction || "IN").toUpperCase()}($scope.hero, animation, callback,loop,nopause, light, alpha, color, scale)`);

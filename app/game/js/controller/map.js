@@ -37,7 +37,9 @@ EVENT = function () {
         framerate: 3,
         width: 48,
         height: 48,
-        sound: ""
+        sound: "",
+        canBreak: "0",
+        canMove: "0",
     };
     this.isActor = "0";
     this.route = [];

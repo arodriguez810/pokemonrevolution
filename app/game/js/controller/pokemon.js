@@ -132,7 +132,26 @@ POKEMONAPI = {
         resolve(data4.data[0] || {});
     }),
 };
-
+TYPECOLOR = {
+    "Bug": "#a8b820",
+    "Dragon": "#6338d5",
+    "Electric": "#f8d030",
+    "Fairy": "#ff65d5",
+    "Fighting": "#903028",
+    "Fire": "#f05030",
+    "Flying": "#a890f0",
+    "Ghost": "#6c5490",
+    "Grass": "#78c850",
+    "Ground": "#e0c068",
+    "Ice": "#98d8d8",
+    "Normal": "#a8a878",
+    "Poison": "#833d85",
+    "Psychic": "#f85888",
+    "Rock": "#b8a038",
+    "Steel": "#b8b8d0",
+    "Water": "#6890f0",
+    "Dark": "#705848",
+};
 POKEMOMFIND = {
     filterFirst: function (filter) {
         var data = APIS.POKEDEX.filter(filter);
@@ -183,9 +202,9 @@ POKEMOMFIND = {
         if (next > 0)
             tiers = POKEMOMFIND.next(tiers, next);
 
-        var pokemons = eval(`APIS.POKEDEX.filter(d=>{ return ${tiers.rules.split("&&")[1]} })`);
+        var pokemons = eval(`APIS.POKEDEX.filter(d=>{ return ${tiers.rules.split("&&")[1]} && d.forme!=='Gmax' })`);
         if (exclusive)
-            pokemons = eval(`APIS.POKEDEX.filter(d=>{ return ${tiers.rules} })`);
+            pokemons = eval(`APIS.POKEDEX.filter(d=>{ return ${tiers.rules} && d.forme!=='Gmax' })`);
         if (base) {
             pokemons = pokemons.filter(d => {
                 return d.types.indexOf(base) !== -1
@@ -233,6 +252,10 @@ POKEMOMFIND = {
                 alltypes[t] = 0;
             }
 
+            var sound_pokepath = `../resources/poekemon/audio/cries/${POKEDEX_.cleanName(pokemon.baseSpecies || name)}.ogg`;
+            if (parseInt(pokemon.num) <= 721)
+                sound_pokepath = `../resources/poekemon/audio/cries_anime/${POKEDEX_.cleanName(pokemon.baseSpecies || name)}.ogg`;
+            var sexo = getRandomInt(100) > 50 ? "male" : "female";
             var shiny = getRandomInt(100) > 95 ? true : false;
             var superShiny = getRandomInt(1000) > 998 ? true : false;
             if (superShiny)
@@ -241,8 +264,10 @@ POKEMOMFIND = {
             return {
                 quality: superShiny ? 30 : (shiny ? 20 : getRandomInt(10)),
                 shiny: shiny,
+                gender: sexo,
                 superShiny: superShiny,
                 imageUrl: shiny ? `../resources/poekemon/gif/front_s/${pokemon.keyname}.gif` : `../resources/poekemon/gif/front/${pokemon.keyname}.gif`,
+                cryUrl: sound_pokepath,
                 date: new Date(),
                 nick: pokemon.keyname,
                 name: pokemon.keyname,
@@ -270,20 +295,171 @@ POKEMOMFIND = {
             };
         } else
             return undefined;
-    },
+    }
+    ,
     ADD: function (item) {
         var pokemons = OSO(SESSION.pokemons);
-        pokemons.push(item);
-        ACTIONS.GAME.SESSION({pokemons: pokemons});
+        if (pokemons.length >= 6) {
+            swal({
+                title: `No puedes tener mas de 6 pokemones en tu equipo, quieres enviar a ${item.name} a la bobeda?`,
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si",
+                cancelButtonText: "NO",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: false,
+            }, function () {
+                var bobedas = OSO(SESSION.bobeda);
+                if (bobedas.length >= 10) {
+                    swal(`Lo sentimos tu bóbeda ya esta llena, ${item.name} no podrá estar contiogo, asegurate de crear espacio para tu proxima captura.`);
+                } else {
+                    bobedas.push(item);
+                    ACTIONS.GAME.SESSION({bobeda: bobedas});
+                    swal(`${item.name}, se ha guardado en tu bóbeda`);
+                }
+            });
+        } else {
+            pokemons.push(item);
+            ACTIONS.GAME.SESSION({pokemons: pokemons});
+            swal(`${item.name}, se ha unido a tu equipo.`);
+        }
     },
     ADDWILD: function () {
         var pokemons = OSO(SESSION.pokemons);
         var item = POKEMOMFIND.WILD(SESSION.tier);
-        pokemons.push(item);
-        ACTIONS.GAME.SESSION({pokemons: pokemons});
+        POKEMOMFIND.ADD(item);
+    },
+    DELETE: function (item, index) {
+        swal({
+            title: `Estas seguro de eliminar a ${item.name}?`,
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si",
+            cancelButtonText: "NO",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: false,
+        }, function () {
+            SESSION.pokemons.splice(index, 1);
+            ACTIONS.GAME.SESSION({pokemons: SESSION.pokemons});
+            swal(`Adios ${item.name}, vuelve a tu vida salvaje :(`);
+        });
+    },
+    TRASLADE: function (item, index) {
+        swal({
+            title: `Estas seguro de trasladar a ${item.name} a tu bóbeda?`,
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si",
+            cancelButtonText: "NO",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: false,
+        }, function () {
+            var item = OSO(SESSION.pokemons[index]);
+            SESSION.pokemons.splice(index, 1);
+            var bobedas = OSO(SESSION.bobeda);
+            if (bobedas.length >= 10) {
+                swal(`Lo sentimos tu bóbeda ya esta llena`);
+            } else {
+                bobedas.push(item);
+                ACTIONS.GAME.SESSION({bobeda: bobedas, pokemons: SESSION.pokemons});
+                swal(`${item.name}, se ha guardado en tu bóbeda`);
+            }
+        });
+    },
+    INCLUDE: function (item, index) {
+        swal({
+            title: `Estas seguro de unir a ${item.name} a tu equipo?`,
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si",
+            cancelButtonText: "NO",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: false,
+        }, function () {
+            var item = OSO(SESSION.bobeda[index]);
+            SESSION.bobeda.splice(index, 1);
+            var pokemons = OSO(SESSION.pokemons);
+            if (pokemons.length >= 6) {
+                swal(`Lo sentimos tu equipo ya está lleno`);
+            } else {
+                pokemons.push(item);
+                ACTIONS.GAME.SESSION({bobeda: SESSION.bobeda, pokemons: pokemons});
+                swal(`${item.name}, se ha unido a tu equipo`);
+            }
+        });
+    },
+    DELETE_BOBEDA: function (item, index) {
+        swal({
+            title: `Estas seguro de eliminar a ${item.name}?`,
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si",
+            cancelButtonText: "NO",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: false,
+        }, function () {
+            SESSION.bobeda.splice(index, 1);
+            ACTIONS.GAME.SESSION({bobeda: SESSION.bobeda});
+            swal(`El profesor es el nuevo dueño de ${item.name}, gracias`);
+        });
     }
 };
 
+LOGROS = {
+    Saltarin: {
+        "name": "Saltarin",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las estructuras, tambi\u00e9n puedes hacerlo d\u00e1ndole click a tu personaje",
+        "icon": 141,
+        "script": "ACTIONS.PLAYER.JUMPING()"
+    },
+    Bucear: {
+        "name": "Bucear",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las aguas para bucear, debes ser Saltarin como requisito",
+        "icon": 12
+    },
+    Destello: {
+        "name": "Destello",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s iluminar las cuevas por un tiempo",
+        "icon": 73,
+        "script": "ACTIONS.PLAYER.LIGH(30)"
+    },
+    Vuelo: {
+        "name": "Vuelo",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica si lo deseas puedes volar!",
+        "icon": 226,
+        "script": "ACTIONS.PLAYER.FLY()"
+    },
+    Destruir: {
+        "name": "Destruir",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s eliminar algunos objetos al tocarlos",
+        "icon": 79
+    },
+    Mover: {
+        "name": "Mover",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s mover algunos objetos al tocarlos",
+        "icon": 78
+    },
+    Invisibilidad: {
+        "name": "Invisibilidad",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s ocultarte de los entrenadores y pokemones",
+        "icon": 20,
+        "script": "ACTIONS.PLAYER.HIDE()"
+    },
+    Teletransportacion: {
+        "name": "Teletransportación",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s teletransportarte al limite de tu mirada",
+        "icon": 307,
+        "script": "ACTIONS.PLAYER.TELE()"
+    },
+};
 MOVESFIND = {
     POKEMON_MOVES: function (name) {
         var pokemon = POKEMOMFIND.firstByName(name);

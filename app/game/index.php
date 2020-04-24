@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <?php $path = 'layout/'; ?>
-<?php include_once($path . '/headgame.php') ?>
+<?php include_once($path . '/head.php') ?>
 
 
 <body class="theme-light-green">
@@ -20,7 +20,7 @@
 
 
     body {
-        background-image: url('../resources/titles/Plain.png');
+        background-image: url('../resources/titles/<?php echo TitleImg(); ?>.png');
         background-size: cover;
     }
 

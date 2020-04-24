@@ -153,7 +153,66 @@ PRESS = {
     CTRL: false,
     SHIFT: false
 };
+$(document).on("keyup", function (e) {
+    if (!createjs.Touch.isSupported()) {
+        clearInterval(TOUCHER);
+        TOUCHER = undefined;
+    }
+});
 $(document).on("keydown", function (e) {
+    if (!createjs.Touch.isSupported()) {
+        if (e.key === " ") {
+            ACTIONS.PLAYER.JUMPING();
+        } else if (e.key === "Enter") {
+            if (ACTIONS.GAME.ISPAUSE()) {
+                ACTIONS.MESSAGE.REPLAY();
+            } else {
+                ACTIONS.GAME.CLICK();
+            }
+
+        } else if (e.key === "w" || e.key === "ArrowUp") {
+            LASTMOVEMENT = "UP";
+            ACTIONS.PLAYER.MOVE_UP();
+            if (!TOUCHER) {
+                TOUCHER = setInterval(function () {
+                    if (LASTMOVEMENT)
+                        if (!ACTIONS.GAME.ISBLOCK())
+                            eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+                }, 10);
+            }
+        } else if (e.key === "s" || e.key === "ArrowDown") {
+            LASTMOVEMENT = "DOWN";
+            ACTIONS.PLAYER.MOVE_DOWN();
+            if (!TOUCHER) {
+                TOUCHER = setInterval(function () {
+                    if (LASTMOVEMENT)
+                        if (!ACTIONS.GAME.ISBLOCK())
+                            eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+                }, 10);
+            }
+        } else if (e.key === "a" || e.key === "ArrowLeft") {
+            LASTMOVEMENT = "LEFT";
+            ACTIONS.PLAYER.MOVE_LEFT();
+            if (!TOUCHER) {
+                TOUCHER = setInterval(function () {
+                    if (LASTMOVEMENT)
+                        if (!ACTIONS.GAME.ISBLOCK())
+                            eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+                }, 10);
+            }
+        } else if (e.key === "d" || e.key === "ArrowRight") {
+            LASTMOVEMENT = "RIGHT";
+            ACTIONS.PLAYER.MOVE_RIGHT();
+            if (!TOUCHER) {
+                TOUCHER = setInterval(function () {
+                    if (LASTMOVEMENT)
+                        if (!ACTIONS.GAME.ISBLOCK())
+                            eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+                }, 10);
+            }
+        }
+
+    }
     if (e.ctrlKey)
         PRESS.CTRL = true;
     if (e.shiftKey)

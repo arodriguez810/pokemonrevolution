@@ -109,13 +109,6 @@
                             {{LAN.t(key)}}
                         </button>
                     </div>
-                    <div ng-repeat="(key, category) in {Tail:{},Wing:{}}">
-                        <button ng-click="selectCategory(key)" style="width: 103px;float: left;margin: 3px"
-                                type="button"
-                                class="btn bg-{{selection.category==key?'blue':'default'}} waves-effect">
-                            {{LAN.t(key)}}
-                        </button>
-                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane fade  in active" id="profile_with_icon_title"
                      style="height: 150px;overflow: scroll">

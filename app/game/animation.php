@@ -126,11 +126,11 @@
                         </div>
                     </div>
                     <center>
-                        <div class="row clearfix">
+                        <div class="row clearfix bg-black" >
                             <canvas width="{{img().w}}" height="{{img().h}}" style="border: #2C009F 1px solid"
                                     id="player"></canvas>
                         </div>
-                        <div class="row clearfix">
+                        <div class="row clearfix" >
                             <button type="button" ng-click="play()"
                                     class="btn bg-amber  waves-effect">
                                 <i class="material-icons">play_circle_filled</i>
@@ -139,7 +139,7 @@
                         </div>
                     </center>
                     <br><br><br>
-                    <div style="width: {{bound().w}}px;height: {{bound().h}}px;position: relative">
+                    <div style="width: {{bound().w}}px;height: {{bound().h}}px;position: relative" class="bg-black">
 
                         <img id="currentImage" style="position: absolute;z-index: 1;" src="{{form.file}}">
                         <div ng-click="form.frames.push(value)"

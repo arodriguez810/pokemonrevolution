@@ -118,7 +118,7 @@
                     </div>
                     <div class="col-sm-12">
                         <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                            <li role="presentation" class="active"  ng-show="currentEvent.isActor=='1'">
+                            <li role="presentation" class="active" ng-show="currentEvent.isActor=='1'">
                                 <a href="#profile_only_icon_title" data-toggle="tab">
                                     <i class="material-icons">face</i>
                                 </a>
@@ -136,7 +136,7 @@
                         </ul>
 
                         <div class="tab-content" style="height: 1000px">
-                            <div role="tabpanel" class="tab-pane fade active in" id="profile_only_icon_title" >
+                            <div role="tabpanel" class="tab-pane fade active in" id="profile_only_icon_title">
                                 <div class="row clearfix" ng-show="currentEvent.isActor=='1'">
 
                                     <div class="col-sm-12">
@@ -153,7 +153,8 @@
 
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade active in" id="messages_only_icon_title" ng-show="currentEvent.isActor=='0'">
+                            <div role="tabpanel" class="tab-pane fade active in" id="messages_only_icon_title"
+                                 ng-show="currentEvent.isActor=='0'">
                                 <div class="row clearfix" ng-show="currentEvent.isActor=='0'">
                                     <div class="col-sm-1">
                                         <div class="form-group form-float">
@@ -182,7 +183,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-1">
+                                        <div class="form-group form-float ">
+                                            <select required title="Can Break?" class="form-control show-tick"
+                                                    ng-model="currentEvent.object.canBreak">
+                                                <option value="0">No</option>
+                                                <option value="1">Si</option>
+                                            </select>
+                                            <label class="form-label">Can Break? </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div class="form-group form-float ">
+                                            <select required title="Can Move?" class="form-control show-tick"
+                                                    ng-model="currentEvent.object.canMove">
+                                                <option value="0">No</option>
+                                                <option value="1">Si</option>
+                                            </select>
+                                            <label class="form-label">Can Move? </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
                                         <div class="form-group form-float ">
                                             Frames:
                                             <pre ng-dblclick="currentEvent.object.animation = [];">{{currentEvent.object.animation}} </pre>
