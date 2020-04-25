@@ -36,7 +36,7 @@
     </button>
 
 
-    <img ng-if="menu && !menuOpen && logro.script && logro.icon" ng-repeat="(mkey,logro) in  session.logros"
+    <img ng-if="menu && !menuOpen && logro.script && logro.icon" ng-repeat="(mkey,logro) in  skills"
          ng-click="runQuickLogro(logro)"
          class="menuButton"
          style="width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;">
@@ -105,6 +105,11 @@
                     <br>
                 </td>
             </tr>
+            <tr>
+                <td colspan="10" style="text-align: right">
+                    Tiempo: {{TimeText}}
+                </td>
+            </tr>
 
         </table>
         <button type="button" onclick="signOut();"
@@ -112,6 +117,14 @@
                 class="btn bg-red  btn-circle-lg waves-effect waves-circle waves-float">
             <i class="material-icons">reply</i>
         </button>
+
+        <button type="button" onclick="location.href='face.php'"
+                style="margin: 10px 10px 10px 10px"
+                class="btn bg-pink  btn-circle-lg waves-effect waves-circle waves-float">
+            <i class="material-icons">face</i>
+        </button>
+
+
         <script>
             function signOut() {
                 swal({
@@ -303,11 +316,11 @@
     <div ng-if="!menuMessage && menuOpen && subMenuOpen==='logros'"
          style="color: white;overflow: scroll;width: 97%;min-height: 270px;padding: 15px;"
          class="bg-orange tab-pane fade animated bounceInRight in active">
-        <div ng-repeat="(mkey,logro) in  session.logros">
+        <div ng-repeat="(mkey,logro) in  skills">
             <btn
                     ng-click="desc(logro.term,logro.name,logro.desc)"
                     style="float: left;font-size: large;text-align: center;padding: 17px;margin: 10px;min-width: 121px"
-                    class="btn bg-blue-grey">
+                    class="btn {{logro.script?'bg-blue-grey':'bg-yellow'}} ">
                 <img style="width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;"
                      ng-if="logro.icon">
             </btn>

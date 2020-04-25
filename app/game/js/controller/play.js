@@ -144,6 +144,17 @@ pokemon.controller('play', ['$scope', function ($scope) {
     $scope.loadedSounds = [];
     $scope.extraResources = [];
     $scope.sounds = {};
+    $scope.animationConfig = {
+        "down": {frames: [1]},
+        "up": {frames: [10]},
+        "left": {frames: [4]},
+        "right": {frames: [7]},
+        "wdown": {frames: [0, 1, 2, 1]},
+        "wup": {frames: [9, 10, 11, 10]},
+        "wleft": {frames: [3, 4, 5, 4]},
+        "wright": {frames: [6, 7, 8, 7]},
+        "gire": {frames: [10, 4, 1, 7, 10, 4, 1, 7]}
+    };
     $scope.extras = {};
     $scope.indexTick = 0;
     $scope.spriteFrames = 3;
@@ -170,7 +181,6 @@ pokemon.controller('play', ['$scope', function ($scope) {
             ACTIONS.MESSAGE.REPLAY();
         }
     }];
-    $scope.shadowY = 8;
     $scope.transitions = "";
     $scope.bubble = null;
     $scope.bubbleText = "...";
@@ -203,9 +213,11 @@ pokemon.controller('play', ['$scope', function ($scope) {
         canBreak: true,
         canHide: true,
         canMove: true,
+        canWater: true,
         deeping: false,
         flying: false,
         isPlayer: true,
+        shadowY: 8,
         name: ""
     };
     $scope.NPCS = [];
@@ -402,7 +414,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
         if (hero.shadow) {
             var shadow = OSO(point);
             if (shadow.y !== undefined)
-                shadow.y += $scope.shadowY;
+                shadow.y += hero.shadowY;
             createjs.Tween.get(hero.shadow).to(shadow, hero.speed);
         }
 
@@ -470,7 +482,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
         if (hero.shadow) {
             var shadow = OSO(point);
             if (shadow.y !== undefined)
-                shadow.y += $scope.shadowY;
+                shadow.y += hero.shadowY;
             createjs.Tween.get(hero.shadow).to(shadow, 1);
         }
         hero.x = newx;
@@ -608,7 +620,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
                                 canJump: true,
                                 canDive: true,
                                 canFly: true,
-                                deeping: false
+                                deeping: false,
+                                shadowY: 8,
                             };
                             $scope.drawPlayer($scope.NPCS[e.hero.name], e.hero.name, x, y, L);
                             eval(`ACTIONS.NPC.${e.look || 'DOWN'}(e.hero.name)`);
@@ -627,7 +640,8 @@ pokemon.controller('play', ['$scope', function ($scope) {
                                 canJump: true,
                                 canDive: true,
                                 canFly: true,
-                                deeping: false
+                                deeping: false,
+                                shadowY: 8,
                             };
                             $scope.drawObject($scope.OBJECTS[e.name], e.name, x, y, L);
                         }
@@ -706,6 +720,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
         if (hero.event.object.canBreak === "1") {
             if ($scope.hero.canBreak) {
                 hero.body.on("click", function (evt) {
+                    if ($scope.hero.staticing) {
+                        return;
+                    }
                     if (!ACTIONS.GAME.NEAR($scope.hero, hero))
                         return;
                     if ($scope.hero.flying)
@@ -730,6 +747,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
 
             if ($scope.hero.canMove) {
                 hero.body.on("click", function (evt) {
+                    if ($scope.hero.staticing) {
+                        return;
+                    }
                     if (!ACTIONS.GAME.NEAR($scope.hero, hero))
                         return;
                     if ($scope.hero.flying)
@@ -764,6 +784,103 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 });
             }
         }
+        if (hero.event.object.canMount === "1") {
+            hero.body.on("click", function (evt) {
+                if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                    return;
+                if ($scope.hero.flying)
+                    return;
+                if ($scope.hero.deeping)
+                    return;
+                var oldposition = ACTIONS.PLAYER.POSITION();
+                ACTIONS.PLAYER.GET().body.gotoAndPlay("gire");
+                setTimeout(function () {
+                    var x, y;
+                    if (oldposition === "up") {
+                        x = hero.x;
+                        y = hero.y - 1;
+                    }
+                    if (oldposition === "down") {
+                        x = hero.x;
+                        y = hero.y + 1;
+                    }
+                    if (oldposition === "left") {
+                        x = hero.x - 1;
+                        y = hero.y;
+                    }
+                    if (oldposition === "right") {
+                        x = hero.x + 1;
+                        y = hero.y;
+                    }
+
+                    var uperLayer = 1;
+                    var upperObject = null;
+                    for (var l = 1; l <= 9; l++) {
+                        var obj = maps[FIRSTMAP].map[`${l}_${(x)}_${(y)}`];
+                        if (obj) {
+                            uperLayer = l;
+                            upperObject = obj;
+                        }
+                    }
+
+                    $scope.play("Jump", SOUNDS.system);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing2"]);`);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing1"]);`);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.body);`);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.shadow);`);
+
+                    $scope.hero.l = uperLayer;
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing2"]);`);
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero.body);`);
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing1"]);`);
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero.shadow);`);
+
+                    var dx = difference($scope.hero.x, x);
+                    var dy = difference($scope.hero.y, y);
+                    var distance = dx > dy ? dx : dy;
+                    var speed = ($scope.hero.speed / 2) * distance;
+
+
+                    var jompeo = 1 + eval((`0.${distance}+1`));
+
+                    createjs.Tween.get($scope.hero.shadow).to({
+                        x: ((x) * $scope.baseWidth),
+                        y: ((y) * $scope.baseWidth) + 8,
+                        scale: jompeo
+                    }, speed);
+
+                    for (var wing of ["wing1", "wing2"])
+                        createjs.Tween.get($scope.hero["body" + wing]).to({
+                            x: ((x) * $scope.baseWidth),
+                            y: ((y) * $scope.baseWidth),
+                            scale: jompeo
+                        }, speed);
+
+                    $scope.runCamera($scope.hero, ((x) * $scope.baseWidth), ((y) * $scope.baseWidth), speed);
+                    createjs.Tween.get($scope.hero.body).to({
+                        x: ((x) * $scope.baseWidth),
+                        y: ((y) * ($scope.baseHeight)),
+                        scale: jompeo
+                    }, speed).call(function () {
+                        createjs.Tween.get($scope.hero.body).to({scale: 1}, speed);
+                        for (var wing of ["wing1", "wing2"])
+                            createjs.Tween.get($scope.hero["body" + wing]).to({scale: 1}, speed);
+
+
+                        createjs.Tween.get($scope.hero.shadow).to({scale: 1}, speed).call(function () {
+                            $scope.hero.x = x;
+                            $scope.hero.y = y;
+                            $scope.transition = false;
+                            ACTIONS.PLAYER.GET().body.gotoAndPlay(oldposition);
+                        });
+                    });
+
+                    eval(`ACTIONS.PLAYER.MOVE_${oldposition.toUpperCase().replace("W", "").replace("DON", "DOWN")}()`);
+                    eval(`ACTIONS.PLAYER.MOVE_${oldposition.toUpperCase().replace("W", "").replace("DON", "DOWN")}()`);
+                }, 1000);
+
+            });
+        }
         eval(`layer${L}.addChild(hero.body);`);
         STAGE.update();
     };
@@ -788,6 +905,170 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body.x = old.x * $scope.baseWidth;
         hero.body.y = old.y * $scope.baseHeight;
         hero.body.name = `object_` + name;
+        if (hero.event.object.canBreak === "1") {
+            if ($scope.hero.canBreak) {
+                hero.body.on("click", function (evt) {
+                    if ($scope.hero.staticing) {
+                        return;
+                    }
+                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                        return;
+                    if ($scope.hero.flying)
+                        return;
+                    if (!$scope.breaking) {
+                        $scope.breaking = true;
+                        ACTIONS.PLAYER.SHAKE(50, 24, 5, function () {
+                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Break", undefined, function () {
+
+                            });
+                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
+                                eval(`layer${L}.removeChild(hero.body);`);
+                                delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
+                                $scope.breaking = false;
+                            });
+                        });
+                    }
+                });
+            }
+        }
+        if (hero.event.object.canMove === "1") {
+
+            if ($scope.hero.canMove) {
+                hero.body.on("click", function (evt) {
+                    if ($scope.hero.staticing) {
+                        return;
+                    }
+                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                        return;
+                    if ($scope.hero.flying)
+                        return;
+                    if (!$scope.breaking) {
+                        $scope.breaking = true;
+                        ACTIONS.GAME.BLOCK();
+                        ACTIONS.PLAYER.SHAKE(10, 12, 2, function () {
+                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Move", undefined, function () {
+                                var moveer = true;
+                                if (ACTIONS.PLAYER.POSITION() === "up")
+                                    if ($scope.collision(hero, hero.x, hero.y - 1))
+                                        moveer = false;
+                                if (ACTIONS.PLAYER.POSITION() === "down")
+                                    if ($scope.collision(hero, hero.x, hero.y + 1))
+                                        moveer = false;
+                                if (ACTIONS.PLAYER.POSITION() === "left")
+                                    if ($scope.collision(hero, hero.x - 1, hero.y))
+                                        moveer = false;
+                                if (ACTIONS.PLAYER.POSITION() === "right")
+                                    if ($scope.collision(hero, hero.x + 1, hero.y))
+                                        moveer = false;
+
+                                if (moveer) {
+                                    eval(`ACTIONS.OBJECT.MOVE_${ACTIONS.PLAYER.POSITION().toUpperCase().replace("W", "").replace("DON", "DOWN")}(hero.body.name.replace('object_', ''));`)
+                                }
+                                $scope.breaking = false;
+                                ACTIONS.GAME.UNBLOCK();
+                            });
+                        });
+                    }
+                });
+            }
+        }
+        if (hero.event.object.canMount === "1") {
+            hero.body.on("click", function (evt) {
+                if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                    return;
+                if ($scope.hero.flying)
+                    return;
+                if ($scope.hero.deeping)
+                    return;
+                var oldposition = ACTIONS.PLAYER.POSITION();
+                ACTIONS.PLAYER.GET().body.gotoAndPlay("gire");
+                setTimeout(function () {
+                    var x, y;
+                    if (oldposition === "up") {
+                        x = hero.x;
+                        y = hero.y - 1;
+                    }
+                    if (oldposition === "down") {
+                        x = hero.x;
+                        y = hero.y + 1;
+                    }
+                    if (oldposition === "left") {
+                        x = hero.x - 1;
+                        y = hero.y;
+                    }
+                    if (oldposition === "right") {
+                        x = hero.x + 1;
+                        y = hero.y;
+                    }
+
+                    var uperLayer = 1;
+                    var upperObject = null;
+                    for (var l = 1; l <= 9; l++) {
+                        var obj = maps[FIRSTMAP].map[`${l}_${(x)}_${(y)}`];
+                        if (obj) {
+                            uperLayer = l;
+                            upperObject = obj;
+                        }
+                    }
+
+                    $scope.play("Jump", SOUNDS.system);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing2"]);`);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing1"]);`);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.body);`);
+                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.shadow);`);
+
+                    $scope.hero.l = uperLayer;
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing2"]);`);
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero.body);`);
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing1"]);`);
+                    eval(`layer${$scope.hero.l}.addChild($scope.hero.shadow);`);
+
+                    var dx = difference($scope.hero.x, x);
+                    var dy = difference($scope.hero.y, y);
+                    var distance = dx > dy ? dx : dy;
+                    var speed = ($scope.hero.speed / 2) * distance;
+
+
+                    var jompeo = 1 + eval((`0.${distance}+1`));
+
+                    createjs.Tween.get($scope.hero.shadow).to({
+                        x: ((x) * $scope.baseWidth),
+                        y: ((y) * $scope.baseWidth) + 8,
+                        scale: jompeo
+                    }, speed);
+
+                    for (var wing of ["wing1", "wing2"])
+                        createjs.Tween.get($scope.hero["body" + wing]).to({
+                            x: ((x) * $scope.baseWidth),
+                            y: ((y) * $scope.baseWidth),
+                            scale: jompeo
+                        }, speed);
+
+                    $scope.runCamera($scope.hero, ((x) * $scope.baseWidth), ((y) * $scope.baseWidth), speed);
+                    createjs.Tween.get($scope.hero.body).to({
+                        x: ((x) * $scope.baseWidth),
+                        y: ((y) * ($scope.baseHeight)),
+                        scale: jompeo
+                    }, speed).call(function () {
+                        createjs.Tween.get($scope.hero.body).to({scale: 1}, speed);
+                        for (var wing of ["wing1", "wing2"])
+                            createjs.Tween.get($scope.hero["body" + wing]).to({scale: 1}, speed);
+
+
+                        createjs.Tween.get($scope.hero.shadow).to({scale: 1}, speed).call(function () {
+                            $scope.hero.x = x;
+                            $scope.hero.y = y;
+                            $scope.transition = false;
+                            ACTIONS.PLAYER.GET().body.gotoAndPlay(oldposition);
+                        });
+                    });
+
+                    eval(`ACTIONS.PLAYER.MOVE_${oldposition.toUpperCase().replace("W", "").replace("DON", "DOWN")}()`);
+                    eval(`ACTIONS.PLAYER.MOVE_${oldposition.toUpperCase().replace("W", "").replace("DON", "DOWN")}()`);
+                }, 1000);
+
+            });
+        }
         eval(`layer${old.l}.addChild(hero.body);`);
         STAGE.update();
     };
@@ -801,16 +1082,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
             framerate: $scope.playerFrames,
             "images": [hero.style.cacheCanvas],
             frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
-            "animations": {
-                "down": {frames: [1]},
-                "up": {frames: [10]},
-                "left": {frames: [4]},
-                "right": {frames: [7]},
-                "wdown": {frames: [0, 1, 2, 1]},
-                "wup": {frames: [9, 10, 11, 10]},
-                "wleft": {frames: [3, 4, 5, 4]},
-                "wright": {frames: [6, 7, 8, 7]}
-            },
+            "animations": $scope.animationConfig,
         });
         var old = {x: hero.x, y: hero.y, l: hero.l};
         eval(`layer${old.l}.removeChild(hero.body);`);
@@ -836,16 +1108,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 framerate: $scope.playerFrames,
                 "images": [hero[wing].cacheCanvas],
                 frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
-                "animations": {
-                    "down": {frames: [1]},
-                    "up": {frames: [10]},
-                    "left": {frames: [4]},
-                    "right": {frames: [7]},
-                    "wdown": {frames: [0, 1, 2, 1]},
-                    "wup": {frames: [9, 10, 11, 10]},
-                    "wleft": {frames: [3, 4, 5, 4]},
-                    "wright": {frames: [6, 7, 8, 7]}
-                },
+                "animations": $scope.animationConfig,
             });
             var oldD = {x: hero.x, y: hero.y, l: hero.l};
             eval(`layer${oldD.l}.removeChild(hero["body" + wing]);`);
@@ -871,7 +1134,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.l = L;
         hero.shadow = new createjs.Bitmap(mapQueues["player_" + name].getResult(`SHADOW`));
         hero.shadow.x = x * $scope.baseWidth;
-        hero.shadow.y = y * $scope.baseHeight + $scope.shadowY;
+        hero.shadow.y = y * $scope.baseHeight + hero.shadowY;
         hero.shadow.name = name + `_playershadow`;
         hero.shadow.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
         eval(`layer${L}.addChild(hero.shadow);`);
@@ -884,16 +1147,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
             framerate: $scope.playerFrames,
             "images": [hero.style.image],
             frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
-            "animations": {
-                "down": {frames: [1]},
-                "up": {frames: [10]},
-                "left": {frames: [4]},
-                "right": {frames: [7]},
-                "wdown": {frames: [0, 1, 2, 1]},
-                "wup": {frames: [9, 10, 11, 10]},
-                "wleft": {frames: [3, 4, 5, 4]},
-                "wright": {frames: [6, 7, 8, 7]}
-            },
+            "animations": $scope.animationConfig,
         });
         hero.body = new createjs.Sprite(Sprite, "down");
 
@@ -907,12 +1161,28 @@ pokemon.controller('play', ['$scope', function ($scope) {
         hero.body.name = `player_` + name;
         hero.name = players[name].name;
         hero.version = players[name].version;
-        hero.canJump = $scope.session.canJump;
-        hero.canDive = $scope.session.canDive;
-        hero.canFly = $scope.session.canFly;
-        hero.canBreak = $scope.session.canBreak;
-        hero.canMove = $scope.session.canMove;
-        hero.canHide = $scope.session.canHide;
+        if (hero.isPlayer) {
+            hero.canJump = $scope.session.canJump;
+            hero.canDive = $scope.session.canDive;
+            hero.canFly = $scope.session.canFly;
+            hero.canBreak = $scope.session.canBreak;
+            hero.canMove = $scope.session.canMove;
+            hero.canHide = $scope.session.canHide;
+            hero.canWater = $scope.session.canWater;
+            $scope.skills = [];
+            for (var skille of $scope.session.logros) {
+                if (LOGROS[skille]) {
+                    $scope.skills.push(LOGROS[skille]);
+                }
+            }
+        } else {
+            hero.canJump = true;
+            hero.canDive = true;
+            hero.canFly = true;
+            hero.canBreak = true;
+            hero.canMove = true;
+            hero.canHide = true;
+        }
 
         for (var wing of ["wing1", "wing2"]) {
             hero[wing] = new createjs.Bitmap(mapQueues["player_" + name].getResult(wing));
@@ -922,16 +1192,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 framerate: $scope.playerFrames,
                 "images": [hero[wing].image],
                 frames: {width: $scope.baseWidth, height: $scope.baseHeight, count: 12},
-                "animations": {
-                    "down": {frames: [1]},
-                    "up": {frames: [10]},
-                    "left": {frames: [4]},
-                    "right": {frames: [7]},
-                    "wdown": {frames: [0, 1, 2, 1]},
-                    "wup": {frames: [9, 10, 11, 10]},
-                    "wleft": {frames: [3, 4, 5, 4]},
-                    "wright": {frames: [6, 7, 8, 7]}
-                },
+                "animations": $scope.animationConfig,
             });
             hero["body" + wing] = new createjs.Sprite(SpriteD, "down");
             hero["body" + wing].x = x * $scope.baseWidth;
@@ -1286,6 +1547,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
             var reforced = await GAME.ANIMATIONS();
             for (var f = 0; f < reforced.length; f++) {
                 $scope.animations[reforced[f].name] = reforced[f];
+                if (reforced[f].isSystem === "1") {
+                    ACTIONS.LOAD.ADD([reforced[f].file]);
+                }
             }
             for (var sound of systemsounds) {
                 var url = sound;
@@ -1414,6 +1678,7 @@ pokemon.controller('play', ['$scope', function ($scope) {
     };
     $scope.ambient = "natural";
     $scope.cacheAmbient = "";
+    $scope.cacheHour = 0;
     $scope.runLogro = function (logro) {
         ACTIONS.GAME.MENUOFF();
         setTimeout(() => {
@@ -1430,13 +1695,17 @@ pokemon.controller('play', ['$scope', function ($scope) {
         else
             return string;
     };
+    $scope.modificationTime = undefined;
+    $scope.skills = [];
+    $scope.transition = false;
+    $scope.TimeText = "";
     ACTIONS = {
         AMBIENT: {
             RUN: function () {
                 var color = "#000";
                 var alpha = 0;
-
-                var h = new Date().getHours();
+                var h = $scope.modificationTime !== undefined ? $scope.modificationTime : new Date().getHours();
+                $scope.TimeText = ACTIONS.AMBIENT.TIME();
                 if (h >= 0 && h <= 3) {
                     color = "#00003f";
                     alpha = 0.7;
@@ -1457,30 +1726,61 @@ pokemon.controller('play', ['$scope', function ($scope) {
                     color = "#000";
                     alpha = 0.9;
                 }
-                if ($scope.cacheAmbient !== $scope.ambient) {
+                if ($scope.cacheAmbient !== $scope.ambient || $scope.cacheHour !== h) {
                     console.log("change ambient");
                     $scope.ambients.graphics.clear().beginFill(color || "#000").drawRect(0, 0, maps[FIRSTMAP].width * $scope.baseWidth, maps[FIRSTMAP].height * $scope.baseHeight).endFill();
                     createjs.Tween.get($scope.ambients).to({alpha: alpha}, 1 * 1000).call(function () {
                     });
                 }
                 $scope.cacheAmbient = $scope.ambient;
+                $scope.cacheHour = h;
+                if (!$scope.$$phase)
+                    $scope.$digest();
             },
-            TIME: function () {
-                var h = new Date().getHours();
-                if (h >= 0 && h <= 3) {
-                    ACTIONS.GAME.SCREEN(2, "#00003f", 0.7);
-                } else if (h >= 4 && h <= 6) {
-                    ACTIONS.GAME.SCREEN(2, "#00003f", 0.5);
-                } else if (h >= 7 && h <= 17) {
-                    ACTIONS.GAME.SCREEN(2, "#fff", 0.001);
-                } else if (h >= 18 && h <= 18) {
-                    ACTIONS.GAME.SCREEN(2, "#ff6700", 0.2);
-                } else if (h >= 19 && h <= 23) {
-                    ACTIONS.GAME.SCREEN(2, "#00003f", 0.6);
+            CHANGETIME: function () {
+                if (!$scope.transition) {
+                    ACTIONS.ANIMATION.PLAY_PLAYER("TIME", undefined, function () {
+                        var h = $scope.modificationTime !== undefined ? $scope.modificationTime : new Date().getHours();
+                        if (h >= 0 && h <= 3) {
+                            $scope.modificationTime = 4;
+                        } else if (h >= 4 && h <= 6) {
+                            $scope.modificationTime = 7;
+                        } else if (h >= 7 && h <= 17) {
+                            $scope.modificationTime = 18;
+                        } else if (h >= 18 && h <= 18) {
+                            $scope.modificationTime = 19;
+                        } else if (h >= 19 && h <= 23) {
+                            $scope.modificationTime = 0;
+                        }
+                        if (!$scope.$$phase)
+                            $scope.$digest();
+                        ACTIONS.AMBIENT.RUN();
+                        $scope.transition = false;
+                    });
                 }
+            },
+            /**
+             * @return {string}
+             */
+            TIME: function () {
+                var h = $scope.modificationTime !== undefined ? $scope.modificationTime : new Date().getHours();
+                if (h >= 0 && h <= 3) {
+                    return "Madrugada";
+                } else if (h >= 4 && h <= 6) {
+                    return "Amanecer";
+                } else if (h >= 7 && h <= 17) {
+                    return "Día";
+                } else if (h >= 18 && h <= 18) {
+                    return "Atardecer";
+                } else if (h >= 19 && h <= 23) {
+                    return "Noche";
+                }
+                return "Día";
             },
             SET: function (name) {
                 $scope.ambient = name;
+                if (!$scope.$$phase)
+                    $scope.$digest();
                 ACTIONS.AMBIENT.RUN();
             }
         },
@@ -1794,7 +2094,9 @@ pokemon.controller('play', ['$scope', function ($scope) {
                         await $scope.loadMap(FIRSTMAP);
                         $scope.playLoading("Cargando " + mapname);
                         $scope.drawMap(FIRSTMAP);
-                        $scope.drawPlayer(object, PLAYER, x, y, object.l);
+                        $scope.drawPlayer(object, $scope.session.id, x, y, object.l);
+                        $scope.runCamera(object, ((x) * $scope.baseWidth), ((y) * $scope.baseWidth), 10);
+                        ACTIONS.PLAYER.OFF();
                         $scope.stopLoading();
                         setTimeout(function () {
                             ACTIONS.GAME.RESUME();
@@ -1864,80 +2166,34 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 }
             },
             FLY: function (object) {
-                if (object.deeping)
+                if ($scope.hero.watering)
                     return;
-                ACTIONS.GAME.BLOCK();
-                if (!object.flying) {
-                    object.flying = true;
-                    ACTIONS.PLAYER.UP();
-                    object["body" + "wing1"].gotoAndPlay('up');
-                    object["body" + "wing2"].gotoAndPlay('up');
-                    if (object.speed)
-                        object.speed = object.base_speed / 1.5;
-                    object.body.framerate = 1;
-                    createjs.Sound.stop();
-
-                    ACTIONS.ANIMATION.PLAY_PLAYER("wing1", undefined, function () {
-                        object["body" + "wing1"].visible = object["body" + "wing2"].visible = true;
-                        var uperLayer = 8;
-                        $scope.play("Wind", SOUNDS.bgm);
-
-                        eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
-                        eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
-                        eval(`layer${object.l}.removeChild(object.body);`);
-                        eval(`layer${object.l}.removeChild(object.shadow);`);
-                        object.l = uperLayer;
-                        eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
-                        eval(`layer${uperLayer}.addChild(object.body);`);
-                        eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
-                        eval(`layer${uperLayer}.addChild(object.shadow);`);
-                        if (object.shadow)
-                            $scope.shadowY = $scope.baseHeight;
-                        ACTIONS.PLAYER.MOVE(object.x, object.y - 1);
-                        if ($scope.hero.hidden) {
-                            $scope.hero.hidden = false;
-                            ACTIONS.ANIMATION.PLAY_PLAYER("Show", undefined, function () {
-
-                            });
-                            ACTIONS.PLAYER.ALPHA(1);
-                        }
-                        ACTIONS.ANIMATION.PLAY_PLAYER("Tornade", undefined, function () {
-
-                            ACTIONS.GAME.UNBLOCK();
-                        }, undefined, true);
-
-
-                    }, undefined, true);
-                } else {
-                    var uperLayer = 1;
-                    var upperObject = null;
-                    for (var l = 8; l >= 1; l--) {
-                        var obj = maps[FIRSTMAP].map[`${l}_${(object.x)}_${(object.y + 1)}`];
-                        if (obj) {
-                            uperLayer = l;
-                            upperObject = obj;
-                            break;
-                        }
+                if (!$scope.transition) {
+                    if (object.staticing) {
+                        $scope.transition = false;
+                        return;
                     }
-
-
-                    if (object.speed)
-                        object.speed = object.base_speed;
-                    object.body.framerate = $scope.playerFrames;
-
-                    if (!object.isNPC && !object.isObject) {
+                    if (object.deeping) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    ACTIONS.GAME.BLOCK();
+                    if (!object.flying) {
+                        object.flying = true;
+                        object["body" + "wing1"].gotoAndPlay('up');
+                        object["body" + "wing2"].gotoAndPlay('up');
+                        if (object.speed)
+                            object.speed = object.base_speed / 1.5;
+                        object.body.framerate = 1;
                         createjs.Sound.stop();
-                        $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
-                        $scope.play("bgs" + FIRSTMAP, SOUNDS.bgs);
-                    }
 
-                    if (object.shadow)
-                        $scope.shadowY = 8;
+                        ACTIONS.ANIMATION.PLAY_IN(object, "wing1", function () {
+                            object["body" + "wing1"].visible = object["body" + "wing2"].visible = true;
+                            var uperLayer = 9;
+                            if (!object.isNPC && !object.isObject) {
+                                $scope.play("Wind", SOUNDS.bgm);
+                            }
 
-                    object["body" + "wing1"].visible = object["body" + "wing2"].visible = false;
-
-                    ACTIONS.ANIMATION.PLAY_PLAYER("wing1", undefined, function () {
-                        ACTIONS.PLAYER.MOVE(object.x, object.y + 1, function () {
                             eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
                             eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
                             eval(`layer${object.l}.removeChild(object.body);`);
@@ -1947,170 +2203,278 @@ pokemon.controller('play', ['$scope', function ($scope) {
                             eval(`layer${uperLayer}.addChild(object.body);`);
                             eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
                             eval(`layer${uperLayer}.addChild(object.shadow);`);
-                            object.flying = false;
-                            ACTIONS.GAME.UNBLOCK();
-                            ACTIONS.GAME.JUMP(object, object.x, object.y, true);
-                        }, undefined, true);
-                    });
+                            if (object.shadow)
+                                object.shadowY = $scope.baseHeight;
+                            ACTIONS.GAME.MOVEOBJECT(object, object.x, object.y - 1);
+                            if ($scope.hero.hidden) {
+                                $scope.hero.hidden = false;
+                                ACTIONS.ANIMATION.PLAY_IN(object, "Show", function () {
 
+                                });
+                                ACTIONS.GAME.ALPHA(object, 1);
+                            }
+                            ACTIONS.GAME.SCREEN(1, "#fff", 0.8);
+                            ACTIONS.ANIMATION.PLAY_IN(object, "Tornade", function () {
+
+                                ACTIONS.GAME.UNBLOCK();
+                            }, undefined, true);
+
+
+                        }, undefined, true);
+                    } else {
+                        var uperLayer = 1;
+                        var upperObject = null;
+                        for (var l = 9; l >= 1; l--) {
+                            var obj = maps[FIRSTMAP].map[`${l}_${(object.x)}_${(object.y + 1)}`];
+                            if (obj) {
+                                uperLayer = l;
+                                upperObject = obj;
+                                break;
+                            }
+                        }
+
+
+                        if (object.speed)
+                            object.speed = object.base_speed;
+                        object.body.framerate = $scope.playerFrames;
+
+                        if (!object.isNPC && !object.isObject) {
+                            createjs.Sound.stop();
+                            $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
+                            $scope.play("bgs" + FIRSTMAP, SOUNDS.bgs);
+                        }
+
+                        if (object.shadow)
+                            object.shadowY = 8;
+
+                        object["body" + "wing1"].visible = object["body" + "wing2"].visible = false;
+
+                        ACTIONS.ANIMATION.PLAY_IN(object, "wing1", function () {
+                            ACTIONS.GAME.MOVEOBJECT(object, object.x, object.y + 1, function () {
+                                eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                                eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                                eval(`layer${object.l}.removeChild(object.body);`);
+                                eval(`layer${object.l}.removeChild(object.shadow);`);
+                                object.l = uperLayer;
+                                eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                                eval(`layer${uperLayer}.addChild(object.body);`);
+                                eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                                eval(`layer${uperLayer}.addChild(object.shadow);`);
+                                object.flying = false;
+                                ACTIONS.GAME.UNBLOCK();
+                                if (object.isNPC) {
+                                    ACTIONS.NPC.JUMP_DOWN(object.name);
+                                } else
+                                    ACTIONS.GAME.JUMP(object, object.x, object.y, true);
+                                ACTIONS.GAME.SCREENOFF(1);
+                                $scope.transition = false;
+                            });
+                        });
+
+                    }
                 }
             },
             JUMP: function (object, x, y, nosound) {
-                if (object.flying)
-                    return;
-                for (var i in $scope.NPCS) {
-                    var NPC = $scope.NPCS[i];
-                    if (NPC) {
-                        if (NPC.body.visible) {
-                            if (NPC.x === x && NPC.y === y)
-                                return;
-                        }
-                    }
-                }
-
-                for (var i in $scope.OBJECTS) {
-                    var NPC = $scope.OBJECTS[i];
-                    if (NPC) {
-                        if (NPC.body.visible) {
-                            if (NPC.x === x && NPC.y === y)
-                                return;
-                        }
-                    }
-                }
-                var dx = difference(object.x, x);
-                var dy = difference(object.y, y);
-                var distance = dx > dy ? dx : dy;
-                var speed = (object.speed / 2) * distance;
-                var uperLayer = 1;
-                var upperObject = null;
-                for (var l = 1; l <= 9; l++) {
-                    var obj = maps[FIRSTMAP].map[`${l}_${(x)}_${(y)}`];
-                    if (obj) {
-                        uperLayer = l;
-                        upperObject = obj;
-                    }
-                }
-                if (upperObject) {
-                    if (uperLayer > object.l + 1)
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if (object.flying) {
+                        $scope.transition = false;
                         return;
-                    if (uperLayer === 2 && ["A3", "A4"].indexOf(upperObject.mode) !== -1)
+                    }
+                    if (object.staticing) {
+                        $scope.transition = false;
                         return;
-                    if (!object.deeping)
-                        if (upperObject.mode === "A1")
-                            if (!object.canDive)
+                    }
+
+                    for (var i in $scope.NPCS) {
+                        var NPC = $scope.NPCS[i];
+                        if (NPC) {
+                            if (NPC.body.visible) {
+                                if (NPC.x === x && NPC.y === y) {
+                                    $scope.transition = false;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    for (var i in $scope.OBJECTS) {
+                        var NPC = $scope.OBJECTS[i];
+                        if (NPC) {
+                            if (NPC.body.visible) {
+                                if (NPC.x === x && NPC.y === y) {
+                                    $scope.transition = false;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    var dx = difference(object.x, x);
+                    var dy = difference(object.y, y);
+                    var distance = dx > dy ? dx : dy;
+                    var speed = (object.speed / 2) * distance;
+                    var uperLayer = 1;
+                    var upperObject = null;
+                    for (var l = 1; l <= 9; l++) {
+                        var obj = maps[FIRSTMAP].map[`${l}_${(x)}_${(y)}`];
+                        if (obj) {
+                            uperLayer = l;
+                            upperObject = obj;
+                        }
+                    }
+                    if (upperObject) {
+                        if (uperLayer > object.l + 1) {
+                            $scope.transition = false;
+                            return;
+                        }
+                        //canTrap
+                        if (!object.watering)
+                            if (uperLayer === 1 && ["A1_B"].indexOf(upperObject.mode) !== -1) {
+                                $scope.transition = false;
                                 return;
-                    if (!object.deeping) {
-                        if (upperObject.mode === "A1") {
-                            uperLayer = 0;
-
-                            if (!object.isNPC && !object.isObject)
-                                ACTIONS.GAME.ALPHABASE(layer1, 1, 0.5);
-
-                            if (object.isNPC) {
-                                ACTIONS.NPC.ALPHA(object.name, 0.5);
-                            } else if (object.isObject) {
-                                ACTIONS.OBJECT.ALPHA(object.name, 0.5);
-                            } else {
-                                ACTIONS.PLAYER.ALPHA(0.5);
                             }
-                            if (object.speed)
-                                object.speed = object.base_speed * 2;
-                            object.body.framerate = 1;
-                            if (!object.isNPC && !object.isObject) {
-                                createjs.Sound.stop();
-                                $scope.play("Deep", SOUNDS.bgm);
+                        if (uperLayer === 2 && ["A3", "A4", "A1_B"].indexOf(upperObject.mode) !== -1) {
+                            $scope.transition = false;
+                            return;
+                        }
+                        if (!object.deeping)
+                            if (upperObject.mode === "A1")
+                                if (!object.canDive) {
+                                    $scope.transition = false;
+                                    return;
+                                }
+                        if (!object.deeping) {
+                            if (upperObject.mode === "A1") {
+                                uperLayer = 0;
+
+                                if (!object.isNPC && !object.isObject)
+                                    ACTIONS.GAME.ALPHABASE(layer1, 1, 0.5);
+
+                                if (object.isNPC) {
+                                    ACTIONS.NPC.ALPHA(object.name, 0.5);
+                                } else if (object.isObject) {
+                                    ACTIONS.OBJECT.ALPHA(object.name, 0.5);
+                                } else {
+                                    ACTIONS.PLAYER.ALPHA(0.5);
+                                }
+                                if (!$scope.hero.watering) {
+                                    if (object.speed)
+                                        object.speed = object.base_speed * 2;
+                                } else {
+                                    if (object.speed)
+                                        object.speed = object.base_speed / 2;
+                                }
+                                object.body.framerate = 1;
+                                if (!object.isNPC && !object.isObject) {
+                                    createjs.Sound.stop();
+                                    $scope.play("Deep", SOUNDS.bgm);
+                                }
+                                object.deeping = true;
+                                if ($scope.hero.hidden) {
+                                    $scope.hero.hidden = false;
+                                }
                             }
-                            object.deeping = true;
-                            if ($scope.hero.hidden) {
-                                $scope.hero.hidden = false;
+                        } else {
+                            if (uperLayer > 0) {
+                                //canTrap
+                                if (!object.watering)
+                                    if (uperLayer === 1 && ["A1_B"].indexOf(upperObject.mode) !== -1) {
+                                        $scope.transition = false;
+                                        return;
+                                    }
+
+                                if (!object.isNPC && !object.isObject)
+                                    ACTIONS.GAME.ALPHABASE(layer1, 1, 1);
+
+                                if (object.isNPC) {
+                                    ACTIONS.NPC.ALPHA(object.name, 1);
+                                } else if (object.isObject) {
+                                    ACTIONS.OBJECT.ALPHA(object.name, 1);
+                                } else {
+                                    ACTIONS.PLAYER.ALPHA(1);
+                                }
+                                if (!object.watering) {
+                                    if (object.speed)
+                                        object.speed = object.base_speed;
+                                } else {
+                                    if (object.speed)
+                                        object.speed = object.base_speed * 3;
+                                }
+
+                                object.body.framerate = $scope.playerFrames;
+                                $scope.play("Dive", SOUNDS.system);
+                                if (!object.isNPC && !object.isObject) {
+                                    createjs.Sound.stop();
+                                    $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
+                                    $scope.play("bgs" + FIRSTMAP, SOUNDS.bgs);
+                                }
+                                object.deeping = false;
                             }
                         }
-                    } else {
-                        if (uperLayer > 0) {
-                            if (!object.isNPC && !object.isObject)
-                                ACTIONS.GAME.ALPHABASE(layer1, 1, 1);
 
-                            if (object.isNPC) {
-                                ACTIONS.NPC.ALPHA(object.name, 1);
-                            } else if (object.isObject) {
-                                ACTIONS.OBJECT.ALPHA(object.name, 1);
-                            } else {
-                                ACTIONS.PLAYER.ALPHA(1,);
+                        if (uperLayer > object.l || uperLayer < object.l) {
+                            object.l = uperLayer;
+                            if (object.l !== 0) {
+                                eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                                eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                                eval(`layer${object.l}.removeChild(object.body);`);
+                                eval(`layer${object.l}.removeChild(object.shadow);`);
+
+                                eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                                eval(`layer${uperLayer}.addChild(object.body);`);
+                                eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                                eval(`layer${uperLayer}.addChild(object.shadow);`);
                             }
-                            if (object.speed)
-                                object.speed = object.base_speed;
-                            object.body.framerate = $scope.playerFrames;
-                            $scope.play("Dive", SOUNDS.system);
-                            if (!object.isNPC && !object.isObject) {
-                                createjs.Sound.stop();
-                                $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
-                                $scope.play("bgs" + FIRSTMAP, SOUNDS.bgs);
-                            }
-                            object.deeping = false;
                         }
-                    }
+                        if (!nosound)
+                            $scope.play("Jump", SOUNDS.system);
 
-                    if (uperLayer > object.l || uperLayer < object.l) {
-                        object.l = uperLayer;
-                        if (object.l !== 0) {
-                            eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
-                            eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
-                            eval(`layer${object.l}.removeChild(object.body);`);
-                            eval(`layer${object.l}.removeChild(object.shadow);`);
+                        var jompeo = 1 + eval((`0.${distance}+1`));
+                        if (nosound)
+                            jompeo = 1;
 
-                            eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
-                            eval(`layer${uperLayer}.addChild(object.body);`);
-                            eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
-                            eval(`layer${uperLayer}.addChild(object.shadow);`);
-                        }
-                    }
-                    if (!nosound)
-                        $scope.play("Jump", SOUNDS.system);
-
-                    var jompeo = 1 + eval((`0.${distance}+1`));
-                    if (nosound)
-                        jompeo = 1;
-
-                    createjs.Tween.get(object.shadow).to({
-                        x: ((x) * $scope.baseWidth),
-                        y: ((y) * $scope.baseWidth) + 8,
-                        scale: jompeo
-                    }, speed);
-
-                    for (var wing of ["wing1", "wing2"])
-                        createjs.Tween.get(object["body" + wing]).to({
+                        createjs.Tween.get(object.shadow).to({
                             x: ((x) * $scope.baseWidth),
-                            y: ((y) * $scope.baseWidth),
+                            y: ((y) * $scope.baseWidth) + 8,
                             scale: jompeo
                         }, speed);
 
-                    $scope.runCamera(object, ((x) * $scope.baseWidth), ((y) * $scope.baseWidth), speed);
-                    createjs.Tween.get(object.body).to({
-                        x: ((x) * $scope.baseWidth),
-                        y: ((y) * ($scope.baseHeight)),
-                        scale: jompeo
-                    }, speed).call(function () {
-                        createjs.Tween.get(object.body).to({scale: 1}, speed);
                         for (var wing of ["wing1", "wing2"])
-                            createjs.Tween.get(object["body" + wing]).to({scale: 1}, speed);
+                            createjs.Tween.get(object["body" + wing]).to({
+                                x: ((x) * $scope.baseWidth),
+                                y: ((y) * $scope.baseWidth),
+                                scale: jompeo
+                            }, speed);
+
+                        $scope.runCamera(object, ((x) * $scope.baseWidth), ((y) * $scope.baseWidth), speed);
+                        createjs.Tween.get(object.body).to({
+                            x: ((x) * $scope.baseWidth),
+                            y: ((y) * ($scope.baseHeight)),
+                            scale: jompeo
+                        }, speed).call(function () {
+                            createjs.Tween.get(object.body).to({scale: 1}, speed);
+                            for (var wing of ["wing1", "wing2"])
+                                createjs.Tween.get(object["body" + wing]).to({scale: 1}, speed);
 
 
-                        createjs.Tween.get(object.shadow).to({scale: 1}, speed).call(function () {
-                            object.x = x;
-                            object.y = y;
-                            if (object.deeping) {
+                            createjs.Tween.get(object.shadow).to({scale: 1}, speed).call(function () {
+                                object.x = x;
+                                object.y = y;
+                                if (object.deeping) {
 
-                                if (object.isNPC) {
-                                    ACTIONS.ANIMATION.PLAY_NPC(object.name, "Dive", "UP");
-                                } else if (object.isObject) {
-                                    ACTIONS.ANIMATION.PLAY_OBJECT(object.name, "Dive", "UP");
-                                } else {
-                                    ACTIONS.ANIMATION.PLAY_PLAYER("Dive", "UP");
+                                    if (object.isNPC) {
+                                        ACTIONS.ANIMATION.PLAY_NPC(object.name, "Dive", "UP");
+                                    } else if (object.isObject) {
+                                        ACTIONS.ANIMATION.PLAY_OBJECT(object.name, "Dive", "UP");
+                                    } else {
+                                        ACTIONS.ANIMATION.PLAY_PLAYER("Dive", "UP");
+                                    }
                                 }
-                            }
+                                $scope.transition = false;
+                            });
                         });
-                    });
 
+                    }
                 }
             },
             FILTER: function (object, light, alpha, color) {
@@ -2145,29 +2509,373 @@ pokemon.controller('play', ['$scope', function ($scope) {
             }
         },
         PLAYER: {
+            OFF: function () {
+                if ($scope.hero.staticing) {
+                    ACTIONS.PLAYER.Thunder();
+                }
+                if ($scope.hero.watering) {
+                    ACTIONS.PLAYER.WATERELEMENTAL();
+                }
+                if ($scope.hero.hidden) {
+                    ACTIONS.PLAYER.HIDE();
+                }
+                if ($scope.hero.flying) {
+                    ACTIONS.PLAYER.FLY();
+                }
+            },
+            WATERELEMENTAL: function () {
+                if ($scope.hero.staticing)
+                    return;
+                if ($scope.hero.walking)
+                    return;
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if ($scope.hero.flying) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.deeping) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.hidden) {
+                        $scope.transition = false;
+                        return;
+                    }
+
+                    if (!$scope.hero.watering) {
+                        $scope.hero.watering = true;
+                        if ($scope.hero.speed)
+                            $scope.hero.speed = $scope.hero.base_speed * 4;
+                        ACTIONS.ANIMATION.PLAY_PLAYER("WaterElemental", undefined, function () {
+                            $scope.transition = false;
+                        });
+                        ACTIONS.PLAYER.FILTER(0.5, 1, "blue");
+                    } else {
+                        $scope.hero.watering = false;
+                        if ($scope.hero.speed)
+                            $scope.hero.speed = $scope.hero.base_speed;
+                        ACTIONS.ANIMATION.PLAY_PLAYER("WaterElemental", undefined, function () {
+                            $scope.transition = false;
+                        });
+                        ACTIONS.PLAYER.CLEAR_FILTER();
+                    }
+                }
+            },
+            Thunder: function () {
+                if ($scope.hero.watering)
+                    return;
+                if ($scope.hero.walking)
+                    return;
+                if ($scope.hero.hidden)
+                    return;
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if ($scope.hero.flying) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.deeping) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.hidden) {
+                        $scope.transition = false;
+                        return;
+                    }
+
+                    if (!$scope.hero.staticing) {
+                        $scope.hero.staticing = true;
+                        if ($scope.hero.speed)
+                            $scope.hero.speed = $scope.hero.base_speed / 4;
+                        ACTIONS.ANIMATION.PLAY_UP($scope.hero, "Thunder", function () {
+                            ACTIONS.PLAYER.FILTER(1.5, 1, "#FFDD3C");
+                            $scope.transition = false;
+                        });
+
+                    } else {
+                        $scope.hero.staticing = false;
+                        if ($scope.hero.speed)
+                            $scope.hero.speed = $scope.hero.base_speed;
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Show", undefined, function () {
+                            $scope.transition = false;
+                        });
+                        ACTIONS.PLAYER.CLEAR_FILTER();
+                    }
+                }
+            },
+            FIREELEMENTAL: function () {
+                if ($scope.hero.staticing) {
+                    if (!$scope.transition) {
+                        $scope.transition = true;
+                        if (ACTIONS.PLAYER.POSITION() === "up") {
+                            ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                                ACTIONS.PLAYER.TELEPORT($scope.hero.x, 0);
+                                $scope.transition = false;
+                            });
+                        }
+
+                        if (ACTIONS.PLAYER.POSITION() === "down") {
+                            ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                                ACTIONS.PLAYER.TELEPORT($scope.hero.x, maps[FIRSTMAP].height - 1);
+                                $scope.transition = false;
+                            });
+                        }
+
+                        if (ACTIONS.PLAYER.POSITION() === "left") {
+                            ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                                ACTIONS.PLAYER.TELEPORT(0, $scope.hero.y);
+                                $scope.transition = false;
+                            });
+                        }
+
+                        if (ACTIONS.PLAYER.POSITION() === "right") {
+                            ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                                ACTIONS.PLAYER.TELEPORT(maps[FIRSTMAP].width - 1, $scope.hero.y);
+                                $scope.transition = false;
+                            });
+                        }
+                    }
+                    return;
+                }
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if ($scope.hero.flying) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.deeping) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.hidden) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    var oldposition = ACTIONS.PLAYER.POSITION();
+                    ACTIONS.PLAYER.GET().body.gotoAndPlay("gire");
+                    setTimeout(function () {
+                        if (!$scope.hero.watering) {
+                            ACTIONS.PLAYER.FILTER(0.5, 1, "red");
+
+                            ACTIONS.ANIMATION.PLAY_PLAYER("FireElemental", undefined, function () {
+                                if ($scope.hero.speed)
+                                    $scope.hero.speed = 30;
+
+                                if (oldposition === "up") {
+                                    ACTIONS.PLAYER.MOVE($scope.hero.x, 0);
+                                }
+
+                                if (oldposition === "down") {
+                                    ACTIONS.PLAYER.MOVE($scope.hero.x, maps[FIRSTMAP].height - 1);
+
+                                }
+
+                                if (oldposition === "left") {
+                                    ACTIONS.PLAYER.MOVE(0, $scope.hero.y);
+
+                                }
+
+                                if (oldposition === "right") {
+                                    ACTIONS.PLAYER.MOVE(maps[FIRSTMAP].width - 1, $scope.hero.y);
+                                }
+
+                                setTimeout(function () {
+                                    if ($scope.hero.speed)
+                                        $scope.hero.speed = $scope.hero.base_speed;
+                                    ACTIONS.PLAYER.CLEAR_FILTER();
+                                    ACTIONS.PLAYER.GET().body.gotoAndPlay(oldposition);
+                                    $scope.transition = false;
+
+                                }, 1000);
+                            });
+                        } else {
+                            ACTIONS.ANIMATION.PLAY_PLAYER("Humo");
+                            ACTIONS.PLAYER.GET().body.gotoAndPlay(oldposition);
+                            $scope.transition = false;
+                        }
+
+                    }, 1000);
+                }
+
+            },
+            EARTHELEMENTAL: function () {
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if ($scope.hero.flying) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.deeping) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.hidden) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    var oldposition = ACTIONS.PLAYER.POSITION();
+
+                    ACTIONS.ANIMATION.PLAY_PLAYER("EarthElemental", oldposition.toUpperCase(), function () {
+                        setTimeout(function () {
+                            var x, y;
+                            if (oldposition === "up") {
+                                x = $scope.hero.x;
+                                y = $scope.hero.y - 1;
+                            }
+                            if (oldposition === "down") {
+                                x = $scope.hero.x;
+                                y = $scope.hero.y + 1;
+                            }
+                            if (oldposition === "left") {
+                                x = $scope.hero.x - 1;
+                                y = $scope.hero.y;
+                            }
+                            if (oldposition === "right") {
+                                x = $scope.hero.x + 1;
+                                y = $scope.hero.y;
+                            }
+
+                            var uperLayer = 1;
+                            var upperObject = null;
+                            for (var l = 1; l <= 9; l++) {
+                                var obj = maps[FIRSTMAP].map[`${l}_${(x)}_${(y)}`];
+                                if (obj) {
+                                    uperLayer = l;
+                                    upperObject = obj;
+                                }
+                            }
+
+                            var L = uperLayer + 1;
+                            if (!maps[FIRSTMAP].event[`${L}_${(x)}_${(y)}`]) {
+                                if ($scope.hero.staticing) {
+
+                                    x = $scope.hero.x;
+                                    y = $scope.hero.y;
+                                    $scope.transition = false;
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x, y - 1, 183, "A");
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x, y + 1, 183, "A2");
+
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x - 1, y - 1, 183, "B");
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x + 1, y - 1, 183, "C");
+
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x - 1, y + 1, 183, "B2");
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x + 1, y + 1, 183, "C2");
+
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x - 1, y, 183, "A");
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x + 1, y, 183, "A2");
+
+
+                                } else {
+                                    ACTIONS.PLAYER.CREATEMURITO(L, x, y, 199);
+                                }
+                            } else {
+                                $scope.transition = false;
+                            }
+                        });
+                    });
+                }
+
+            },
+            CREATEMURITO: function (L, x, y, frame, adde) {
+                var name = "Murito " + new Date().getTime() + "" + (adde || "");
+                maps[FIRSTMAP].event[`${L}_${(x)}_${(y)}`] = {
+                    "name": name,
+                    "description": "",
+                    "movement": "fixed",
+                    "look": "DOWN",
+                    "trigger": "click",
+                    "trigger_step": 1,
+                    "conditions": "1==1",
+                    "actions": [],
+                    "visible": "1==1",
+                    "object": {
+                        "url": "..\/resources\/objects\/Outside_B.png",
+                        "animation": [
+                            frame
+                        ],
+                        "framerate": 3,
+                        "width": 48,
+                        "height": 48,
+                        "sound": "",
+                        "canBreak": "0",
+                        "canMove": "0",
+                        "canMount": "1"
+                    },
+                    "isActor": "0",
+                    "route": [],
+                    "hero": {
+                        "name": "",
+                        "x": 0,
+                        "y": 0,
+                        "l": 1,
+                        "body": null,
+                        "shadow": null,
+                        "speed": 300,
+                        "walking": false
+                    }
+                };
+                var e = maps[FIRSTMAP].event[`${L}_${(x)}_${(y)}`];
+                $scope.loadObject(e).then(function () {
+                    $scope.OBJECTS[e.name] = {
+                        isObject: true,
+                        name: e.name,
+                        x: x,
+                        y: y,
+                        l: L,
+                        body: null,
+                        shadow: null,
+                        speed: 300,
+                        base_speed: 300,
+                        event: e,
+                        canJump: true,
+                        canDive: true,
+                        canFly: true,
+                        deeping: false,
+                        shadowY: 8,
+                    };
+                    $scope.drawObject($scope.OBJECTS[e.name], e.name, x, y, L);
+                    $scope.transition = false;
+                });
+            },
             TELE: function () {
-                if (ACTIONS.PLAYER.POSITION() === "up") {
-                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
-                        ACTIONS.PLAYER.TELEPORT($scope.hero.x, 0);
-                    });
-                }
 
-                if (ACTIONS.PLAYER.POSITION() === "down") {
-                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
-                        ACTIONS.PLAYER.TELEPORT($scope.hero.x, maps[FIRSTMAP].height - 1);
+                if ($scope.hero.staticing) {
+                    ACTIONS.ANIMATION.PLAY_PLAYER("Infinite", undefined, function () {
+                        ACTIONS.PLAYER.TELEPORT(0, 0, "Elinfinito");
+                        $scope.transition = false;
                     });
+                    return;
                 }
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if (ACTIONS.PLAYER.POSITION() === "up") {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                            ACTIONS.PLAYER.TELEPORT($scope.hero.x, 0);
+                            $scope.transition = false;
+                        });
+                    }
 
-                if (ACTIONS.PLAYER.POSITION() === "left") {
-                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
-                        ACTIONS.PLAYER.TELEPORT(0, $scope.hero.y);
-                    });
-                }
+                    if (ACTIONS.PLAYER.POSITION() === "down") {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                            ACTIONS.PLAYER.TELEPORT($scope.hero.x, maps[FIRSTMAP].height - 1);
+                            $scope.transition = false;
+                        });
+                    }
 
-                if (ACTIONS.PLAYER.POSITION() === "right") {
-                    ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
-                        ACTIONS.PLAYER.TELEPORT(maps[FIRSTMAP].width - 1, $scope.hero.y);
-                    });
+                    if (ACTIONS.PLAYER.POSITION() === "left") {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                            ACTIONS.PLAYER.TELEPORT(0, $scope.hero.y);
+                            $scope.transition = false;
+                        });
+                    }
+
+                    if (ACTIONS.PLAYER.POSITION() === "right") {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                            ACTIONS.PLAYER.TELEPORT(maps[FIRSTMAP].width - 1, $scope.hero.y);
+                            $scope.transition = false;
+                        });
+                    }
                 }
             },
             SHAKE: function (interval, distance, times, callback) {
@@ -2185,26 +2893,39 @@ pokemon.controller('play', ['$scope', function ($scope) {
                 return null;
             },
             HIDE: function () {
-                if ($scope.hero.flying)
+                if ($scope.hero.watering)
                     return;
-                if ($scope.hero.deeping)
-                    return;
-                if (!$scope.hero.hidden) {
-                    $scope.hero.hidden = true;
-                    if ($scope.hero.speed)
-                        $scope.hero.speed = $scope.hero.base_speed * 1.50;
-                    ACTIONS.ANIMATION.PLAY_PLAYER("Hide", undefined, function () {
-
-                    });
-                    ACTIONS.PLAYER.ALPHA(0.1);
-                } else {
-                    $scope.hero.hidden = false;
-                    if ($scope.hero.speed)
-                        $scope.hero.speed = $scope.hero.base_speed;
-                    ACTIONS.ANIMATION.PLAY_PLAYER("Show", undefined, function () {
-
-                    });
-                    ACTIONS.PLAYER.ALPHA(1);
+                if (!$scope.transition) {
+                    $scope.transition = true;
+                    if ($scope.hero.flying) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.staticing) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if ($scope.hero.deeping) {
+                        $scope.transition = false;
+                        return;
+                    }
+                    if (!$scope.hero.hidden) {
+                        $scope.hero.hidden = true;
+                        if ($scope.hero.speed)
+                            $scope.hero.speed = $scope.hero.base_speed * 1.50;
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Hide", undefined, function () {
+                            $scope.transition = false;
+                        });
+                        ACTIONS.PLAYER.ALPHA(0.1);
+                    } else {
+                        $scope.hero.hidden = false;
+                        if ($scope.hero.speed)
+                            $scope.hero.speed = $scope.hero.base_speed;
+                        ACTIONS.ANIMATION.PLAY_PLAYER("Show", undefined, function () {
+                            $scope.transition = false;
+                        });
+                        ACTIONS.PLAYER.ALPHA(1);
+                    }
                 }
             },
             ALPHA: function (alpha, callback) {
@@ -2572,7 +3293,76 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             CLEAR_FILTER: function (name) {
                 ACTIONS.GAME.CLEAR_FILTER($scope.NPCS[name]);
-            }
+            },
+            LIGH: function (npc, time) {
+                ACTIONS.GAME.FLASH("white", 1);
+                if ($scope.ambient === "darkcave") {
+                    ACTIONS.NPC.FILTER(npc, 2, 1, "#000");
+                    $scope.ambient = "natural";
+                    ACTIONS.AMBIENT.RUN();
+                    setTimeout(function () {
+                        ACTIONS.GAME.PAUSE();
+                        $scope.ambient = "darkcave";
+                        ACTIONS.AMBIENT.RUN();
+                        ACTIONS.NPC.CLEAR_FILTER(npc);
+                        setTimeout(function () {
+                            ACTIONS.GAME.RESUME();
+                        }, 1000);
+                    }, time * 1000)
+                }
+            },
+            FLY: function (name) {
+                ACTIONS.GAME.FLY($scope.NPCS[name]);
+            },
+            HIDE: function (name) {
+                if ($scope.NPCS[name].flying)
+                    return;
+                if ($scope.NPCS[name].deeping)
+                    return;
+                if (!$scope.NPCS[name].hidden) {
+                    $scope.NPCS[name].hidden = true;
+                    if ($scope.NPCS[name].speed)
+                        $scope.NPCS[name].speed = $scope.NPCS[name].base_speed * 1.50;
+                    ACTIONS.ANIMATION.PLAY_IN($scope.NPCS[name], "Hide", function () {
+
+                    });
+
+                    ACTIONS.NPC.ALPHA(name, 0.1);
+                } else {
+                    $scope.NPCS[name].hidden = false;
+                    if ($scope.NPCS[name].speed)
+                        $scope.NPCS[name].speed = $scope.NPCS[name].base_speed;
+                    ACTIONS.ANIMATION.PLAY_IN($scope.NPCS[name], "Show", function () {
+
+                    });
+                    ACTIONS.NPC.ALPHA(name, 1);
+                }
+            },
+            TELE: function (name) {
+                if (ACTIONS.NPC.POSITION(name) === "up") {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                        ACTIONS.NPC.TELEPORT(name, $scope.NPCS[name].x, 0);
+                    });
+                }
+
+                if (ACTIONS.NPC.POSITION(name) === "down") {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                        ACTIONS.NPC.TELEPORT(name, $scope.NPCS[name].x, maps[FIRSTMAP].height - 1);
+                    });
+                }
+
+                if (ACTIONS.NPC.POSITION(name) === "left") {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                        ACTIONS.NPC.TELEPORT(name, 0, $scope.NPCS[name].y);
+                    });
+                }
+
+                if (ACTIONS.NPC.POSITION(name) === "right") {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                        ACTIONS.NPC.TELEPORT(name, maps[FIRSTMAP].width - 1, $scope.NPCS[name].y);
+                    });
+                }
+            },
         },
         OBJECT: {
             SHAKE: function (name, interval, distance, times, callback) {
@@ -2667,6 +3457,37 @@ pokemon.controller('play', ['$scope', function ($scope) {
             },
             ORIGINAL_FRAMES: function (name) {
                 ACTIONS.OBJECT.GET(name).body._animation.frames = ACTIONS.OBJECT.GET(name).event.object.animation;
+            },
+            DESTROY: function (name) {
+                ACTIONS.ANIMATION.PLAY_OBJECT(name, "Break", undefined, function () {
+
+                });
+                ACTIONS.ANIMATION.PLAY_OBJECT(name, "AfterBreak", "UP", function () {
+                    eval(`layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].body);`);
+                    delete $scope.OBJECTS[name];
+                });
+            },
+            RODATE: function (position, name) {
+                var moveer = true;
+                if (position === "up")
+                    if ($scope.collision($scope.OBJECTS[name], $scope.OBJECTS[name].x, $scope.OBJECTS[name].y - 1))
+                        moveer = false;
+                if (position === "down")
+                    if ($scope.collision($scope.OBJECTS[name], $scope.OBJECTS[name].x, $scope.OBJECTS[name].y + 1))
+                        moveer = false;
+                if (position === "left")
+                    if ($scope.collision($scope.OBJECTS[name], $scope.OBJECTS[name].x - 1, $scope.OBJECTS[name].y))
+                        moveer = false;
+                if (position === "right")
+                    if ($scope.collision($scope.OBJECTS[name], $scope.OBJECTS[name].x + 1, $scope.OBJECTS[name].y))
+                        moveer = false;
+
+                ACTIONS.ANIMATION.PLAY_OBJECT(name, "Move", undefined);
+                if (moveer) {
+
+                    eval(`ACTIONS.OBJECT.MOVE_${position.toUpperCase().replace("W", "").replace("DON", "DOWN")}(name);`);
+
+                }
             }
         },
         MESSAGE: {

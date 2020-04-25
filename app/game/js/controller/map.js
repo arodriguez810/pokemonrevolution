@@ -40,6 +40,7 @@ EVENT = function () {
         sound: "",
         canBreak: "0",
         canMove: "0",
+        canMount: "0"
     };
     this.isActor = "0";
     this.route = [];

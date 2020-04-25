@@ -203,6 +203,16 @@
                                             <label class="form-label">Can Move? </label>
                                         </div>
                                     </div>
+                                    <div class="col-sm-1">
+                                        <div class="form-group form-float ">
+                                            <select required title="Can Mount?" class="form-control show-tick"
+                                                    ng-model="currentEvent.object.canMount">
+                                                <option value="0">No</option>
+                                                <option value="1">Si</option>
+                                            </select>
+                                            <label class="form-label">Can Mount? </label>
+                                        </div>
+                                    </div>
                                     <div class="col-sm-7">
                                         <div class="form-group form-float ">
                                             Frames:

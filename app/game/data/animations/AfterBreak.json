@@ -1,1 +1,1 @@
-{"name":"AfterBreak","category":"Wind","file":"..\/resources\/animations\/Wind\/2_29_03_08_10_48_04.png","frames":[0,1,2,3,5,6,7,8,10,11,12,13],"sound":"..\/resources\/audio\/Sound\/Breath.ogg","rows":"3","columns":"5","framerate":30}
+{"name":"AfterBreak","category":"Wind","file":"..\/resources\/animations\/Wind\/2_29_03_08_10_48_04.png","frames":[0,1,2,3,5,6,7,8,10,11,12,13],"sound":"..\/resources\/audio\/Sound\/Breath.ogg","rows":"3","columns":"5","framerate":30,"isSystem":"1"}

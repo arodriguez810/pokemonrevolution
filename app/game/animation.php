@@ -124,13 +124,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <select required title="System?" class="form-control show-tick"
+                                        ng-model="form.isSystem">
+                                    <option value="0">No</option>
+                                    <option value="1">Si</option>
+                                </select>
+                                <label class="form-label">System? </label>
+                            </div>
+                        </div>
                     </div>
                     <center>
-                        <div class="row clearfix bg-black" >
+                        <div class="row clearfix bg-black">
                             <canvas width="{{img().w}}" height="{{img().h}}" style="border: #2C009F 1px solid"
                                     id="player"></canvas>
                         </div>
-                        <div class="row clearfix" >
+                        <div class="row clearfix">
                             <button type="button" ng-click="play()"
                                     class="btn bg-amber  waves-effect">
                                 <i class="material-icons">play_circle_filled</i>

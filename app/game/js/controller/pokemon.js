@@ -459,6 +459,42 @@ LOGROS = {
         "icon": 307,
         "script": "ACTIONS.PLAYER.TELE()"
     },
+    SoyAgua: {
+        "name": "Soy Agua",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica te unes con el agua para poder trepar cascadas y nadar mas rápido",
+        "icon": 68,
+        "script": "ACTIONS.PLAYER.WATERELEMENTAL()"
+    },
+    SoyFuego: {
+        "name": "Soy Fuego",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica te conviertes en fuego para salir impulsado como un cañón",
+        "icon": 65,
+        "script": "ACTIONS.PLAYER.FIREELEMENTAL()"
+    },
+    SoyTierra: {
+        "name": "Soy Tierra",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podrás crear rocas que te servirán como puentes y resortes",
+        "icon": 69,
+        "script": "ACTIONS.PLAYER.EARTHELEMENTAL()"
+    },
+    SoyTrueno: {
+        "name": "Soy Trueno",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podrás ser uno con el trueno incrementando tus posibilidades fisicas",
+        "icon": 67,
+        "script": "ACTIONS.PLAYER.Thunder()"
+    },
+    Tiempo: {
+        "name": "Control de Tiempo",
+        "term": "T\u00e9cnica",
+        "desc": "Con esta t\u00e9cnica podrás cambiar el tiempo actual",
+        "icon": 221,
+        "script": "ACTIONS.AMBIENT.CHANGETIME()"
+    }
+
 };
 MOVESFIND = {
     POKEMON_MOVES: function (name) {

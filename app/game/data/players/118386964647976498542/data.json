@@ -5,59 +5,19 @@
   "avatar": 1,
   "tier": "Omega",
   "logros": [
-    {
-      "name": "Saltarin",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las estructuras, tambi\u00e9n puedes hacerlo d\u00e1ndole click a tu personaje",
-      "icon": 141,
-      "script": "ACTIONS.PLAYER.JUMPING()"
-    },
-    {
-      "name": "Bucear",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las aguas para bucear, debes ser Saltarin como requisito",
-      "icon": 12
-    },
-    {
-      "name": "Destello",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s iluminar las cuevas por un tiempo",
-      "icon": 73,
-      "script": "ACTIONS.PLAYER.LIGH(30)"
-    },
-    {
-      "name": "Vuelo",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica si lo deseas puedes volar, perdon pokemon!",
-      "icon": 226,
-      "script": "ACTIONS.PLAYER.FLY()"
-    },
-    {
-      "name": "Destruir",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s romper algunos objetos al tocarlos",
-      "icon": 79
-    },
-    {
-      "name": "Mover",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s mover algunos objetos al tocarlos",
-      "icon": 78
-    },
-    {
-      "name": "Invisibilidad",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s ocultarte de los entrenadores y pokemones",
-      "icon": 20,
-      "script": "ACTIONS.PLAYER.HIDE()"
-    },
-    {
-      "name": "Teletransportación",
-      "term": "T\u00e9cnica",
-      "desc": "Con esta t\u00e9cnica podr\u00e1s teletransportarte al limite de tu mirada",
-      "icon": 307,
-      "script": "ACTIONS.PLAYER.TELE()"
-    }
+    "Saltarin",
+    "Bucear",
+    "Destello",
+    "Vuelo",
+    "Destruir",
+    "Mover",
+    "Invisibilidad",
+    "Teletransportacion",
+    "SoyAgua",
+    "SoyFuego",
+    "SoyTierra",
+    "SoyTrueno",
+    "Tiempo"
   ],
   "canJump": true,
   "canDive": true,
@@ -65,6 +25,7 @@
   "canBreak": true,
   "canMove": true,
   "canHide": true,
+  "canWater": true,
   "pokemons": [
     {
       "quality": 0,
