@@ -16,6 +16,33 @@
     .DialogWindow {
         padding: 8px;
     }
+
+    .pokemonLife {
+        width: 40%;
+        float: right;
+        text-align: right;
+        font-size: 18px;
+        border: 2px #000 solid;
+        background-color: whitesmoke;
+    }
+
+    .friendLife {
+
+    }
+
+    .pokemonLife div {
+        width: 100%;
+        text-transform: capitalize;
+        padding: 8px;
+        transition: width 4s,
+    }
+
+    .friendLife {
+        float: left;
+        text-align: left;
+    }
+
+
 </style>
 <div id="footer" class="{{menuOpen?'bg-black':'bg-blue-grey'}}"
      style="position: absolute;z-index: 9999;width: 100%;padding: 3px">
@@ -107,7 +134,7 @@
             </tr>
             <tr>
                 <td colspan="10" style="text-align: right">
-                    Tiempo: {{TimeText}}
+                    Tiempo: {{TimeText}}, version: <?php echo $version ?>
                 </td>
             </tr>
 
@@ -151,14 +178,17 @@
         <div>
             <div class="table-bordered" style="width: 20%;float: left;min-height: 275px;">
                 <span class="badge bg-blue" style="width: 100%"> Click para ver</span>
-                <div
-                        style="text-transform: capitalize;text-align: center !important;width: 50%;display: inline-block"
-                        ng-repeat="(kpo,pokemon) in session.pokemons">
-                    <img ng-dblclick="upPokemon()" ng-click="menuPokemon($index)" style=" transform: scale(0.7);"
+                <div class=".sorting"
+                     style="text-transform: capitalize;text-align: center !important;width: 50%;display: inline-block"
+                     ng-repeat="(kpo,pokemon) in session.pokemons">
+                    <img on-long-press="itemOnLongPress($index)" ng-dblclick="upPokemon()"
+                         ng-click="menuPokemon($index)" style="transform: scale(0.7);"
                          src="{{pokemon.imageUrl}}">
                 </div>
                 <div>
-                    <span class="badge bg-pink" style="width: 100%"> Doble para mover</span>
+                    <span class="badge bg-pink" style="width: 100%"> Mantener</span>
+                    <span class="badge bg-pink" style="width: 100%"> Presionado</span>
+                    <span class="badge bg-pink" style="width: 100%"> Para mover</span>
                 </div>
             </div>
             <div style="width: 80%;float: left;    min-height: 275px;">
@@ -213,8 +243,13 @@
                                         style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
                                         class="btn ">
                                     <img src="../resources/poekemon/types/{{move.type}}.png"
-                                         style="margin-left: 5px"> <b> {{move.name}}</b>
+                                         style="margin-left: 5px">
+                                    <b> {{move.name}}</b>
+                                    <img src="../resources/poekemon/category/{{move.category}}.png"
+                                         style="margin-left: 5px">
+
                                 </btn>
+
                             </div>
                         </td>
                         <td>
@@ -312,14 +347,13 @@
             </div>
         </div>
     </div>
-
     <div ng-if="!menuMessage && menuOpen && subMenuOpen==='logros'"
          style="color: white;overflow: scroll;width: 97%;min-height: 270px;padding: 15px;"
          class="bg-orange tab-pane fade animated bounceInRight in active">
         <div ng-repeat="(mkey,logro) in  skills">
             <btn
                     ng-click="desc(logro.term,logro.name,logro.desc)"
-                    style="float: left;font-size: large;text-align: center;padding: 17px;margin: 10px;min-width: 121px"
+                    style="float: left;font-size: large;text-align: center;padding: 17px;margin: 10px;min-width: 65px"
                     class="btn {{logro.script?'bg-blue-grey':'bg-yellow'}} ">
                 <img style="width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;"
                      ng-if="logro.icon">
@@ -328,5 +362,53 @@
         </div>
     </div>
 
+</div>
 
+<div id="battleMenu" style="position: absolute;z-index: 9999;width: 100%;padding: 3px;display: none">
+    <div id="lifes">
+        <div class="pokemonLife friendLife" ng-click="BATTLEOBJS.menu_open();">
+            {{BATTLEOBJS.friend().name}} <img src="../resources/icons/{{BATTLEOBJS.friend().gender}}.png">
+            <div class="bg-light-green" style="width: {{BATTLEOBJS.friend_hp()}}%">
+
+            </div>
+        </div>
+
+        <div class="pokemonLife" ng-click="BATTLEOBJS.friend_stat('hp',30)">
+            <img src="../resources/icons/{{BATTLEOBJS.target().gender}}.png"> {{BATTLEOBJS.target().name}}
+            <div class="bg-light-green " style="width: {{BATTLEOBJS.target_hp()}}%">
+
+            </div>
+        </div>
+    </div>
+    <div ng-if="menuMessage"
+         style="color: white;overflow: scroll;width: 97%;min-height: 270px;z-index: 30;"
+         class="bg-blue-grey tab-pane fade animated bounceInLeft in active">
+        <div style="margin: 15px">
+            <h3>{{menuMessage.term}}</h3>
+            <h4>{{menuMessage.name}}:</h4>
+            <p style="font-size: 18px">{{menuMessage.desc}}</p>
+            <button onclick="ACTIONS.GAME.MENUMESSAGE_CLOSE()" type="button" class="btn btn-danger waves-effect">
+                <i class="material-icons">keyboard_backspace</i>
+            </button>
+        </div>
+    </div>
+
+    <div ng-if="BATTLEOBJS.menu" style="color: white;overflow: scroll;width: 97%;min-height: 270px;padding: 15px;"
+         class="bg-blue-grey tab-pane fade animated bounceInRight in active">
+        <btn
+                ng-repeat="(mkey,move) in  BATTLEOBJS.friend().moves"
+                ng-click="desc('Movimiento',move.name,move.shortDesc)"
+                style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
+                class="btn ">
+            <img src="../resources/poekemon/types/{{move.type}}.png"
+                 style="margin-left: 5px">
+            <b> {{move.name}}</b>
+            <img src="../resources/poekemon/category/{{move.category}}.png"
+                 style="margin-left: 5px">
+            <btn class="btn btn-default" style="float: right;">USAR</btn>
+        </btn>
+        <button ng-click="BATTLEOBJS.menu_close()" type="button" class="btn btn-danger waves-effect">
+            <i class="material-icons">keyboard_backspace</i>
+        </button>
+    </div>
 </div>

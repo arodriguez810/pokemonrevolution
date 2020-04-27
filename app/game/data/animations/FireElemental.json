@@ -1,1 +1,1 @@
-{"name":"FireElemental","category":"Fire","file":"..\/resources\/animations\/Fire\/Fira.png","frames":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],"sound":"..\/resources\/audio\/Sound\/Fire4.ogg","rows":"4","columns":"5","framerate":30,"isSystem":"1"}
+{"name":"FireElemental","category":"Fire","file":"..\/resources\/animations\/Fire\/Firaga.png","frames":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34],"sound":"..\/resources\/audio\/Sound\/Fire4.ogg","rows":"7","columns":"5","framerate":30,"isSystem":"1"}

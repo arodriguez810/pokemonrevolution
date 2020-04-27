@@ -169,7 +169,7 @@ POKEMOMFIND = {
     },
     TRAINER: function (tier, type, base) {
         var tiers = POKEMOMFIND.tier_get(tier);
-        var trainer = POKEMON.trainersRange[type];
+        var trainer = POKEMON.trainersRange[type || "noob"];
         var pokemons = [];
         for (var pokemon of trainer) {
             var tiersD = POKEMOMFIND.next(tiers, pokemon);
@@ -243,8 +243,11 @@ POKEMOMFIND = {
                 for (var form of pokemon.otherFormes) {
                     if (form.indexOf("gmax") !== -1)
                         giga = form;
-                    if (form.indexOf("mega") !== -1)
-                        mega = form;
+                    if (form.indexOf("mega") !== -1) {
+                        if (!Array.isArray(mega))
+                            mega = [];
+                        mega.push(form);
+                    }
                 }
             }
             var alltypes = {};
@@ -261,6 +264,42 @@ POKEMOMFIND = {
             if (superShiny)
                 shiny = false;
             var mymoves = MOVESFIND.POKEMON_MOVES_GENERATE(name);
+            var evoProb = 0;
+            var regresiveCount = 30;
+            var myCategory = false;
+            var evos = OSO(pokemon.evos);
+            if (mega) {
+                if (!evos) {
+                    evos = [];
+                }
+                evos = evos.concat(mega);
+            }
+
+            if (evos) {
+                if (evos.length > 0) {
+                    var index = 0;
+                    for (var category in POKEMON.categories) {
+                        var tiers = POKEMON.categories[category];
+                        var tiersNext = POKEMON.categories[index + 1];
+                        var exist = eval(`APIS.POKEDEX.filter(d=>{ return ${tiers.rules} && d.keyname===pokemon.keyname })`);
+                        var existEqual = eval(`APIS.POKEDEX.filter(d=>{ return ${tiers.rules} && d.keyname===evos[0] })`);
+                        if (!myCategory) {
+                            if (exist.length > 0)
+                                myCategory = true;
+                            if (existEqual.length > 0)
+                                break;
+                        } else {
+                            if (existEqual.length > 0) {
+                                regresiveCount = Math.ceil(regresiveCount / 2);
+                                break;
+                            } else {
+                                regresiveCount = Math.ceil(regresiveCount / 2);
+                            }
+                        }
+                        index++;
+                    }
+                }
+            }
             return {
                 quality: superShiny ? 30 : (shiny ? 20 : getRandomInt(10)),
                 shiny: shiny,
@@ -277,7 +316,8 @@ POKEMOMFIND = {
                 ability: MOVESFIND.ABILITY(ability),
                 heightm: pokemon.heightm,
                 weightkg: pokemon.weightkg,
-                evos: pokemon.evos,
+                evos: evos,
+                evosProb: regresiveCount,
                 giga: giga,
                 mega: mega,
                 battle: {
@@ -295,8 +335,7 @@ POKEMOMFIND = {
             };
         } else
             return undefined;
-    }
-    ,
+    },
     ADD: function (item) {
         var pokemons = OSO(SESSION.pokemons);
         if (pokemons.length >= 6) {
@@ -325,7 +364,6 @@ POKEMOMFIND = {
         }
     },
     ADDWILD: function () {
-        var pokemons = OSO(SESSION.pokemons);
         var item = POKEMOMFIND.WILD(SESSION.tier);
         POKEMOMFIND.ADD(item);
     },
@@ -408,26 +446,29 @@ POKEMOMFIND = {
 LOGROS = {
     Saltarin: {
         "name": "Saltarin",
+        "key": "Saltarin",
         "term": "T\u00e9cnica",
-        "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las estructuras, tambi\u00e9n puedes hacerlo d\u00e1ndole click a tu personaje",
-        "icon": 141,
-        "script": "ACTIONS.PLAYER.JUMPING()"
+        "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las estructuras, puedes hacerlo d\u00e1ndole click a tu personaje",
+        "icon": 141
     },
     Bucear: {
         "name": "Bucear",
+        "key": "Bucear",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica podr\u00e1s saltar las aguas para bucear, debes ser Saltarin como requisito",
         "icon": 12
     },
     Destello: {
         "name": "Destello",
+        "key": "Destello",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica podr\u00e1s iluminar las cuevas por un tiempo",
-        "icon": 73,
+        "icon": 71,
         "script": "ACTIONS.PLAYER.LIGH(30)"
     },
     Vuelo: {
         "name": "Vuelo",
+        "key": "Vuelo",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica si lo deseas puedes volar!",
         "icon": 226,
@@ -435,18 +476,21 @@ LOGROS = {
     },
     Destruir: {
         "name": "Destruir",
+        "key": "Destruir",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica podr\u00e1s eliminar algunos objetos al tocarlos",
         "icon": 79
     },
     Mover: {
         "name": "Mover",
+        "key": "Mover",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica podr\u00e1s mover algunos objetos al tocarlos",
         "icon": 78
     },
     Invisibilidad: {
         "name": "Invisibilidad",
+        "key": "Invisibilidad",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica podr\u00e1s ocultarte de los entrenadores y pokemones",
         "icon": 20,
@@ -454,41 +498,47 @@ LOGROS = {
     },
     Teletransportacion: {
         "name": "Teletransportación",
+        "key": "Teletransportacion",
         "term": "T\u00e9cnica",
-        "desc": "Con esta t\u00e9cnica podr\u00e1s teletransportarte al limite de tu mirada",
+        "desc": "Con esta t\u00e9cnica podr\u00e1s teletransportarte al limite de tu mirada, puede contener poderes ocultos",
         "icon": 307,
         "script": "ACTIONS.PLAYER.TELE()"
     },
     SoyAgua: {
         "name": "Soy Agua",
+        "key": "SoyAgua",
         "term": "T\u00e9cnica",
-        "desc": "Con esta t\u00e9cnica te unes con el agua para poder trepar cascadas y nadar mas rápido",
+        "desc": "Con esta t\u00e9cnica te unes con el agua para poder trepar cascadas y nadar mas rápido, puede contener poderes ocultos",
         "icon": 68,
         "script": "ACTIONS.PLAYER.WATERELEMENTAL()"
     },
     SoyFuego: {
         "name": "Soy Fuego",
+        "key": "SoyFuego",
         "term": "T\u00e9cnica",
-        "desc": "Con esta t\u00e9cnica te conviertes en fuego para salir impulsado como un cañón",
+        "desc": "Con esta t\u00e9cnica te conviertes en fuego para salir impulsado como un cañón, puede contener poderes ocultos",
         "icon": 65,
         "script": "ACTIONS.PLAYER.FIREELEMENTAL()"
     },
     SoyTierra: {
         "name": "Soy Tierra",
+        "key": "SoyTierra",
         "term": "T\u00e9cnica",
-        "desc": "Con esta t\u00e9cnica podrás crear rocas que te servirán como puentes y resortes",
+        "desc": "Con esta t\u00e9cnica podrás crear rocas que te servirán como puentes y resortes, puede contener poderes ocultos",
         "icon": 69,
         "script": "ACTIONS.PLAYER.EARTHELEMENTAL()"
     },
     SoyTrueno: {
         "name": "Soy Trueno",
+        "key": "SoyTrueno",
         "term": "T\u00e9cnica",
-        "desc": "Con esta t\u00e9cnica podrás ser uno con el trueno incrementando tus posibilidades fisicas",
+        "desc": "Con esta t\u00e9cnica podrás ser uno con el trueno incrementando tus posibilidades fisicas y magicas con poderes inesperados",
         "icon": 67,
         "script": "ACTIONS.PLAYER.Thunder()"
     },
     Tiempo: {
         "name": "Control de Tiempo",
+        "key": "Tiempo",
         "term": "T\u00e9cnica",
         "desc": "Con esta t\u00e9cnica podrás cambiar el tiempo actual",
         "icon": 221,
@@ -607,3 +657,255 @@ MOVESFIND = {
     }
 };
 
+GAMESCREEN = $("#game");
+POKEMONBATTLE = {
+    FORMS: {
+        "stand": "stand",
+        "punch": "punch",
+        "evade": "evade",
+        "bad": "bad",
+        "order": "order",
+        "happy": "happy",
+        "confiado": "confiado",
+        "point_bad": "point_bad",
+        "sad": "sad",
+        "stand_fight": "stand_fight",
+        "stand_fight_interrogation": "stand_fight_interrogation",
+        "sad_2": "sad_2",
+        "hurt": "hurt",
+        "stand_order": "stand_order",
+        "sad_3": "sad_3",
+        "evade_2": "evade_2",
+        "animate": "animate",
+        "dead": "dead",
+    },
+    LAUNCH: function ($scope, tier, trainer, type, baseType) {
+        $("#footer").hide();
+        $("#battleMenu").show();
+
+        ACTIONS.GAME.BLOCK();
+        ACTIONS.SOUND.STOPALL();
+        ACTIONS.SOUND.BattleMusic("");
+        $scope.BATTLEOBJS = {};
+
+        ACTIONS.GAME.SCREEN(0.5, "#000", 1, async function () {
+            for (var l = 0; l <= 9; l++) {
+                eval(`layer${l}.visible =false;`);
+            }
+            ACTIONS.CAMERA.ZERO();
+            layerBattle.removeAllChildren();
+            layerBattle.alpha = 0;
+            //DrawBackGround
+            $scope.BATTLEOBJS.menu = false;
+            $scope.BATTLEOBJS.menu_close = function () {
+                $scope.play("Cancel", SOUNDS.system);
+                $scope.BATTLEOBJS.menu = false;
+            };
+            $scope.BATTLEOBJS.menu_open = function () {
+                $scope.play("Menu", SOUNDS.system);
+                $scope.BATTLEOBJS.menu = true;
+            };
+
+            $scope.BATTLEOBJS.hpc = 4;
+            $scope.BATTLEOBJS.FRIENDINDEX = 0;
+            $scope.BATTLEOBJS.TARGETINDEX = 0;
+            $scope.BATTLEOBJS.BG = POKEMONBATTLE.DRAWBG($scope);
+            $scope.BATTLEOBJS.HERO = POKEMONBATTLE.HERO($scope);
+            $scope.BATTLEOBJS.ENEMY = POKEMONBATTLE.ENEMY($scope, trainer);
+
+            if (trainer) {
+                $scope.BATTLEOBJS.TARGETS = POKEMOMFIND.TRAINER(tier, type, baseType);
+            } else {
+                $scope.BATTLEOBJS.TARGETS = [POKEMOMFIND.WILD(tier)];
+            }
+
+            console.log($scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX]);
+
+            // Listeners
+            $scope.BATTLEOBJS.friend = function () {
+                return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
+            };
+            $scope.BATTLEOBJS.friend_hp = function () {
+                var base = ($scope.BATTLEOBJS.friend().stats.hp * $scope.BATTLEOBJS.hpc);
+                var real = ($scope.BATTLEOBJS.friend().stats.hp * $scope.BATTLEOBJS.hpc) - $scope.BATTLEOBJS.friend().battle.temp.stats.hp;
+                return (real * 100) / base;
+            };
+            $scope.BATTLEOBJS.friend_stat = function (stat, modifier) {
+                if (modifier !== undefined) {
+                    $scope.BATTLEOBJS.friend().battle.temp.stats[stat] += parseInt(modifier);
+                }
+                return ($scope.BATTLEOBJS.friend().stats[stat]) - $scope.BATTLEOBJS.friend().battle.temp.stats[stat];
+            };
+            $scope.BATTLEOBJS.friend_moves = function () {
+                return $scope.BATTLEOBJS.friend().moves;
+            };
+
+            $scope.BATTLEOBJS.target = function () {
+                return $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
+            };
+            $scope.BATTLEOBJS.target_hp = function () {
+                var base = ($scope.BATTLEOBJS.target().stats.hp * $scope.BATTLEOBJS.hpc);
+                var real = ($scope.BATTLEOBJS.target().stats.hp * $scope.BATTLEOBJS.hpc) - $scope.BATTLEOBJS.target().battle.temp.stats.hp;
+                return (real * 100) / base;
+            };
+            $scope.BATTLEOBJS.target_stat = function (stat, modifier) {
+                if (modifier !== undefined) {
+                    $scope.BATTLEOBJS.target().battle.temp.stats[stat] += parseInt(modifier);
+                }
+                return ($scope.BATTLEOBJS.target().stats[stat]) - $scope.BATTLEOBJS.target().battle.temp.stats[stat];
+            };
+            // Listeners
+
+            ACTIONS.GAME.ALPHABASE(layerBattle, 0.5, 1, function () {
+                //Draw Hero
+                setTimeout(async () => {
+                    $scope.BATTLEOBJS.FRIEND = await POKEMONBATTLE.FRIEND($scope);
+                    $scope.BATTLEOBJS.HERO.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
+                    ACTIONS.ANIMATION.THROWNATURAL('Pokeball_Omega',
+                        $scope.BATTLEOBJS.HERO.body.x,
+                        $scope.BATTLEOBJS.HERO.body.y,
+                        $scope.BATTLEOBJS.HERO.body.x,
+                        $scope.BATTLEOBJS.HERO.body.y + ($scope.peopleHeight * 1.5),
+                        400,
+                        function () {
+                            ACTIONS.ANIMATION.PLAYNATURAL('OutPokeball', $scope.BATTLEOBJS.HERO.body.x, $scope.BATTLEOBJS.HERO.body.y + ($scope.peopleHeight * 1.5), function () {
+                                ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);
+                                ACTIONS.SOUND.PLAY($scope.BATTLEOBJS.friend().cryUrl, SOUNDS.system);
+                                if (trainer) {
+                                    setTimeout(async () => {
+                                        $scope.BATTLEOBJS.TARGET = await POKEMONBATTLE.TARGET($scope);
+                                        $scope.BATTLEOBJS.ENEMY.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
+                                        ACTIONS.ANIMATION.THROWNATURAL('Pokeball_Omega',
+                                            $scope.BATTLEOBJS.ENEMY.body.x,
+                                            $scope.BATTLEOBJS.ENEMY.body.y,
+                                            $scope.BATTLEOBJS.ENEMY.body.x,
+                                            $scope.BATTLEOBJS.ENEMY.body.y + ($scope.peopleHeight * 1.5),
+                                            400,
+                                            function () {
+                                                ACTIONS.ANIMATION.PLAYNATURAL('OutPokeball', $scope.BATTLEOBJS.ENEMY.body.x, $scope.BATTLEOBJS.ENEMY.body.y + ($scope.peopleHeight * 1.5), function () {
+                                                    ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);
+                                                    ACTIONS.SOUND.PLAY($scope.BATTLEOBJS.target().cryUrl, SOUNDS.system);
+                                                });
+                                            });
+                                    }, 500);
+                                } else {
+                                    $scope.BATTLEOBJS.TARGET = POKEMONBATTLE.TARGET($scope);
+                                    ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);
+                                }
+                            });
+                        });
+                }, 1000);
+            });
+        });
+    },
+    END: function ($scope) {
+        ACTIONS.SOUND.STOPALL();
+        ACTIONS.SOUND.BGM_RESTORE();
+        ACTIONS.SOUND.BGS_RESTORE();
+        ACTIONS.CAMERA.PLAYER();
+        for (var l = 0; l <= 9; l++) {
+            eval(`layer${l}.visible =true;`);
+        }
+        $scope.BATTLEOBJS.FRIEND.dom.parentNode.removeChild($scope.BATTLEOBJS.FRIEND.dom);
+        layerBattle.removeAllChildren();
+        layerBattle.alpha = 0;
+        ACTIONS.GAME.SCREENOFF(1, function () {
+            $("#footer").show();
+            ACTIONS.GAME.UNBLOCK();
+        })
+    },
+    DRAWBG: function ($scope) {
+        var imageD = mapQueues[FIRSTMAP].getResult("BG");
+        var BG = new createjs.ScaleBitmap(mapQueues[FIRSTMAP].getResult("BG"), new createjs.Rectangle(0, 0, imageD.width, imageD.height));
+        BG.setDrawSize($scope.width * $scope.baseWidth, $scope.height * $scope.baseHeight);
+        layerBattle.addChild(BG);
+        return BG;
+    },
+    HERO: function ($scope) {
+        var hero = new createjs.Bitmap(mapQueues["player_" + $scope.session.id].getResult(`SV`));
+        hero.cache(0, 0, hero.width, hero.height);
+        var Sprite = new createjs.SpriteSheet({
+            framerate: $scope.playerFrames,
+            "images": [hero.image],
+            frames: {width: $scope.peopleWidth, height: $scope.peopleHeight, count: 54},
+            "animations": $scope.peopleAnimationConfig,
+        });
+        var heroBody = new createjs.Sprite(Sprite, "stand");
+        var heroShadow = new createjs.Bitmap(mapQueues["player_" + $scope.session.id].getResult(`SHADOWBIG`));
+        heroShadow.x = heroBody.x = 170;
+        heroShadow.scaleX = heroBody.scaleX = -1;
+        heroShadow.y = heroBody.y = 70;
+        heroShadow.y += 43;
+        heroShadow.x += 10;
+        layerBattle.addChild(heroShadow);
+        layerBattle.addChild(heroBody);
+        return {body: heroBody, shadow: heroShadow};
+    },
+    ENEMY: function ($scope, name) {
+        var hero = new createjs.Bitmap(mapQueues["player_" + (name || $scope.session.id)].getResult(`SV`));
+        hero.cache(0, 0, hero.width, hero.height);
+        var Sprite = new createjs.SpriteSheet({
+            framerate: $scope.playerFrames,
+            "images": [hero.image],
+            frames: {width: $scope.peopleWidth, height: $scope.peopleHeight, count: 54},
+            "animations": $scope.peopleAnimationConfig,
+        });
+        var heroBody = new createjs.Sprite(Sprite, "stand");
+        var heroShadow = new createjs.Bitmap(mapQueues["player_" + $scope.session.id].getResult(`SHADOWBIG`));
+        heroShadow.x = heroBody.x = 400;
+        heroShadow.y = heroBody.y = 70;
+        heroShadow.y += 43;
+        heroShadow.x -= 10;
+        layerBattle.addChild(heroShadow);
+        layerBattle.addChild(heroBody);
+        if (!name) {
+            heroBody.visible = false;
+            heroShadow.visible = false;
+        }
+        return {body: heroBody, shadow: heroShadow};
+    },
+    FRIEND: ($scope) => new Promise(async (resolve, reject) => {
+        var firend = new Image();
+        firend.style = "z-index: 1;top 0;left: 0;";
+        firend.src = $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX].imageUrl;
+        document.getElementById("main").appendChild(firend);
+        var friendBox = new createjs.DOMElement(firend);
+        friendBox.scaleX = -1;
+        friendBox.x = GAMESCREEN.width() / 4;
+        friendBox.y = 70;
+        friendBox.y += 43;
+        friendBox.y += 64;
+        friendBox.alpha = 0;
+        firend.onload = function (evt) {
+            var img = evt.path[0];
+            //friendBox.x += img.width;
+            // friendBox.y += img.height;
+            layerBattle.addChild(friendBox);
+            resolve({body: friendBox, dom: firend});
+        };
+
+    }),
+    TARGET: ($scope) => new Promise(async (resolve, reject) => {
+        var firend = new Image();
+        firend.style = "z-index: 1;top 0;left: 0;";
+        firend.src = $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX].imageUrl;
+        document.getElementById("main").appendChild(firend);
+        var friendBox = new createjs.DOMElement(firend);
+        friendBox.x = GAMESCREEN.width() - (GAMESCREEN.width() / 4);
+        friendBox.y = 70;
+        friendBox.y += 43;
+        friendBox.y += 64;
+        friendBox.alpha = 0;
+
+        firend.onload = function (evt) {
+            var img = evt.path[0];
+            friendBox.x -= img.width;
+            if ($scope.BATTLEOBJS.FRIEND.dom.height > img.height)
+                friendBox.y += ($scope.BATTLEOBJS.FRIEND.dom.height - img.height);
+            else
+                friendBox.y -= (img.height - $scope.BATTLEOBJS.FRIEND.dom.height);
+            layerBattle.addChild(friendBox);
+            resolve({body: friendBox, dom: firend});
+        };
+    }),
+};

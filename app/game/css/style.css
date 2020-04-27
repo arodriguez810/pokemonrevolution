@@ -3234,7 +3234,7 @@ section.content {
     font-size: 26px !important;
     position: relative !important;
     left: 0px !important;
-    top: 6px !important;
+    top: 2px !important;
 }
 
 .btn:not(.btn-link):not(.btn-circle) {
@@ -3254,7 +3254,6 @@ section.content {
 
 .btn:not(.btn-link):not(.btn-circle) i {
     font-size: 20px;
-    position: relative;
     top: 3px;
 }
 

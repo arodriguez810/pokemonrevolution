@@ -50,14 +50,15 @@
 ?>
 <body oncontextmenu="return false;" style="overflow: hidden;font-family:font-family: monospace;">
 
-<section id="play" ng-app="pokemon" ng-controller="play" style="position: relative;">
+<section id="play" ng-app="pokemon" ng-controller="play">
     <!--GAME-->
-    <canvas style="position: absolute;top: 40px"
-            width="{{bounds().width}}"
-            height="{{bounds().height}}"
-            id="game">
-    </canvas>
-
+    <div id="main">
+        <canvas style="position: absolute"
+                width="{{bounds().width}}"
+                height="{{bounds().height}}"
+                id="game">
+        </canvas>
+    </div>
     <!--MENU-->
     <?php include 'playmenu.php' ?>
 
@@ -71,6 +72,9 @@
 <?php include_once($path . '/js.php') ?>
 
 <script src="js/controller/play.js?v=<?php echo $version ?>"></script>
+<script src="js/controller/playvars.js?v=<?php echo $version ?>"></script>
+<script src="js/controller/playfunctions.js?v=<?php echo $version ?>"></script>
+<script src="js/controller/playactions.js?v=<?php echo $version ?>"></script>
 <script src="js/controller/pokemon.js?v=<?php echo $version ?>"></script>
 <script src="js/joy.min.js?v=<?php echo $version ?>"></script>
 <script>
@@ -79,35 +83,6 @@
         ACTIONS.GAME.PLAY(PROFILE);
     }
 
-    LASTMOVEMENT = undefined;
-    TOUCHER = undefined;
-    var dynamic = nipplejs.create({
-        zone: document.getElementById('play'),
-        color: 'white'
-    });
-    dynamic.on('added', function (evt, nipple) {
-        nipple.on('start move end dir plain', function (evt) {
-            if (evt.target.direction)
-                if (evt.target.direction.angle) {
-                    LASTMOVEMENT = evt.target.direction.angle.toUpperCase();
-                    if (!ACTIONS.GAME.ISBLOCK())
-                        eval(`ACTIONS.PLAYER.MOVE_${evt.target.direction.angle.toUpperCase()}();`);
-                    if (!TOUCHER) {
-                        TOUCHER = setInterval(function () {
-                            if (LASTMOVEMENT) {
-                                if (!ACTIONS.GAME.ISBLOCK())
-                                    eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
-                            }
-                        }, 10);
-                    }
-                }
-        });
-    }).on('removed', function (evt, nipple) {
-        clearInterval(TOUCHER);
-        TOUCHER = undefined;
-        nipple.off('start move end dir plain', function () {
-        });
-    });
 
     // var conn = new WebSocket('ws://localhost:9090');
     // conn.onopen = function (e) {
