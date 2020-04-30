@@ -66,7 +66,7 @@ function playvars($scope) {
     $scope.pause = false;
     $scope.block = false;
     $scope.width = 12;
-    $scope.height = 6;
+    $scope.height = 8;
     $scope.baseHeight = 48;
 
     $scope.peopleWidth = 64;

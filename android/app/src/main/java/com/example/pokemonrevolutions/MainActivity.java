@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setSupportZoom(false);
         PokemonRevolution.loadUrl("http://mangalos.com");
-        //PokemonRevolution.setInitialScale(getScale(800, 600));
+//        PokemonRevolution.setInitialScale(getScale(576, 384));
         PokemonRevolution.setWebViewClient(new WebViewClient());
 
     }

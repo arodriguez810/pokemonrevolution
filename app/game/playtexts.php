@@ -1,5 +1,5 @@
 <!--TEXTS-->
-<div style="position: absolute;display: none;width: 100%;z-index: 99999" id="texts">
+<div style="position: absolute;display: none;width: 98%;z-index: 99999" id="texts">
     <div class="DialogWindow" style="min-height: 172px;min-width: 600px">
         <div class="DialogTitle">
             <img style="float: right"

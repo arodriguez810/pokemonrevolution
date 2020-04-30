@@ -16,8 +16,10 @@ function playactions($scope) {
         {name: 'bobeda', icon: 'desktop_windows', color: 'teal'},
         {name: 'friends', icon: 'child_care', color: 'pink'},
     ];
-    $scope.menuPokemon = function (index) {
+    $scope.menuPokemon = function (index, detail) {
         $scope.selectedPokemon = index;
+        if (detail)
+            $scope.PKM.pokemonDetail = true;
         $scope.play("Pointer", SOUNDS.system);
         ACTIONS.SOUND.PLAY($scope.selectedPokemonClick().cryUrl, SOUNDS.system);
     };
@@ -38,12 +40,13 @@ function playactions($scope) {
         $scope.play("Pointer", SOUNDS.system);
         $scope.subMenuOpen = value;
     };
-    $scope.selectedPokemonClick = function () {
+    $scope.selectedPokemonClick = function (detail) {
         if ($scope.session)
             if ($scope.session.pokemons)
                 if ($scope.session.pokemons[$scope.selectedPokemon]) {
                     return $scope.session.pokemons[$scope.selectedPokemon];
                 }
+
         return null;
     };
     $scope.selectedBobedaClick = function () {
@@ -93,7 +96,6 @@ function playactions($scope) {
     $scope.skills = [];
     $scope.transition = false;
     $scope.TimeText = "";
-
     $scope.cooldowns = {
         Destello: {cooldown: 40},
         Vuelo: {cooldown: 180},
@@ -105,8 +107,9 @@ function playactions($scope) {
         SoyTrueno: {cooldown: 300},
         Tiempo: {cooldown: 10},
     };
-
     $scope.inactiveTool = [];
+
+
     ACTIONS = {
         AMBIENT: {
             RUN: function () {
@@ -2101,7 +2104,6 @@ function playactions($scope) {
                     var item = OSO($scope.messageQuee[0]);
                     $scope.messageQuee.shift();
                     $scope.dialogText = item.message || "...";
-
                     if (item.hero.isNPC)
                         $scope.dialogHero = $scope.NPCS[item.hero];
                     else
@@ -2337,13 +2339,19 @@ function playactions($scope) {
                     var sprite = new createjs.Sprite(SpriteSheet);
                     sprite.x = ((x * $scope.baseWidth) - (frameW / 2)) + $scope.midWidth;
                     sprite.y = ((y * $scope.baseHeight) - (frameH / 2)) + $scope.midHeight;
-                    sprite.scale = scale || 1;
+                    if (scale === true) {
+                        var ratio = img.width / $scope.bounds().width;
+                        sprite.scaleX = sprite.scaleY = ratio;
+                    } else
+                        sprite.scale = scale || 1;
+
                     layerAnimation.addChild(sprite);
 
+                    var thetime = time === true ? (animation.frames.length / parseInt(animation.framerate)) * 1000 : time;
                     createjs.Tween.get(sprite).to({
                         x: ((x2 * $scope.baseWidth) - (frameW / 2)) + $scope.midWidth,
                         y: ((y2 * $scope.baseHeight) - (frameH / 2)) + $scope.midHeight
-                    }, time).call(function () {
+                    }, thetime).call(function () {
 
                         sprite.removeAllEventListeners();
                         layerAnimation.removeChild(sprite);
@@ -2379,13 +2387,18 @@ function playactions($scope) {
                     var sprite = new createjs.Sprite(SpriteSheet);
                     sprite.x = ((x) - (frameW / 2));
                     sprite.y = ((y) - (frameH / 2));
-                    sprite.scale = scale || 1;
+                    if (scale === true) {
+                        var ratio = img.width / $scope.bounds().width;
+                        sprite.scaleX = sprite.scaleY = ratio;
+                    } else
+                        sprite.scale = scale || 1;
                     layerAnimation.addChild(sprite);
 
+                    var thetime = time === true ? (animation.frames.length / parseInt(animation.framerate)) * 1000 : time;
                     createjs.Tween.get(sprite).to({
                         x: x2 - (frameW / 2),
                         y: y2 - (frameH / 2)
-                    }, time).call(function () {
+                    }, thetime).call(function () {
 
                         sprite.removeAllEventListeners();
                         layerAnimation.removeChild(sprite);
@@ -2543,7 +2556,6 @@ function playactions($scope) {
                     $scope.play("bgm" + FIRSTMAP, SOUNDS.bgm);
                 }
             }
-
         },
         CAMERA: {
             ZERO: function () {
@@ -2560,6 +2572,112 @@ function playactions($scope) {
             BATTLEEND: function () {
                 POKEMONBATTLE.END($scope);
             },
+        },
+        UNIT: {
+            TEST: function (vare) {
+                console.log(eval(`angular.element(document.getElementById('play')).scope().${vare};`));
+            },
+            NEXT: function () {
+                POKEMONBATTLE.FRIENDTEST($scope, GLOBALINDEXTEST);
+                GLOBALINDEXTEST++;
+            },
+            FRIEND: function (index) {
+                POKEMONBATTLE.FRIENDTEST($scope, index);
+            },
+            PKM: function () {
+                return $scope.PKM;
+            },
+            BATTLEOBJS: function () {
+                return $scope.BATTLEOBJS;
+            }
         }
+    };
+    GLOBALINDEXTEST = 0;
+
+
+    // Listeners
+    $scope.PKM = {};
+    $scope.PKM.hpc = 4;
+    $scope.PKM.mainMenu = false;
+    $scope.PKM.menu = false;
+    $scope.PKM.pokemonDetail = false;
+    $scope.PKM.previewClose = function () {
+        $scope.PKM.pokemonDetail = false;
+    };
+    $scope.PKM.menu_close = function () {
+        $scope.play("Cancel", SOUNDS.system);
+        $scope.PKM.menu = false;
+    };
+
+    $scope.PKM.talk = function (message, time) {
+        $scope.play("Talk", SOUNDS.system);
+        $("#enemyText").html(`${$scope.BATTLEOBJS.ENEMY.name}: ${message}`);
+        setTimeout(function () {
+            $("#enemyText").html("");
+        }, time * 1000);
+    };
+    $scope.PKM.menu_open = function () {
+        $scope.play("Menu", SOUNDS.system);
+        $scope.PKM.menu = true;
+    };
+
+    $scope.PKM.friend = function (index) {
+        return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
+    };
+
+
+    $scope.PKM.target = function () {
+        return $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
+    };
+
+    $scope.PKM.attack = function (move, target) {
+        if (target) {
+            POKEMONBATTLE.ATTACK($scope, move,
+                $scope.BATTLEOBJS.ENEMY, $scope.BATTLEOBJS.HERO,
+                $scope.PKM.target(), $scope.PKM.friend(),
+                function () {
+                    console.log("end enemy attack");
+                });
+        } else {
+            POKEMONBATTLE.ATTACK($scope, move,
+                $scope.BATTLEOBJS.HERO, $scope.BATTLEOBJS.ENEMY,
+                $scope.PKM.friend(), $scope.PKM.target(),
+                function () {
+                    console.log("end attack");
+                });
+        }
+    };
+
+    $scope.PKM.changefriend = function (target) {
+        if (target) {
+
+        } else
+            POKEMONBATTLE.CHANGEPOKEMON($scope, $scope.selectedPokemon);
+    };
+
+    $scope.PKM.hp = function (obj) {
+        var base = (obj.stats.hp * $scope.PKM.hpc);
+        var real = (obj.stats.hp * $scope.PKM.hpc) - obj.battle.temp.stats.hp;
+        real = real <= 0 ? 0 : real;
+        return (real * 100) / base;
+    };
+    $scope.PKM.stat = function (obj, stat, modifier) {
+        if (modifier !== undefined) {
+            obj.battle.temp.stats[stat] += parseInt(modifier);
+        }
+        return (obj.stats[stat]) - obj.battle.temp.stats[stat];
+    };
+    $scope.PKM.friend_moves = function (obj) {
+        return obj.moves;
+    };
+    $scope.PKM.hpcolor = function (hp) {
+        if (hp >= 50)
+            return "bg-light-green";
+        else if (hp <= 49 && hp >= 25)
+            return "bg-amber";
+        else if (hp >= 1)
+            return "bg-red";
+        else
+            return "bg-lala";
     };
 }

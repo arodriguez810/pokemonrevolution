@@ -1,6 +1,6 @@
 <?php
 
-$version = "1.0.0.23";
+$version = "1.0.0.32";
 
 function TitleImg()
 {

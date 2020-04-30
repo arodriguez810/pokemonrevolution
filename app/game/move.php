@@ -54,10 +54,8 @@
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="form-group form-float ">
-                                <select class="form-control show-tick" ng-model="form.animation">
-                                    <option ng-repeat="(key,value) in animations" value="{{value.name}}">{{value.name}}
-                                    </option>
-                                </select>
+                                <textarea class="form-control show-tick" ng-model="form.animation">
+                                    </textarea>
                                 <label class="form-label">Animation</label>
                             </div>
                         </div>
@@ -143,11 +141,8 @@
                                             src="../resources/poekemon/types/{{move.type}}.png">
                                 </td>
                                 <td>
-                                    <select class="form-control show-tick" ng-model="list[key].animation">
-                                        <option ng-repeat="(keys,values) in animations" value="{{values.name}}">
-                                            {{values.name}}
-                                        </option>
-                                    </select>
+                                    <textarea class="form-control show-tick" ng-model="move.animation">
+                                    </textarea>
                                 </td>
                                 <td>
                                     <textarea class="form-control show-tick" ng-model="move.code">

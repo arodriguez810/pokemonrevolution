@@ -1,59 +1,61 @@
 <!DOCTYPE html>
 <html>
 <?php $path = 'layout/'; ?>
-<?php include_once($path . '/head.php') ?>
 
-<body class="theme-light-green">
-<!-- Page Loader -->
-<?php include_once($path . '/loader.php') ?>
-<!-- #END# Page Loader -->
-<!-- Overlay For Sidebars -->
-<div class="overlay"></div>
+<?php
 
-<!-- #END# Overlay For Sidebars -->
-<!-- Search Bar -->
+$version = "1.0.0.39";
 
-<!-- #END# Search Bar -->
-<!-- Top Bar -->
-<!-- #Top Bar -->
-<style>
-    #play {
-
+function TitleImg()
+{
+    $time = date("H");
+    if ($time < 18) {
+        echo "Plain";
+    } else {
+        echo "Night";
     }
-
-    body {
-        background-color: black;
-    }
-
-    canvas {
-        width: 100%;
-    }
-
-    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-        color: #fff !important;
-        cursor: default;
-        background-color: #2196F3 !important;;
-        border: 1px solid #2196F3 !important;;
-        border-bottom-color: transparent;
-    }
-
-    .collection_0 {
-        z-index: -500 !important;
-        left: -99999px !important;
-        top: -99999px !important;
-    }
-
-</style>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<?PHP
+}
 
 ?>
-<body oncontextmenu="return false;" style="overflow: hidden;font-family:font-family: monospace;">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content=" initial-scale=0.899, maximum-scale=0.899, user-scalable=no" name="viewport">
+    <title>Pokemon Revolution</title>
+    <link rel="icon" href="images/logo/favicon.ico" type="image/x-icon">
+    <link href="js/font/material.css?v=<?php echo $version ?>" rel="stylesheet" type="text/css">
+    <link href="plugins/bootstrap/css/bootstrap.css?v=<?php echo $version ?>" rel="stylesheet">
+    <link href="css/game.css?v=<?php echo $version ?>" rel="stylesheet">
+    <link href="plugins/animate-css/animate.css?v=<?php echo $version ?>" rel="stylesheet"/>
+    <link href="plugins/sweetalert/sweetalert.css?v=<?php echo $version ?>" rel="stylesheet"/>
+    <link href="css/style.css?v=<?php echo $version ?>" rel="stylesheet">
+    <link href="css/themes/all-themes.css?v=<?php echo $version ?>" rel="stylesheet"/>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+          content="1002650457102-m57p66ca2bnf2oe830bf1mvlfimscr79.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <style>
+        .swal2-container {
+            z-index: 999999999999;
+        }
+    </style>
+    <script>
+        LOADEDG = 0;
+
+        function loadedg() {
+            LOADEDG++;
+        }
+    </script>
+</head>
+<?php include_once($path . '/loader.php') ?>
+<div class="overlay"></div>
+
+<body oncontextmenu="return false;" style="overflow: hidden;font-family:font-family: monospace;background-color: black">
 
 <section id="play" ng-app="pokemon" ng-controller="play">
     <!--GAME-->
     <div id="main">
-        <canvas style="position: absolute"
+        <canvas style="z-index: 1; position: absolute; margin: auto; top: 0px; left: 0px; right: 0px; bottom: 0px; width: {{bounds().width}}px; height: {{bounds().height}}px;"
                 width="{{bounds().width}}"
                 height="{{bounds().height}}"
                 id="game">
@@ -77,6 +79,16 @@
 <script src="js/controller/playactions.js?v=<?php echo $version ?>"></script>
 <script src="js/controller/pokemon.js?v=<?php echo $version ?>"></script>
 <script src="js/joy.min.js?v=<?php echo $version ?>"></script>
+<style>
+
+    #main {
+        touch-action: auto !important;
+    }
+    body{
+        font-size: 24px !important;
+    }
+
+</style>
 <script>
     function onSignIn(googleUser) {
         PROFILE = googleUser.getBasicProfile();

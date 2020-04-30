@@ -771,6 +771,7 @@ function playfunctions($scope) {
 
     //Base
     STAGE.on("stagemousedown", $scope.moveMe);
+    STAGE.on("click", $scope.moveMe);
 
 
     //Starters and Loadings
@@ -1044,40 +1045,44 @@ function playfunctions($scope) {
         APIS.TYPES = await POKEMONAPI.TYPES();
         APIS.LEARNS = await POKEMONAPI.LEARNS();
         APIS.POKEDEX = await POKEMONAPI.ALL();
+        //APIS.POKEDEX = APIS.POKEDEX.sort((a, b) => (a.keyname > b.keyname) ? 1 : -1);
 
         if (!$scope.$$phase)
             $scope.$digest();
-        if (!$scope.padder) {
-            $scope.padder = true;
-            LASTMOVEMENT = undefined;
-            TOUCHER = undefined;
-            var dynamic = nipplejs.create({
-                zone: document.getElementById('play'),
-                color: 'white'
-            });
-            dynamic.on('added', function (evt, nipple) {
-                nipple.on('start move end dir plain', function (evt) {
-                    if (evt.target.direction)
-                        if (evt.target.direction.angle) {
-                            LASTMOVEMENT = evt.target.direction.angle.toUpperCase();
-                            if (!ACTIONS.GAME.ISBLOCK())
-                                eval(`ACTIONS.PLAYER.MOVE_${evt.target.direction.angle.toUpperCase()}();`);
-                            if (!TOUCHER) {
-                                TOUCHER = setInterval(function () {
-                                    if (LASTMOVEMENT) {
-                                        if (!ACTIONS.GAME.ISBLOCK())
-                                            eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
-                                    }
-                                }, 10);
+        LASTMOVEMENT = undefined;
+        TOUCHER = undefined;
+        if (createjs.Touch.isSupported()) {
+            if (!$scope.padder) {
+                $scope.padder = true;
+
+                var dynamic = nipplejs.create({
+                    zone: document.getElementById('main'),
+                    color: 'white'
+                });
+                dynamic.on('added', function (evt, nipple) {
+                    nipple.on('start move end dir plain', function (evt) {
+                        if (evt.target.direction)
+                            if (evt.target.direction.angle) {
+                                LASTMOVEMENT = evt.target.direction.angle.toUpperCase();
+                                if (!ACTIONS.GAME.ISBLOCK())
+                                    eval(`ACTIONS.PLAYER.MOVE_${evt.target.direction.angle.toUpperCase()}();`);
+                                if (!TOUCHER) {
+                                    TOUCHER = setInterval(function () {
+                                        if (LASTMOVEMENT) {
+                                            if (!ACTIONS.GAME.ISBLOCK())
+                                                eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+                                        }
+                                    }, 10);
+                                }
                             }
-                        }
+                    });
+                }).on('removed', function (evt, nipple) {
+                    clearInterval(TOUCHER);
+                    TOUCHER = undefined;
+                    nipple.off('start move end dir plain', function () {
+                    });
                 });
-            }).on('removed', function (evt, nipple) {
-                clearInterval(TOUCHER);
-                TOUCHER = undefined;
-                nipple.off('start move end dir plain', function () {
-                });
-            });
+            }
         }
         console.clear();
     };
