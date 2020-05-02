@@ -4,7 +4,7 @@
 
 <?php
 
-$version = "1.0.0.39";
+$version = "1.0.0.40";
 
 function TitleImg()
 {
@@ -84,7 +84,8 @@ function TitleImg()
     #main {
         touch-action: auto !important;
     }
-    body{
+
+    body {
         font-size: 24px !important;
     }
 
@@ -104,6 +105,12 @@ function TitleImg()
     // conn.onmessage = function (e) {
     //     console.log(e.data);
     // };
+</script>
+<script>
+    $(document).ready(function () {
+        document.getElementById("footer").style.width = getComputedStyle(document.getElementById("game")).marginLeft - 3;
+        document.getElementById("footer2").style.width = getComputedStyle(document.getElementById("game")).marginLeft - 3;
+    });
 </script>
 </body>
 

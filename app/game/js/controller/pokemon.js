@@ -267,10 +267,16 @@ POKEMOMFIND = {
             if (parseInt(pokemon.num) <= 721)
                 sound_pokepath = `../resources/poekemon/audio/cries_anime/${POKEDEX_.cleanName(pokemon.baseSpecies || name)}.ogg`;
             var sexo = getRandomInt(100) > 50 ? "male" : "female";
-            var shiny = getRandomInt(100) > 95 ? true : false;
-            var superShiny = getRandomInt(1000) > 998 ? true : false;
-            if (superShiny)
+            var shiny = getRandomInt(100) > 98 ? true : false;
+            var superShiny = false;
+            if (shiny) {
+                superShiny = getRandomInt(100) > 80 ? true : false;
+            }
+            var style = "";
+            if (superShiny) {
                 shiny = false;
+                style = superShiny ? `filter: hue-rotate(${getRandomIntRange(40, 320)}deg);` : "";
+            }
             var mymoves = MOVESFIND.POKEMON_MOVES_GENERATE(name);
             var evoProb = 0;
             var regresiveCount = 30;
@@ -313,6 +319,7 @@ POKEMOMFIND = {
                 shiny: shiny,
                 gender: sexo,
                 superShiny: superShiny,
+                style: style,
                 imageUrl: shiny ? `../resources/poekemon/gif/front_s/${pokemon.keyname}.gif` : `../resources/poekemon/gif/front/${pokemon.keyname}.gif`,
                 cryUrl: sound_pokepath,
                 date: new Date(),
@@ -707,7 +714,9 @@ POKEMONBATTLE = {
         "dead": "dead",
     },
     LAUNCH: function ($scope, tier, trainer, type, baseType) {
-        $("#footer").hide();
+        $("#footer, #footer2").hide();
+
+
         $scope.PKM.pokemonDetail = false;
         $scope.PKM.menu = false;
         ACTIONS.GAME.BLOCK();
@@ -791,7 +800,7 @@ POKEMONBATTLE = {
                             POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
                             true,
                             function () {
-                                ACTIONS.ANIMATION.PLAYNATURAL('OutPokeball',
+                                ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.friend().superShiny ? 'SuperShiny' : ($scope.PKM.friend().shiny ? 'Starts' : 'OutPokeball'),
                                     POKEMONBATTLE.XS($scope.BATTLEOBJS.FRIEND.body.x - ($scope.BATTLEOBJS.FRIEND.body.width / 2)),
                                     POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
                                     function () {
@@ -809,7 +818,7 @@ POKEMONBATTLE = {
                                                     POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
                                                     true,
                                                     function () {
-                                                        ACTIONS.ANIMATION.PLAYNATURAL('OutPokeball',
+                                                        ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.target().superShiny ? 'SuperShiny' : ($scope.PKM.target().shiny ? 'Starts' : 'OutPokeball'),
                                                             POKEMONBATTLE.XS($scope.BATTLEOBJS.TARGET.body.x + ($scope.BATTLEOBJS.TARGET.body.width / 2)),
                                                             POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
                                                             function () {
@@ -845,7 +854,7 @@ POKEMONBATTLE = {
         $scope.PKM.menu = false;
         ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.2, 0);
         $scope.BATTLEOBJS.HERO.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
-        ACTIONS.ANIMATION.PLAYNATURAL('GetBack',
+        ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.friend().superShiny ? 'GetBack' : ($scope.PKM.friend().shiny ? 'GetBack' : 'GetBack'),
             POKEMONBATTLE.XS($scope.BATTLEOBJS.FRIEND.body.x - ($scope.BATTLEOBJS.FRIEND.body.width / 2)),
             POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
             function () {
@@ -859,12 +868,42 @@ POKEMONBATTLE = {
                     POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
                     true,
                     function () {
-                        ACTIONS.ANIMATION.PLAYNATURAL('OutPokeball',
+                        ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.friend().superShiny ? 'SuperShiny' : ($scope.PKM.friend().shiny ? 'Starts' : 'OutPokeball'),
                             POKEMONBATTLE.XS($scope.BATTLEOBJS.FRIEND.body.x - ($scope.BATTLEOBJS.FRIEND.body.width / 2)),
                             POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
                             function () {
                                 ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);
                                 ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl, SOUNDS.system);
+                            });
+                    });
+
+            });
+    },
+    CHANGETARGET: function ($scope, index) {
+        $scope.PKM.pokemonDetail = false;
+        $scope.PKM.menu = false;
+        ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.2, 0);
+        $scope.BATTLEOBJS.ENEMY.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
+        ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.target().superShiny ? 'GetBack' : ($scope.PKM.target().shiny ? 'GetBack' : 'GetBack'),
+            POKEMONBATTLE.XS($scope.BATTLEOBJS.TARGET.body.x + ($scope.BATTLEOBJS.TARGET.body.width / 2)),
+            POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
+            function () {
+                $scope.BATTLEOBJS.TARGETINDEX = index;
+                $scope.BATTLEOBJS.TARGET = POKEMONBATTLE.TARGET($scope);
+                $scope.BATTLEOBJS.ENEMY.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
+                ACTIONS.ANIMATION.THROWNATURAL('Pokeball_Omega',
+                    $scope.BATTLEOBJS.ENEMY.body.x,
+                    $scope.BATTLEOBJS.ENEMY.body.y,
+                    POKEMONBATTLE.XS($scope.BATTLEOBJS.TARGET.body.x + ($scope.BATTLEOBJS.TARGET.body.width / 2)),
+                    POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
+                    true,
+                    function () {
+                        ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.target().superShiny ? 'SuperShiny' : ($scope.PKM.target().shiny ? 'Starts' : 'OutPokeball'),
+                            POKEMONBATTLE.XS($scope.BATTLEOBJS.TARGET.body.x + ($scope.BATTLEOBJS.TARGET.body.width / 2)),
+                            POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
+                            function () {
+                                ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);
+                                ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl, SOUNDS.system);
                             });
                     });
 
@@ -932,10 +971,10 @@ POKEMONBATTLE = {
 
         if (movement === "full") {
             ACTIONS.ANIMATION.THROWNATURAL(animation,
-                0, 0,
-                0, 0,
+                STAGE.canvas.width / 2, 0,
+                STAGE.canvas.width / 2, 0,
                 true, () => {
-                }, undefined, undefined, undefined, undefined, true);
+                }, undefined, undefined, undefined, undefined, 3);
         }
         if (movement === "special") {
             ACTIONS.ANIMATION.THROWNATURAL(animation,
@@ -1009,7 +1048,7 @@ POKEMONBATTLE = {
         layerBattle.removeAllChildren();
         layerBattle.alpha = 0;
         ACTIONS.GAME.SCREENOFF(1, function () {
-            $("#footer").show();
+            $("#footer, #footer2").show();
 
             ACTIONS.GAME.UNBLOCK();
         })
@@ -1066,13 +1105,12 @@ POKEMONBATTLE = {
     },
     FRIEND: function ($scope) {
         if ($scope.BATTLEOBJS.FRIEND) {
-            layerBattle.removeChild($scope.BATTLEOBJS.FRIEND.shadow);
-            layerBattle.removeChild($scope.BATTLEOBJS.FRIEND.body);
+            $scope.BATTLEOBJS.FRIEND.dom.parentNode.removeChild($scope.BATTLEOBJS.FRIEND.dom);
         }
         var pokemon = $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
-        var bound = $scope.getResource(pokemon.imageUrl);
+        var bound = $scope.getResource(pokemon.imageUrl).cloneNode(true);
         document.getElementById("main").appendChild(bound);
-        bound.style = "z-index:9";
+        bound.style = "z-index:9;" + pokemon.style;
         var sprite = new createjs.DOMElement(bound);
         var wdif = bound.width - 70;
         sprite.x = POKEMONBATTLE.X(($scope.BATTLEOBJS.HERO.body.x + wdif));
@@ -1082,52 +1120,42 @@ POKEMONBATTLE = {
         sprite.width = bound.width;
         sprite.scaleX = $scope.BATTLEOBJS.HERO.body.scaleX;
         sprite.alpha = 0;
-
-        var box = new createjs.Shape();
-        box.graphics.beginFill("black").drawCircle(0, 0, bound.width / 5);
-        box.x = (sprite.x - 70) - (bound.width / 2);
-        box.y = sprite.y + bound.height - 10;
-        box.scaleX = $scope.BATTLEOBJS.HERO.body.scaleX;
-        box.alpha = 0.5;
-        box.scaleX = 3;
-
-        layerBattle.addChild(box);
         layerBattle.addChild(sprite);
-        return ({body: sprite, dom: bound, shadow: box});
+        return ({body: sprite, dom: bound});
+    },
+    TARGET: function ($scope) {
+        if ($scope.BATTLEOBJS.TARGET) {
+            $scope.BATTLEOBJS.TARGET.dom.parentNode.removeChild($scope.BATTLEOBJS.TARGET.dom);
+        }
+        var pokemon = $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
+        var bound = $scope.getResource(pokemon.imageUrl).cloneNode(true);
+        document.getElementById("main").appendChild(bound);
+        bound.style = "z-index:9;" + pokemon.style;
+        var sprite = new createjs.DOMElement(bound);
+        var wdif = bound.width - 70;
+        sprite.x = POKEMONBATTLE.X(($scope.BATTLEOBJS.ENEMY.body.x - wdif));
+        var hdif = 70 - bound.height;
+        sprite.y = POKEMONBATTLE.Y(($scope.BATTLEOBJS.ENEMY.body.y + 70) + (hdif));
+        sprite.height = bound.height;
+        sprite.width = bound.width;
+        sprite.scaleX = $scope.BATTLEOBJS.ENEMY.body.scaleX;
+        sprite.alpha = 0;
+        layerBattle.addChild(sprite);
+        return ({body: sprite, dom: bound})
     },
     FRIENDTEST: function ($scope, index) {
         var prepokemon = POKEMOMFIND.GENERATE(APIS.POKEDEX[index].keyname);
-        ACTIONS.LOAD.ADD([prepokemon.imageUrl.replace('.gif', '.png'), prepokemon.imageUrl, prepokemon.cryUrl], function () {
+        ACTIONS.LOAD.ADD([prepokemon.imageUrl, prepokemon.cryUrl], function () {
             $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX] = prepokemon;
             POKEMONBATTLE.CHANGEPOKEMON($scope, $scope.BATTLEOBJS.FRIENDINDEX);
         });
     },
-    TARGET: function ($scope) {
-        if ($scope.BATTLEOBJS.TARGET) {
-            layerBattle.removeChild($scope.BATTLEOBJS.TARGET.shadow);
-            layerBattle.removeChild($scope.BATTLEOBJS.TARGET.body);
-        }
-        var pokemon = $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
-        var bound = $scope.getResource(pokemon.imageUrl);
-        document.getElementById("main").appendChild(bound);
-        bound.style = "z-index:9";
-        var sprite = new createjs.DOMElement(bound);
-        var wdif = 70 - bound.width;
-        sprite.x = POKEMONBATTLE.X((($scope.BATTLEOBJS.ENEMY.body.x) + wdif) - 10);
-        var hdif = 70 - bound.height;
-        sprite.y = POKEMONBATTLE.Y(($scope.BATTLEOBJS.ENEMY.body.y + 70) + hdif);
-        sprite.height = bound.height;
-        sprite.width = bound.width;
-        sprite.alpha = 0;
-
-        var box = new createjs.Shape();
-        box.graphics.beginFill("black").drawCircle(0, 0, bound.width / 5);
-        box.x = (sprite.x - 70) + (bound.width / 2);
-        box.y = sprite.y + bound.height - 10;
-        box.alpha = 0.5;
-        box.scaleX = 3;
-        layerBattle.addChild(box);
-        layerBattle.addChild(sprite);
-        return ({body: sprite, dom: bound, shadow: box});
+    TARGETTEST: function ($scope, index) {
+        var prepokemon = POKEMOMFIND.GENERATE(APIS.POKEDEX[index].keyname);
+        ACTIONS.LOAD.ADD([prepokemon.imageUrl, prepokemon.cryUrl], function () {
+            $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX] = prepokemon;
+            POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX);
+        });
     },
+
 };

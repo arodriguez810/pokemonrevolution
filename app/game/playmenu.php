@@ -5,7 +5,9 @@
     }
 
     .menuButton {
-        margin-bottom: 10px;
+        margin-bottom: 4px;
+        width: 100%;
+        height: 50px;
     }
 
     .tab-pane {
@@ -21,10 +23,11 @@
         width: 40%;
         float: right;
         text-align: right;
-        font-size: 18px;
+        font-size: 24px;
         border: 2px #000 solid;
         background-color: whitesmoke;
         text-transform: capitalize;
+        padding: 3px;
     }
 
     .friendLife {
@@ -35,7 +38,9 @@
         width: 100%;
         text-transform: capitalize;
         padding: 8px;
-        transition: width 4s,
+        transition: width 4s,;
+        border: 1px solid #333;
+        border-radius: 11px;
     }
 
     .friendLife {
@@ -47,19 +52,23 @@
         background-color: transparent !important;
     }
 
+    #footer2 {
+        background-color: transparent !important;
+        text-align: right;
+    }
+
+    #gameMenu {
+        position: absolute;
+        z-index: 999;
+        width: 98%;
+        height: 100%;
+        background: rgb(2, 0, 36);
+        background: radial-gradient(circle, rgba(2, 0, 36, 1) 74%, rgba(14, 9, 121, 1) 97%);
+    }
 
 </style>
 <div id="footer" class="{{menuOpen?'bg-black':'bg-blue-grey'}}"
-     style="position: absolute;z-index: 9999;width: {{menuOpen?'100%':'75px'}};padding: 5px">
-    <button ng-if="muted && !menuOpen" type="button" onclick="ACTIONS.GAME.MUTE_OFF()"
-            class="btn bg-red waves-effect waves-circle waves-float menuButton">
-        <i class="material-icons myicon">volume_off</i>
-    </button>
-
-    <button ng-if="!muted && !menuOpen" type="button" onclick="ACTIONS.GAME.MUTE()"
-            class="btn btn-red waves-effect waves-circle waves-float menuButton">
-        <i class="material-icons myicon">volume_up</i>
-    </button>
+     style="float: left;z-index: 9999;width: {{menuOpen?'100%':'75px'}};padding: 5px">
 
 
     <button ng-if="menu && !menuOpen" type="button" onclick="ACTIONS.GAME.MENUTOGGLE()"
@@ -68,19 +77,24 @@
     </button>
 
 
-    <img ng-if="menu && !menuOpen && logro.script && logro.icon" ng-repeat="(mkey,logro) in  skills"
-         ng-click="runQuickLogro(logro)"
-         class="menuButton"
-         style=";width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;">
+    <button ng-if="menu && !menuOpen && logro.script && logro.icon && $index%2===0" ng-repeat="(mkey,logro) in  skills"
+            class="btn bg-blue-grey waves-effect waves-circle waves-float menuButton">
+        <img ng-click="runQuickLogro(logro)"
+             class="menuButton"
+             style="margin: 0;width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;">
+    </button>
 
 
+</div>
+
+<div id="gameMenu" ng-show="menuOpen">
     <div style="text-align: center">
-        <button ng-if="menuOpen" type="button" onclick="ACTIONS.GAME.MENUTOGGLE()"
+        <button type="button" onclick="ACTIONS.GAME.MENUTOGGLE()"
                 class="btn btn-danger btn-circle-lg waves-effect waves-circle waves-float">
             <i class="material-icons">cancel</i>
 
         </button>
-        <button ng-if="menuOpen && !menuMessage" type="button" ng-click="subMenu(homemenu.name)"
+        <button ng-if="!menuMessage" type="button" ng-click="subMenu(homemenu.name)"
                 ng-repeat="(key, homemenu) in interface"
                 style="margin: 10px 10px 10px 10px"
                 class="btn bg-{{subMenuOpen===homemenu.name?homemenu.color:'blue-grey'}}  btn-circle-lg waves-effect waves-circle waves-float">
@@ -101,7 +115,7 @@
         </div>
     </div>
 
-    <div ng-if="!menuMessage && menuOpen && subMenuOpen==='perfil'"
+    <div ng-if="!menuMessage &&  subMenuOpen==='perfil'"
          style="color: white;overflow: scroll"
          class="tab-pane fade animated bounceInRight in active">
         <table style="width: 97%;font-size: 18px" class="">
@@ -177,37 +191,20 @@
         </script>
     </div>
 
-    <div ng-if="!menuMessage && menuOpen && subMenuOpen==='pokemons'"
+    <div ng-if="!menuMessage &&  subMenuOpen==='pokemons'"
          style="color: white;overflow: scroll;width: 97%;min-height: 270px;"
          class="bg-light-green tab-pane fade animated bounceInRight in active">
         <div>
-            <div class="table-bordered" style="width: 20%;float: left;min-height: 275px;">
-                <span class="badge bg-blue" style="width: 100%"> Click para ver</span>
-                <div class=".sorting"
-                     style="text-transform: capitalize;text-align: center !important;width: 50%;display: inline-block"
-                     ng-repeat="(kpo,pokemon) in session.pokemons">
-                    <img on-long-press="itemOnLongPress($index)" ng-dblclick="upPokemon()"
-                         ng-click="menuPokemon($index)" style="transform: scale(0.7);"
-                         src="{{pokemon.imageUrl}}">
-                </div>
-                <div>
-                    <span class="badge bg-pink" style="width: 100%"> Mantener</span>
-                    <span class="badge bg-pink" style="width: 100%"> Presionado</span>
-                    <span class="badge bg-pink" style="width: 100%"> Para mover</span>
-                </div>
-            </div>
-            <div style="width: 80%;float: left;    min-height: 275px;">
+            <div style="width: 100%;float: left;    min-height: 275px;">
                 <table class="table-bordered {{selectedPokemonClick().shiny? 'bg-lime':''}}"
                        ng-if="selectedPokemonClick()" style="width: 100%">
                     <tbody>
                     <tr>
-                        <td rowspan="2" style="text-align: center">
-                            <img style=" transform: scale(1);"
+                        <td style="text-align: center" rowspan="2">
+                            <img style=" transform: scale(1);{{selectedPokemonClick().style}}"
                                  src="{{selectedPokemonClick().imageUrl}}">
                         </td>
-                    </tr>
-                    <tr>
-                        <td style="text-transform: capitalize;text-align: left">
+                        <td colspan="2" style="text-transform: capitalize;text-align: left">
                             <div style="list-style: none;text-align: left">
 
                                 <btn
@@ -270,6 +267,30 @@
                             </button>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div class="table-bordered">
+                                <div class=".sorting"
+                                     style="text-transform: capitalize;text-align: center !important;width: 16%;display: inline-block"
+                                     ng-repeat="(kpo,pokemon) in session.pokemons">
+                                    <button ng-click="itemOnLongPress($index)" type="button"
+                                            class="btn bg-teal waves-effect"
+                                            style="height: 22px;padding: 0;width: 36px;">
+                                        <i class="material-icons">keyboard_backspace</i>
+                                    </button>
+                                </div>
+                                <br>
+                                <div class=".sorting"
+                                     style="text-transform: capitalize;text-align: center !important;width: 16%;display: inline-block"
+                                     ng-repeat="(kpo,pokemon) in session.pokemons">
+                                    <img
+                                            ng-click="menuPokemon($index)"
+                                            style="transform: scale(0.5);{{pokemon.style}}"
+                                            src="{{pokemon.imageUrl}}">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -277,7 +298,7 @@
         </div>
     </div>
 
-    <div ng-if="!menuMessage && menuOpen && subMenuOpen==='bobeda'"
+    <div ng-if="!menuMessage &&  subMenuOpen==='bobeda'"
          style="color: white;overflow: scroll;width: 97%;min-height: 270px;"
          class="bg-teal tab-pane fade animated bounceInRight in active">
         <div>
@@ -285,7 +306,7 @@
                 <div
                         style="text-transform: capitalize;text-align: center !important;width: 50%;display: inline-block"
                         ng-repeat="(kpo,pokemon) in session.bobeda">
-                    <img ng-click="menuBobeda($index)" style=" transform: scale(0.7);"
+                    <img ng-click="menuBobeda($index)" style=" transform: scale(0.7);{{pokemon.style}}"
                          src="{{pokemon.imageUrl}}">
                 </div>
             </div>
@@ -295,7 +316,7 @@
                     <tbody>
                     <tr>
                         <td rowspan="2" style="text-align: center">
-                            <img style=" transform: scale(1);"
+                            <img style=" transform: scale(1);{{selectedBobedaClick().style}}"
                                  src="{{selectedBobedaClick().imageUrl}}">
                         </td>
                     </tr>
@@ -342,6 +363,8 @@
                                         class="btn ">
                                     <img src="../resources/poekemon/types/{{move.type}}.png"
                                          style="margin-left: 5px"> <b> {{move.name}}</b>
+                                    <img src="../resources/poekemon/category/{{move.category}}.png"
+                                         style="margin-left: 5px">
                                 </btn>
                             </div>
                         </td>
@@ -358,7 +381,7 @@
             </div>
         </div>
     </div>
-    <div ng-if="!menuMessage && menuOpen && subMenuOpen==='logros'"
+    <div ng-if="!menuMessage &&  subMenuOpen==='logros'"
          style="color: white;overflow: scroll;width: 97%;min-height: 270px;padding: 15px;"
          class="bg-orange tab-pane fade animated bounceInRight in active">
         <div ng-repeat="(mkey,logro) in  skills">
@@ -372,6 +395,30 @@
 
         </div>
     </div>
+
+</div>
+
+<div id="footer2" class="{{menuOpen?'bg-black':'bg-blue-grey'}}"
+     style="float: right;z-index: 9999;width: {{menuOpen?'100%':'75px'}};padding: 5px">
+
+    <button ng-if="muted && !menuOpen" type="button" onclick="ACTIONS.GAME.MUTE_OFF()"
+            class="btn bg-red waves-effect waves-circle waves-float menuButton">
+        <i class="material-icons myicon">volume_off</i>
+    </button>
+
+    <button ng-if="!muted && !menuOpen" type="button" onclick="ACTIONS.GAME.MUTE()"
+            class="btn btn-red waves-effect waves-circle waves-float menuButton">
+        <i class="material-icons myicon">volume_up</i>
+    </button>
+
+    <button ng-if="menu && !menuOpen && logro.script && logro.icon && $index%2!==0" ng-repeat="(mkey,logro) in  skills"
+
+            class="btn bg-blue-grey waves-effect waves-circle waves-float menuButton">
+        <img ng-click="runQuickLogro(logro)"
+             class="menuButton"
+             style="margin: 0;width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;">
+    </button>
+
 
 </div>
 
@@ -393,7 +440,7 @@
                  style="width: {{PKM.hp(PKM.target())}}%">
 
             </div>
-            <div class="bg-white" style="color: black;padding: 0;text-align: left" id="enemyText">
+            <div class="bg-white" style="border: none;color: black;padding: 0;text-align: left" id="enemyText">
 
             </div>
         </div>
@@ -417,7 +464,7 @@
             <tbody>
             <tr>
                 <td style="text-align: center">
-                    <img style=" transform: scale(1);"
+                    <img style=" transform: scale(1);{{selectedPokemonClick().style}}"
                          src="{{selectedPokemonClick().imageUrl}}">
                     <button type="button" ng-click="PKM.changefriend()"
                             class="btn bg-blue waves-effect">
@@ -513,10 +560,9 @@
         <div style="text-align: center">
             <img
                     ng-show="BATTLEOBJS.FRIENDINDEX!==$index"
-                    style="text-transform: capitalize;text-align: center !important;display: inline-block;margin-left: 15px"
+                    style="text-transform: capitalize;text-align: center !important;display: inline-block;margin-left: 15px;{{pokemon.style}}"
                     ng-repeat="(kpo,pokemon) in session.pokemons"
-                    on-long-press=""
-                    ng-click="menuPokemon($index,true)" style="transform: scale(0.7);"
+                    ng-click="menuPokemon($index,true)"
                     src="{{pokemon.imageUrl}}">
         </div>
     </div>

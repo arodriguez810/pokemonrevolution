@@ -1264,7 +1264,9 @@ function playactions($scope) {
 
                 if ($scope.hero.staticing) {
                     ACTIONS.ANIMATION.PLAY_PLAYER("Infinite", undefined, function () {
-                        ACTIONS.PLAYER.TELEPORT(0, 0, "Elinfinito");
+                        setTimeout(function () {
+                            ACTIONS.PLAYER.TELEPORT(0, 0, "Elinfinito");
+                        }, 1000);
                         $scope.transition = false;
                     });
                     return;
@@ -2301,7 +2303,7 @@ function playactions($scope) {
                     sprite.scale = scale || 1;
                     layerAnimation.addChild(sprite);
                     if (!loop) {
-                        setTimeout(() => {
+                        setTimeout(function () {
                             layerAnimation.removeChild(sprite);
                             if (!nopause)
                                 ACTIONS.GAME.RESUME();
@@ -2574,11 +2576,14 @@ function playactions($scope) {
             },
         },
         UNIT: {
-            TEST: function (vare) {
-                console.log(eval(`angular.element(document.getElementById('play')).scope().${vare};`));
+            TEST: function () {
+                return $scope;
             },
             NEXT: function () {
-                POKEMONBATTLE.FRIENDTEST($scope, GLOBALINDEXTEST);
+                if (GLOBALINDEXTEST % 2 === 0)
+                    POKEMONBATTLE.FRIENDTEST($scope, GLOBALINDEXTEST);
+                else
+                    POKEMONBATTLE.TARGETTEST($scope, GLOBALINDEXTEST);
                 GLOBALINDEXTEST++;
             },
             FRIEND: function (index) {

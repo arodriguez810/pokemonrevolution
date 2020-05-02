@@ -1,6 +1,6 @@
 <!--TEXTS-->
 <div style="position: absolute;display: none;width: 98%;z-index: 99999" id="texts">
-    <div class="DialogWindow" style="min-height: 172px;min-width: 600px">
+    <div class="DialogWindow" style="min-height: 172px;min-width: 600px;opacity: 1">
         <div class="DialogTitle">
             <img style="float: right"
                  src="data/characters_file/{{dialogHero.name}}/face.png?v={{dialogHero.version||''}}"
@@ -22,8 +22,9 @@
     </div>
 </div>
 
-<div style="position: absolute;display: none;z-index: 99997" id="notify" onclick="$('#notify').hide()">
-    <div class="DialogWindow" style="min-width: 300px" onclick="$('#notify').hide()">
+<div style="position: absolute;    display: none;    width: 98%;    z-index: 99999;" id="notify"
+     onclick="$('#notify').hide()">
+    <div class="DialogWindow" style="min-width: 300px;width: 100%;font-size: 24px;" onclick="$('#notify').hide()">
         <div class="DialogTitle" style="text-align: center;margin-bottom: 0px" onclick="$('#notify').hide()">
                 <span style="font-size: 18px;" onclick="$('#notify').hide()">
                     {{notificationText}}

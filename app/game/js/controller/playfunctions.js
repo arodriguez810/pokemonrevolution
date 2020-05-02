@@ -1084,6 +1084,6 @@ function playfunctions($scope) {
                 });
             }
         }
-        console.clear();
+        //console.clear();
     };
 }

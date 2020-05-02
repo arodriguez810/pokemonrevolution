@@ -259,9 +259,6 @@ function playvars($scope) {
                     if ($scope.numberCollisions % 70 === 0)
                         $scope.play("Collision", SOUNDS.system);
                 }
-                setTimeout(async () => {
-                    await $scope.clickEvent(hero, cx, cy, E_trigger.collision);
-                }, 500);
             }
             return collisions.indexOf(true) !== -1;
         }
@@ -462,7 +459,8 @@ function playvars($scope) {
                 var cy = Math.floor(local.y / $scope.baseHeight);
                 if (actions) {
                     var wasEvent = await $scope.clickEvent(hero, cx, cy, E_trigger.click);
-                    if (wasEvent)
+                    var wasEventC = await $scope.clickEvent(hero, cx, cy, E_trigger.collision);
+                    if (wasEvent || wasEventC)
                         return;
                 }
                 hero.walking = true;

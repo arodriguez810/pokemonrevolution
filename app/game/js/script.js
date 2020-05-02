@@ -189,8 +189,10 @@ PRESS = {
 $(document).on("keyup", function (e) {
     if ($("#game").length > 0) {
         if (!createjs.Touch.isSupported()) {
-            clearInterval(TOUCHER);
-            TOUCHER = undefined;
+            if (TOUCHER) {
+                clearInterval(TOUCHER);
+                TOUCHER = undefined;
+            }
         }
     }
 });
