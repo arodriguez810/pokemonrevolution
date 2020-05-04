@@ -1,0 +1,22 @@
+{ "name": "Pokeball_11","category": "Pokemon", "file": "..\/resources\/animations\/Pokemon\/pokeballs.png", "frames": [
+    10,
+    37,
+    64,
+    91,
+    118,
+    145,
+    172,
+    199,
+    226,
+    253,
+    280,
+    280,
+    280,
+    280,
+    280
+  ],
+  "sound": "..\/resources\/audio\/Sound\/Evasion1.ogg",
+  "rows": "17",
+  "columns": "27",
+  "framerate": 30,
+  "isSystem": "1"}

@@ -1,0 +1,22 @@
+{ "name": "Pokeball_19","category": "Pokemon", "file": "..\/resources\/animations\/Pokemon\/pokeballs.png", "frames": [
+    18,
+    45,
+    72,
+    99,
+    126,
+    153,
+    180,
+    207,
+    234,
+    261,
+    288,
+    288,
+    288,
+    288,
+    288
+  ],
+  "sound": "..\/resources\/audio\/Sound\/Evasion1.ogg",
+  "rows": "17",
+  "columns": "27",
+  "framerate": 30,
+  "isSystem": "1"}

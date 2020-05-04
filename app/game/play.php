@@ -4,7 +4,7 @@
 
 <?php
 
-$version = "1.0.0.40";
+$version = "1.0.0.42";
 
 function TitleImg()
 {
@@ -59,6 +59,11 @@ function TitleImg()
                 width="{{bounds().width}}"
                 height="{{bounds().height}}"
                 id="game">
+        </canvas>
+        <canvas style="user-select: auto;touch-action: none;pointer-events:none;z-index: 20; position: absolute; margin: auto; top: 0px; left: 0px; right: 0px; bottom: 0px; width: {{bounds().width}}px; height: {{bounds().height}}px;"
+                width="{{bounds().width}}"
+                height="{{bounds().height}}"
+                id="animations">
         </canvas>
     </div>
     <!--MENU-->

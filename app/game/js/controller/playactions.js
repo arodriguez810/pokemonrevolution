@@ -59,7 +59,10 @@ function playactions($scope) {
     };
     $scope.typeColor = TYPECOLOR;
     $scope.deletePokemon = function (item, index) {
+        $scope.selectedPokemon = 0;
         POKEMOMFIND.DELETE(item, index);
+        if (!$scope.$$phase)
+            $scope.$digest();
     };
     $scope.trasladePokemon = function (item, index) {
         POKEMOMFIND.TRASLADE(item, index);
@@ -364,7 +367,6 @@ function playactions($scope) {
             },
             PAUSE() {
                 $scope.pause = true;
-                createjs.Ticker.paused = true;
             },
             /**
              * @return {boolean}
@@ -383,7 +385,6 @@ function playactions($scope) {
             },
             RESUME() {
                 $scope.pause = false;
-                createjs.Ticker.paused = false;
             },
             SCROLL: function (object, x, y, s_in, s_state, s_out, callback) {
                 if (object) {
@@ -496,7 +497,7 @@ function playactions($scope) {
                     var point = object.x;
                     var codes = [];
                     for (var i = 1; i <= times; i++) {
-                        codes.push(`createjs.Tween.get(object).to({x: (${point} ${i % 2 === 0 ? '-' : '+'} distance ) }, interval);`);
+                        codes.push(`createjs.Tween.get(object).to({x: (${point} ${i % 2 === 0 ? '+' : '-'} distance ) }, interval);`);
                     }
                     for (var i = 1; i <= times; i++) {
                         setTimeout(() => {
@@ -506,6 +507,26 @@ function playactions($scope) {
                     }
                     setTimeout(function () {
                         createjs.Tween.get(object).to({x: point}, interval);
+                        if (callback)
+                            callback()
+                    }, interval * (times + 1));
+                }
+            },
+            SHAKEY: function (object, interval, distance, times, callback) {
+                if (object) {
+                    var point = object.y;
+                    var codes = [];
+                    for (var i = 1; i <= times; i++) {
+                        codes.push(`createjs.Tween.get(object).to({y: (${point} ${i % 2 === 0 ? '+' : '-'} distance ) }, interval);`);
+                    }
+                    for (var i = 1; i <= times; i++) {
+                        setTimeout(() => {
+                            eval(codes[0]);
+                            codes.shift();
+                        }, interval * i);
+                    }
+                    setTimeout(function () {
+                        createjs.Tween.get(object).to({y: point}, interval);
                         if (callback)
                             callback()
                     }, interval * (times + 1));
@@ -1357,45 +1378,55 @@ function playactions($scope) {
                     ACTIONS.GAME.ALPHA($scope.hero, alpha, callback);
             },
             MOVE: function (x, y, callback) {
-                if ($scope.hero)
-                    $scope.move($scope.hero, {
-                        stageX: (x * $scope.baseWidth) - STAGE.regX,
-                        stageY: (y * $scope.baseHeight) - STAGE.regY
-                    }, undefined, callback);
+                if (!$scope.walking)
+                    if ($scope.hero)
+                        $scope.move($scope.hero, {
+                            stageX: (x * $scope.baseWidth) - STAGE.regX,
+                            stageY: (y * $scope.baseHeight) - STAGE.regY
+                        }, undefined, callback);
             },
             MOVE_UP: function (callback) {
-                if ($scope.hero.y - 1 >= 0)
-                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y - 1, callback);
+                if (!$scope.walking)
+                    if ($scope.hero.y - 1 >= 0)
+                        ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y - 1, callback);
             },
             MOVE_DOWN: function (callback) {
-                if ($scope.hero.y + 1 < maps[FIRSTMAP].height)
-                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y + 1, callback);
+                if (!$scope.walking)
+                    if ($scope.hero.y + 1 < maps[FIRSTMAP].height)
+                        ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x, $scope.hero.y + 1, callback);
             },
             MOVE_RIGHT: function (callback) {
-                if ($scope.hero.x + 1 < maps[FIRSTMAP].width)
-                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x + 1, $scope.hero.y, callback);
+                if (!$scope.walking)
+                    if ($scope.hero.x + 1 < maps[FIRSTMAP].width)
+                        ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x + 1, $scope.hero.y, callback);
             },
             MOVE_LEFT: function (callback) {
-                if ($scope.hero.x - 1 >= 0)
-                    ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x - 1, $scope.hero.y, callback);
+                if (!$scope.walking)
+                    if ($scope.hero.x - 1 >= 0)
+                        ACTIONS.GAME.MOVEOBJECT($scope.hero, $scope.hero.x - 1, $scope.hero.y, callback);
             },
             UP: function () {
-                if ($scope.hero)
-                    $scope.hero.body.gotoAndPlay("up");
+                if (!$scope.walking)
+                    if ($scope.hero)
+                        $scope.hero.body.gotoAndPlay("up");
             },
             DOWN: function () {
-                if ($scope.hero)
-                    $scope.hero.body.gotoAndPlay("down");
+                if (!$scope.walking)
+                    if ($scope.hero)
+                        $scope.hero.body.gotoAndPlay("down");
             },
             RIGHT: function () {
-                if ($scope.hero)
-                    $scope.hero.body.gotoAndPlay("right");
+                if (!$scope.walking)
+                    if ($scope.hero)
+                        $scope.hero.body.gotoAndPlay("right");
             },
             LEFT: function () {
-                if ($scope.hero)
-                    $scope.hero.body.gotoAndPlay("left");
+                if (!$scope.walking)
+                    if ($scope.hero)
+                        $scope.hero.body.gotoAndPlay("left");
             },
             GET: function () {
+
                 return $scope.hero;
             },
             LOOK: function (to) {
@@ -2235,6 +2266,21 @@ function playactions($scope) {
             }
         },
         ANIMATION: {
+            DIRECT: function (object, x, y, time, callback) {
+                var back = {x: object.x, y: object.y};
+                createjs.Tween.get(object).to({
+                    x: x,
+                    y: y
+                }, time / 2).call(function () {
+                    createjs.Tween.get(object).to({
+                        x: back.x,
+                        y: back.y
+                    }, time / 2).call(function () {
+                        if (callback)
+                            callback();
+                    });
+                });
+            },
             PLAY: function (name, x, y, callback, loop, nopause, light, alpha, color, scale) {
                 if (!nopause)
                     ACTIONS.GAME.PAUSE();
@@ -2262,7 +2308,8 @@ function playactions($scope) {
                     layerAnimation.addChild(sprite);
                     if (!loop) {
                         setTimeout(() => {
-                            layerAnimation.removeChild(sprite);
+                            // layerAnimation.removeChild(sprite);
+                            sprite.visible = false;
                             if (!nopause)
                                 ACTIONS.GAME.RESUME();
                             if (callback)
@@ -2304,7 +2351,8 @@ function playactions($scope) {
                     layerAnimation.addChild(sprite);
                     if (!loop) {
                         setTimeout(function () {
-                            layerAnimation.removeChild(sprite);
+                            // layerAnimation.removeChild(sprite);
+                            sprite.visible = false;
                             if (!nopause)
                                 ACTIONS.GAME.RESUME();
                             if (callback)
@@ -2354,9 +2402,8 @@ function playactions($scope) {
                         x: ((x2 * $scope.baseWidth) - (frameW / 2)) + $scope.midWidth,
                         y: ((y2 * $scope.baseHeight) - (frameH / 2)) + $scope.midHeight
                     }, thetime).call(function () {
-
-                        sprite.removeAllEventListeners();
-                        layerAnimation.removeChild(sprite);
+                        // layerAnimation.removeChild(sprite);
+                        sprite.visible = false;
                         if (!nopause)
                             ACTIONS.GAME.RESUME();
                         if (callback)
@@ -2401,9 +2448,8 @@ function playactions($scope) {
                         x: x2 - (frameW / 2),
                         y: y2 - (frameH / 2)
                     }, thetime).call(function () {
-
-                        sprite.removeAllEventListeners();
-                        layerAnimation.removeChild(sprite);
+                        // layerAnimation.removeChild(sprite);
+                        sprite.visible = false;
                         if (!nopause)
                             ACTIONS.GAME.RESUME();
                         if (callback)
@@ -2568,8 +2614,8 @@ function playactions($scope) {
             }
         },
         POKEMON: {
-            BATTLESTART: function (trainer, type, baseType) {
-                POKEMONBATTLE.LAUNCH($scope, SESSION.tier, trainer, type, baseType);
+            BATTLESTART: function (trainer, type, baseType, win, loose) {
+                POKEMONBATTLE.LAUNCH($scope, SESSION.tier, trainer, type, baseType, win, loose);
             },
             BATTLEEND: function () {
                 POKEMONBATTLE.END($scope);
@@ -2580,11 +2626,7 @@ function playactions($scope) {
                 return $scope;
             },
             NEXT: function () {
-                if (GLOBALINDEXTEST % 2 === 0)
-                    POKEMONBATTLE.FRIENDTEST($scope, GLOBALINDEXTEST);
-                else
-                    POKEMONBATTLE.TARGETTEST($scope, GLOBALINDEXTEST);
-                GLOBALINDEXTEST++;
+                POKEMONBATTLE.TARGETTEST($scope, GLOBALINDEXTEST);
             },
             FRIEND: function (index) {
                 POKEMONBATTLE.FRIENDTEST($scope, index);
@@ -2602,7 +2644,8 @@ function playactions($scope) {
 
     // Listeners
     $scope.PKM = {};
-    $scope.PKM.hpc = 4;
+    $scope.PKM.hpc = 10;
+    $scope.PKM.statlimit = 4;
     $scope.PKM.mainMenu = false;
     $scope.PKM.menu = false;
     $scope.PKM.pokemonDetail = false;
@@ -2613,67 +2656,60 @@ function playactions($scope) {
         $scope.play("Cancel", SOUNDS.system);
         $scope.PKM.menu = false;
     };
-
     $scope.PKM.talk = function (message, time) {
         $scope.play("Talk", SOUNDS.system);
-        $("#enemyText").html(`${$scope.BATTLEOBJS.ENEMY.name}: ${message}`);
+        $("#enemyText").show();
+        $("#enemyTextDiv").html(`${$scope.BATTLEOBJS.ENEMY.name}: ${message}`);
         setTimeout(function () {
-            $("#enemyText").html("");
+            $("#enemyTextDiv").html("");
+            $("#enemyText").hide();
         }, time * 1000);
     };
     $scope.PKM.menu_open = function () {
         $scope.play("Menu", SOUNDS.system);
         $scope.PKM.menu = true;
     };
-
     $scope.PKM.friend = function (index) {
         return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
     };
-
-
     $scope.PKM.target = function () {
         return $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
     };
-
-    $scope.PKM.attack = function (move, target) {
-        if (target) {
-            POKEMONBATTLE.ATTACK($scope, move,
-                $scope.BATTLEOBJS.ENEMY, $scope.BATTLEOBJS.HERO,
-                $scope.PKM.target(), $scope.PKM.friend(),
-                function () {
-                    console.log("end enemy attack");
-                });
-        } else {
-            POKEMONBATTLE.ATTACK($scope, move,
-                $scope.BATTLEOBJS.HERO, $scope.BATTLEOBJS.ENEMY,
-                $scope.PKM.friend(), $scope.PKM.target(),
-                function () {
-                    console.log("end attack");
-                });
-        }
+    $scope.PKM.attack = function (move) {
+        POKEMONBATTLE.RUNTURN($scope, move);
     };
-
-    $scope.PKM.changefriend = function (target) {
-        if (target) {
-
-        } else
-            POKEMONBATTLE.CHANGEPOKEMON($scope, $scope.selectedPokemon);
+    $scope.PKM.changefriend = function () {
+        POKEMONBATTLE.RUNTURN($scope, undefined, true);
     };
-
     $scope.PKM.hp = function (obj) {
         var base = (obj.stats.hp * $scope.PKM.hpc);
-        var real = (obj.stats.hp * $scope.PKM.hpc) - obj.battle.temp.stats.hp;
+        var real = (obj.stats.hp * $scope.PKM.hpc) - obj.battle.stats.hp;
         real = real <= 0 ? 0 : real;
         return (real * 100) / base;
     };
+    $scope.PKM.basehp = function (obj) {
+        return (obj.stats.hp * $scope.PKM.hpc);
+    };
     $scope.PKM.stat = function (obj, stat, modifier) {
         if (modifier !== undefined) {
-            obj.battle.temp.stats[stat] += parseInt(modifier);
+            if (stat !== "hp") {
+                if (obj.battle.stats[stat] < $scope.PKM.statlimit && obj.battle.stats[stat] > ($scope.PKM.statlimit * -1))
+                    obj.battle.stats[stat] += parseInt(modifier);
+            } else {
+                obj.battle.stats[stat] += parseInt(modifier);
+                if (obj.battle.stats[stat] < 0) {
+                    obj.battle.stats[stat] = 0;
+                }
+            }
         }
-        return (obj.stats[stat]) - obj.battle.temp.stats[stat];
+        if (stat !== "hp") {
+            return (obj.stats[stat]) - (obj.battle.stats[stat] * 10);
+        } else {
+            return (obj.stats[stat]) - obj.battle.stats[stat];
+        }
     };
-    $scope.PKM.friend_moves = function (obj) {
-        return obj.moves;
+    $scope.PKM.moves = function (obj) {
+        return obj.battle.moves || obj.moves;
     };
     $scope.PKM.hpcolor = function (hp) {
         if (hp >= 50)
@@ -2685,4 +2721,4 @@ function playactions($scope) {
         else
             return "bg-lala";
     };
-}
+};

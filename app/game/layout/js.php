@@ -5,9 +5,6 @@
 <!-- Bootstrap Core Js -->
 <script src="plugins/bootstrap/js/bootstrap.js"></script>
 <script src="js/tools/createjs.min.js"></script>
-<script src="js/tools/preloadjs.min.js"></script>
-<script src="js/tools/tweenjs.min.js"></script>
-<script src="js/tools/soundjs.min.js"></script>
 <script src="js/tools/ThresholdFilter.js"></script>
 <script src="js/tools/tinycolor-min.js"></script>
 <script src="js/tools/ScaleBitmap.js"></script>

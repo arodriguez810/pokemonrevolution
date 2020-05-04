@@ -98,11 +98,15 @@ function playvars($scope) {
     players = {};
     maps = {};
     STAGE = new createjs.Stage("game");
+    ANIMATIONSSTAGE = new createjs.Stage("animations");
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     STAGE.snameToPixelsEnabled = true;
     STAGE.snapToPixelEnabled = true;
     createjs.Ticker.addEventListener("tick", STAGE);
+    createjs.Ticker.addEventListener("tick", ANIMATIONSSTAGE);
     createjs.Touch.enable(STAGE);
+    ANIMATIONSSTAGE.mouseEnabled = false;
+    ANIMATIONSSTAGE.mouseChildren = false;
     //createjs.Ticker.maxDelta = 50;
     for (var l = 0; l <= 9; l++) {
         eval(`layer${l} = new createjs.Container();`);
@@ -112,7 +116,7 @@ function playvars($scope) {
     eval(`STAGE.addChild(layerBattle);`);
 
     eval(`layerAnimation = new createjs.Container();`);
-    eval(`STAGE.addChild(layerAnimation);`);
+    eval(`ANIMATIONSSTAGE.addChild(layerAnimation);`);
 
     $scope.hero = {
         x: 0,
@@ -290,6 +294,8 @@ function playvars($scope) {
                 var limitY = ((maps[FIRSTMAP].height * $scope.baseHeight) - ($scope.height * $scope.baseHeight));
                 regY = regY > limitY ? limitY : regY;
             }
+            ANIMATIONSSTAGE.regX = regX;
+            ANIMATIONSSTAGE.regY = regY;
             createjs.Tween.get(STAGE).to({regX: regX, regY: regY}, speed);
         }
     };

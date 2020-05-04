@@ -341,3 +341,22 @@ function objToArray(array) {
 function getRandomIntRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+function decodeProperties(array) {
+    var result = [];
+    for (var item of array) {
+        result = getProperties("", item, result);
+    }
+    return result;
+}
+
+function getProperties(prefijo, object, array) {
+    for (var i in object) {
+        if (typeof object[i] === "object") {
+            array = getProperties(i, object[i], array);
+        } else {
+            array[`${prefijo}_${i}`] = "";
+        }
+    }
+    return array;
+}

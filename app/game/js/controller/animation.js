@@ -178,7 +178,7 @@ pokemon.controller('animation', ['$scope', function ($scope) {
             var SpriteSheet = new createjs.SpriteSheet({
                 framerate: $scope.form.framerate,
                 "images": [queue.getResult(`image`)],
-                "frames": {width: parseInt($scope.img().w), height: parseInt($scope.img().h)},
+                "frames": {width: parseFloat($scope.img().w), height: parseFloat($scope.img().h)},
                 "animations": {
                     "run": {frames: $scope.form.frames}
                 }
