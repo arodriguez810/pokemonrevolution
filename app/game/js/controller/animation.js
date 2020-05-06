@@ -4,8 +4,8 @@ ANIMATION = function () {
     this.file = "";
     this.frames = [];
     this.sound = "";
-    this.rows = 1;
-    this.columns = 1;
+    this.rows = 5;
+    this.columns = 5;
     this.framerate = 30;
 };
 ANIMATION_ = {
@@ -158,8 +158,15 @@ pokemon.controller('animation', ['$scope', function ($scope) {
         if ($scope.sounds[id])
             createjs.Sound.play($scope.sounds[id], config);
     };
-    $scope.setall = function () {
-        $scope.form.frames = $scope.getObjects();
+    $scope.setall = function (reverse, push) {
+        var final = $scope.getObjects();
+        if (reverse) {
+            final = final.reverse();
+        }
+        if (!push)
+            $scope.form.frames = final;
+        else
+            $scope.form.frames = $scope.form.frames.concat(final);
     };
     $scope.play = function () {
         $("#loadingAni").show();

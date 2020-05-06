@@ -61,10 +61,21 @@ public class MainActivity extends AppCompatActivity {
         settings.setDomStorageEnabled(true);
         settings.setSupportMultipleWindows(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setSupportZoom(false);
+        //settings.setSupportZoom(false);
         PokemonRevolution.loadUrl("http://mangalos.com");
 //        PokemonRevolution.setInitialScale(getScale(576, 384));
-        PokemonRevolution.setWebViewClient(new WebViewClient());
+        PokemonRevolution.setWebViewClient(new WebViewClient()
+        {
+            // overcome the ontouchstart registration bug !
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                super.onPageFinished(view, url);
+                final WebView myWebView = (WebView) findViewById(R.id.PokemonRevolution);
+                PokemonRevolution.scrollTo(1, 0);
+                PokemonRevolution.scrollTo(0, 0);
+            }
+        });
 
     }
 

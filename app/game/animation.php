@@ -107,12 +107,28 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-sm-6">
+                            <h4>{{form.frames.length}} = {{form.frames.length/form.framerate}} seconds</h4>
                             <div class="form-group form-float ">
                                 <pre ng-dblclick="form.frames = [];">{{form.frames}} </pre>
                             </div>
                             <button type="button" ng-click="setall()"
                                     class="btn bg-blue-grey  waves-effect">
-                                <i class="material-icons">filter_9_plus</i>
+                                <i class="material-icons">arrow_downward</i>
+                            </button>
+
+                            <button type="button" ng-click="setall(true)"
+                                    class="btn bg-blue-grey  waves-effect">
+                                <i class="material-icons">arrow_upward</i>
+                            </button>
+
+                            <button type="button" ng-click="setall(false,true)"
+                                    class="btn bg-blue-grey  waves-effect">
+                                <i class="material-icons">arrow_drop_down_circle</i>
+                            </button>
+
+                            <button type="button" ng-click="setall(true,true)"
+                                    class="btn bg-blue-grey  waves-effect">
+                                <i class="material-icons">backup</i>
                             </button>
                         </div>
                         <div class="col-sm-2">

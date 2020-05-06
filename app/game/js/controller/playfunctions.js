@@ -978,10 +978,10 @@ function playfunctions($scope) {
             $scope.bubble.y = 0;
             $scope.bubble.visible = false;
             layer9.mouseEnabled = false;
-            layer9.addChild($scope.ambients);
-            layer9.addChild($scope.transitions);
-            layer9.addChild($scope.loadingPage);
-            layer9.addChild($scope.bubble);
+            layerAnimation.addChild($scope.ambients);
+            layerAnimation.addChild($scope.transitions);
+            layerAnimation.addChild($scope.loadingPage);
+            layerAnimation.addChild($scope.bubble);
             var name = "resources_system";
             mapQueues[name] = new createjs.LoadQueue(false);
             mapQueues[name].installPlugin(createjs.Sound);
@@ -1012,10 +1012,10 @@ function playfunctions($scope) {
             }, this);
             mapQueues[name].load();
         } else {
-            layer9.addChild($scope.ambients);
-            layer9.addChild($scope.transitions)
-            layer9.addChild($scope.loadingPage);
-            layer9.addChild($scope.bubble);
+            layerAnimation.addChild($scope.ambients);
+            layerAnimation.addChild($scope.transitions)
+            layerAnimation.addChild($scope.loadingPage);
+            layerAnimation.addChild($scope.bubble);
             resolve(true);
         }
     });
@@ -1051,39 +1051,6 @@ function playfunctions($scope) {
             $scope.$digest();
         LASTMOVEMENT = undefined;
         TOUCHER = undefined;
-        if (createjs.Touch.isSupported()) {
-            if (!$scope.padder) {
-                $scope.padder = true;
-
-                var dynamic = nipplejs.create({
-                    zone: document.getElementById('main'),
-                    color: 'white'
-                });
-                dynamic.on('added', function (evt, nipple) {
-                    nipple.on('start move end dir plain', function (evt) {
-                        if (evt.target.direction)
-                            if (evt.target.direction.angle) {
-                                LASTMOVEMENT = evt.target.direction.angle.toUpperCase();
-                                if (!ACTIONS.GAME.ISBLOCK())
-                                    eval(`ACTIONS.PLAYER.MOVE_${evt.target.direction.angle.toUpperCase()}();`);
-                                if (!TOUCHER) {
-                                    TOUCHER = setInterval(function () {
-                                        if (LASTMOVEMENT) {
-                                            if (!ACTIONS.GAME.ISBLOCK())
-                                                eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
-                                        }
-                                    }, 10);
-                                }
-                            }
-                    });
-                }).on('removed', function (evt, nipple) {
-                    clearInterval(TOUCHER);
-                    TOUCHER = undefined;
-                    nipple.off('start move end dir plain', function () {
-                    });
-                });
-            }
-        }
         //console.clear();
     };
 }

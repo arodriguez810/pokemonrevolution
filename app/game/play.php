@@ -4,7 +4,7 @@
 
 <?php
 
-$version = "1.0.0.42";
+$version = "1.0.0.51";
 
 function TitleImg()
 {
@@ -50,7 +50,8 @@ function TitleImg()
 <?php include_once($path . '/loader.php') ?>
 <div class="overlay"></div>
 
-<body oncontextmenu="return false;" style="overflow: hidden;font-family:font-family: monospace;background-color: black">
+<body oncontextmenu="return false;"
+      style="overflow: hidden;font-family:font-family: monospace;background-color: black">
 
 <section id="play" ng-app="pokemon" ng-controller="play">
     <!--GAME-->
@@ -65,6 +66,13 @@ function TitleImg()
                 height="{{bounds().height}}"
                 id="animations">
         </canvas>
+
+        <img ng-show="BATTLEOBJS.clima"
+             style="user-select: auto;touch-action: none;pointer-events:none;z-index: 20; position: absolute; margin: auto; top: 0px; left: 0px; right: 0px; bottom: 0px; width: {{bounds().width}}px; height: {{bounds().height}}px;"
+             width="{{bounds().width}}"
+             height="{{bounds().height}}"
+             src="../resources/clima/{{BATTLEOBJS.clima}}.gif"
+             id="clima"/>
     </div>
     <!--MENU-->
     <?php include 'playmenu.php' ?>
@@ -73,6 +81,31 @@ function TitleImg()
     <?php include 'playtexts.php' ?>
 
     <div style="display: none" class="g-signin2" data-onsuccess="onSignIn"></div>
+
+
+    <div ng-show="!isBattlening && !menuOpen"
+         style="position: absolute;bottom: 10px;right: 10px;text-align: center;z-index: 999;opacity: 0.6;">
+        <button ontouchstart="PADMOVE('w')" ontouchend="PADMOVE('q')" type="button"
+                class="btn btn-lg bg-green waves-effect"
+                style="margin-bottom: 6px;">
+            <i class="material-icons">arrow_upward</i>
+        </button>
+        <br>
+        <button ontouchstart="PADMOVE('a')" ontouchend="PADMOVE('q')" type="button"
+                class="btn btn-lg bg-red waves-effect">
+            <i class="material-icons">arrow_back</i>
+        </button>
+        <button ontouchstart="PADMOVE('s')" ontouchend="PADMOVE('q')" type="button"
+                class="btn btn-lg bg-blue waves-effect">
+            <i class="material-icons">arrow_downward</i>
+        </button>
+        <button ontouchstart="PADMOVE('d')" ontouchend="PADMOVE('q')" type="button"
+                class="btn btn-lg bg-amber waves-effect">
+            <i class="material-icons">arrow_forward</i>
+        </button>
+
+    </div>
+
 
 </section>
 

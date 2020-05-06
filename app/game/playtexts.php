@@ -33,6 +33,6 @@
     </div>
 </div>
 
-<div class="speech-bubble" style="position: absolute;display: none" id="bubble">
+<div class="speech-bubble" style="position: absolute;display: none;z-index: 15" id="bubble">
     {{bubbleText}}
 </div>

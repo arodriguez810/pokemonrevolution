@@ -288,7 +288,7 @@
                                      ng-repeat="(kpo,pokemon) in session.pokemons">
                                     <img
                                             ng-click="menuPokemon($index)"
-                                            style="transform: scale(0.5);{{pokemon.style}}"
+                                            style="transform: scale(0.5);{{pokemon.style}};{{PKM.hp(pokemon)<=0?'filter: grayscale(1);':''}}"
                                             src="{{pokemon.imageUrl}}">
                                 </div>
                             </div>
@@ -431,8 +431,32 @@
             {{PKM.friend().name}} <img src="../resources/icons/{{PKM.friend().gender}}.png">
             <div class="{{PKM.hpcolor(PKM.hp(PKM.friend()))}}"
                  style="width: {{PKM.hp(PKM.friend())}}%;transition: width 2s, height 4s;">
-
             </div>
+            <label class="StatusText" style="background-color: {{typeColor[PKM.friend().battle.statusType]}}"
+                   ng-show="PKM.friend().battle.status">
+                {{PKM.friend().battle.status}} x{{PKM.friend().battle.statusTurn}}
+            </label>
+            <label class="STATSText bg-red" ng-show="PKM.friend().battle.stats.atk!==0">
+                a{{PKM.friend().battle.stats.atk*-1}}
+            </label>
+            <label class="STATSText bg-blue" ng-show="PKM.friend().battle.stats.def!==0">
+                d{{PKM.friend().battle.stats.def*-1}}
+            </label>
+            <label class="STATSText bg-amber" ng-show="PKM.friend().battle.stats.spe!==0">
+                s{{PKM.friend().battle.stats.spe*-1}}
+            </label>
+            <label class="STATSText bg-pink" ng-show="PKM.friend().battle.stats.spa!==0">
+                sa{{PKM.friend().battle.stats.spa*-1}}
+            </label>
+            <label class="STATSText bg-cyan" ng-show="PKM.friend().battle.stats.spd!==0">
+                sd{{PKM.friend().battle.stats.spd*-1}}
+            </label>
+            <label class="STATSText bg-brown" ng-show="PKM.friend().battle.stats.accuracy!==0">
+                ac{{PKM.friend().battle.stats.accuracy*-1}}
+            </label>
+            <label class="STATSText bg-blue-grey" ng-show="PKM.friend().battle.stats.evasion!==0">
+                ev{{PKM.friend().battle.stats.evasion*-1}}
+            </label>
         </div>
         <div class="pokemonLife" onclick="ACTIONS.UNIT.NEXT();">
             <img src="../resources/icons/{{PKM.target().gender}}.png"> {{PKM.target().name}}
@@ -440,6 +464,32 @@
                  style="width: {{PKM.hp(PKM.target())}}%;transition: width 2s, height 4s;">
 
             </div>
+            <label class="StatusText"
+                   style="float: left; background-color: {{typeColor[PKM.target().battle.statusType]}}"
+                   ng-show="PKM.target().battle.status">
+                {{PKM.target().battle.status}} x{{PKM.target().battle.statusTurn}}
+            </label>
+            <label class="STATSText bg-red" ng-show="PKM.target().battle.stats.atk!==0" style="float: left;">
+                a{{PKM.target().battle.stats.atk*-1}}
+            </label>
+            <label class="STATSText bg-blue" ng-show="PKM.target().battle.stats.def!==0" style="float: left;">
+                d{{PKM.target().battle.stats.def*-1}}
+            </label>
+            <label class="STATSText bg-amber" ng-show="PKM.target().battle.stats.spe!==0" style="float: left;">
+                s{{PKM.target().battle.stats.spe*-1}}
+            </label>
+            <label class="STATSText bg-pink" ng-show="PKM.target().battle.stats.spa!==0" style="float: left;">
+                sa{{PKM.target().battle.stats.spa*-1}}
+            </label>
+            <label class="STATSText bg-cyan" ng-show="PKM.target().battle.stats.spd!==0" style="float: left;">
+                sd{{PKM.target().battle.stats.spd*-1}}
+            </label>
+            <label class="STATSText bg-brown" ng-show="PKM.target().battle.stats.accuracy!==0" style="float: left;">
+                ac{{PKM.target().battle.stats.accuracy*-1}}
+            </label>
+            <label class="STATSText bg-blue-grey" ng-show="PKM.target().battle.stats.evasion!==0" style="float: left;">
+                ev{{PKM.target().battle.stats.evasion*-1}}
+            </label>
             <div ng-repeat="(kpo,pokemon) in BATTLEOBJS.TARGETS"
                  style="margin-top: 5px;float: right;width: 10px;height: 10px;border-radius: 100%;border: 1px black solid;"
                  class="{{PKM.hpcolor(PKM.hp(pokemon))}}">
@@ -458,15 +508,12 @@
         <i class="material-icons myicon">volume_up</i>
     </button>
 
-    <button ng-if="PKM.mainMenu" style="width: 19%;    font-size: 18px;" type="button" ng-click="PKM.menu_open();"
-            class="btn bg-blue">
-        Atacar<i class="material-icons">gamepad</i>
+    <button ng-if="PKM.mainMenu && PKM.friend().battle.status!=='partiallytrapped'"
+            style="width: 20%;    font-size: 18px;" type="button" ng-click="PKM.menu_open();"
+            class="btn bg-orange">
+        Cambiar<i class="material-icons">swap_vertical_circle</i>
     </button>
-    <button ng-if="PKM.mainMenu" ng-show="BATTLEOBJS.isWild" style="width: 19%;    font-size: 18px;" type="button"
-            onclick="ACTIONS.POKEMON.BATTLEEND();"
-            class="btn bg-red">
-        Huir <i class="material-icons">directions_run</i>
-    </button>
+
 </div>
 
 <div ng-if="PKM.mainMenu" style="position: absolute;z-index: 9999;width: 98%;padding: 3px">
@@ -492,10 +539,7 @@
                 <td style="text-align: center">
                     <img style=" transform: scale(1);{{selectedPokemonClick().style}}"
                          src="{{selectedPokemonClick().imageUrl}}">
-                    <button ng-show="PKM.hp(selectedPokemonClick())>0" type="button" ng-click="PKM.changefriend()"
-                            class="btn bg-blue waves-effect">
-                        <i class="material-icons">launch</i>
-                    </button>
+
                     <div class="pokemonLife friendLife">
                         <div class="{{PKM.hpcolor(PKM.hp(selectedPokemonClick()))}}"
                              style="width: {{PKM.hp(selectedPokemonClick())}}%">
@@ -559,43 +603,91 @@
         </button>
     </div>
 
-    <div ng-if="PKM.menu" style="color: white;overflow: scroll;width: 97%;min-height: 270px;padding: 15px;"
-         class="bg-blue-grey tab-pane fade animated bounceInRight in active pokmonDetail">
-        <btn ng-show="PKM.hp(PKM.friend())>0"
-             ng-repeat="(mkey,move) in  PKM.friend().moves"
-             ng-click="desc('Movimiento',move.name,move.shortDesc)"
-             style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
-             class="btn ">
-            <img src="../resources/poekemon/types/{{move.type}}.png"
-                 style="margin-left: 5px">
-            <b> {{move.name}}</b>
-            <img src="../resources/poekemon/category/{{move.category}}.png"
-                 style="margin-left: 5px">
-            <btn class="btn btn-default" ng-click="PKM.attack(move)" style="float: right;">USAR</btn>
-        </btn>
-        <div style="margin-top: 120px">
-            <button ng-click="PKM.menu_close()" ng-show="PKM.hp(PKM.friend())>0" type="button"
-                    class="btn btn-danger waves-effect">
-                <i class="material-icons">keyboard_backspace</i>
-            </button>
+    <div ng-if="PKM.menu || PKM.hp(PKM.friend())<=0 || BATTLEOBJS.batonpass"
+         style="color: white;overflow: scroll;width: 97%;padding: 15px;height: 100%"
+         class="bg-white tab-pane fade animated bounceInRight in active pokmonDetail">
 
-        </div>
-        <div style="text-align: center" ng-show="PKM.friend().battle.canChange!==false || PKM.hp(PKM.friend())<=0">
-            <img
-                    ng-show="BATTLEOBJS.FRIENDINDEX!==$index"
-                    style="text-transform: capitalize;text-align: center !important;display: inline-block;margin-left: 15px;{{pokemon.style}}"
+        <table style="text-align: center;width: 100%"
+               ng-show="PKM.friend().battle.canChange!==false || PKM.hp(PKM.friend())<=0">
+            <tr>
+
+                <td style="width: 20%;float: left;position: relative;height: 100px"
                     ng-repeat="(kpo,pokemon) in session.pokemons"
-                    ng-click="menuPokemon($index,true)"
-                    src="{{pokemon.imageUrl}}">
+                    ng-show="BATTLEOBJS.FRIENDINDEX!==$index">
+
+                    <img
+                            style="position: absolute;bottom: 0; text-transform: capitalize;text-align: center !important;display: inline-block;{{pokemon.style}};{{PKM.hp(pokemon)<=0?'filter: grayscale(1);':''}}"
+                            ng-click="menuPokemon($index,true)"
+                            src="{{pokemon.imageUrl}}">
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 20%;float: left;" ng-repeat="(kpo,pokemon) in session.pokemons"
+                    ng-show="BATTLEOBJS.FRIENDINDEX!==$index">
+                    <div style="width: 100%">
+                        <div class="{{PKM.hpcolor(PKM.hp(pokemon))}}"
+                             style="width: {{PKM.hp(pokemon)}}%;    height: 20px;    margin: 4px;    border-radius: 20px;    border: 1px black solid;">
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 20%;float: left;" ng-repeat="(kpo,pokemon) in session.pokemons"
+                    ng-show="BATTLEOBJS.FRIENDINDEX!==$index">
+                    <button ng-show="PKM.hp(pokemon)>0" type="button" ng-click="PKM.changefriend($index)"
+                            class="btn bg-red waves-effect">
+                        <i class="material-icons">cached</i>Cambiar
+                    </button>
+
+                    <button ng-show="!PKM.hp(pokemon)>0" type="button"
+                            class="btn bg-grey waves-effect">
+                        <i class="material-icons">cached</i>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div style="width: 100%; text-align: center;margin-top: 50px">
+            <button ng-click="PKM.menu_close()" ng-show="PKM.hp(PKM.friend())>0" type="button"
+                    class="btn btn-danger waves-effect" style="width: 50%">
+                Regresar a pelear <i class="material-icons">keyboard_backspace</i>
+            </button>
+            <button ng-if="PKM.mainMenu" ng-show="BATTLEOBJS.isWild" style="width: 19%;    font-size: 18px;"
+                    type="button"
+                    onclick="ACTIONS.POKEMON.BATTLEEND();"
+                    class="btn bg-red">
+                Huir <i class="material-icons">directions_run</i>
+            </button>
         </div>
     </div>
+
+
+</div>
+
+<div ng-show="PKM.mainMenu && !BATTLEOBJS.batonpass"
+     style="position: absolute;bottom: 10px;text-align: center;z-index: 999;opacity: 0.9;width: 98%">
+
+
+    <btn ng-show="PKM.hp(PKM.friend())>0"
+         ng-repeat="(mkey,move) in  PKM.friend().moves"
+         ng-click="PKM.attack(move)"
+
+         style="float: left;min-width: 20%;background-color: {{typeColor[move.type]}};text-align: left;{{PKM.gigamaxAttack(move)}}"
+         class="btn ">
+        <img src="../resources/poekemon/types/{{move.type}}.png"
+             style="margin-left: 5px"><b> {{move.name}}</b><img
+                src="../resources/poekemon/category/{{move.category}}.png"
+                style="margin-left: 5px">
+    </btn>
 
 </div>
 
 <div class="bg-white"
-     style="color: black;padding: 0;text-align: left;z-index: 999999;display: none;position: relative;float: right;border: red 1px solid;border-radius: 12px;"
+     style="color: black;padding: 0;text-align: left;z-index: 999999;display: none;position: absolute;float: right;border: red 1px solid;border-radius: 12px;bottom: 0;right: 0;"
      id="enemyText">
     <div id="enemyTextDiv" class="text-primary" style="float: left;"></div>
     <img style="float: right;width: 72px;"
          src="data/characters_file/{{BATTLEOBJS.ENEMY.name}}/face.png?v=<?php echo $version ?>">
 </div>
+

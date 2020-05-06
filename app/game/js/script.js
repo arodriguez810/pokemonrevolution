@@ -1,4 +1,6 @@
-﻿pokemon = angular.module('pokemon', []).directive('onLongPress', function ($timeout) {
+﻿LASTMOVEMENT = undefined;
+TOUCHER = undefined;
+pokemon = angular.module('pokemon', []).directive('onLongPress', function ($timeout) {
     return {
         restrict: 'A',
         link: function ($scope, $elm, $attrs) {
@@ -196,6 +198,57 @@ $(document).on("keyup", function (e) {
         }
     }
 });
+
+function PADMOVE(key) {
+    var e = {key: key};
+    if (key === "q") {
+        clearInterval(TOUCHER);
+        TOUCHER = undefined;
+    }
+    if (e.key === "w" || e.key === "ArrowUp") {
+        LASTMOVEMENT = "UP";
+        ACTIONS.PLAYER.MOVE_UP();
+        if (!TOUCHER) {
+            TOUCHER = setInterval(function () {
+                if (LASTMOVEMENT)
+                    if (!ACTIONS.GAME.ISBLOCK())
+                        eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+            }, 10);
+        }
+    } else if (e.key === "s" || e.key === "ArrowDown") {
+        LASTMOVEMENT = "DOWN";
+        ACTIONS.PLAYER.MOVE_DOWN();
+        if (!TOUCHER) {
+            TOUCHER = setInterval(function () {
+                if (LASTMOVEMENT)
+                    if (!ACTIONS.GAME.ISBLOCK())
+                        eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+            }, 10);
+        }
+    } else if (e.key === "a" || e.key === "ArrowLeft") {
+        LASTMOVEMENT = "LEFT";
+        ACTIONS.PLAYER.MOVE_LEFT();
+        if (!TOUCHER) {
+            TOUCHER = setInterval(function () {
+                if (LASTMOVEMENT)
+                    if (!ACTIONS.GAME.ISBLOCK())
+                        eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+            }, 10);
+        }
+    } else if (e.key === "d" || e.key === "ArrowRight") {
+        LASTMOVEMENT = "RIGHT";
+        ACTIONS.PLAYER.MOVE_RIGHT();
+        if (!TOUCHER) {
+            TOUCHER = setInterval(function () {
+                if (LASTMOVEMENT)
+                    if (!ACTIONS.GAME.ISBLOCK())
+                        eval(`ACTIONS.PLAYER.MOVE_${LASTMOVEMENT}();`);
+            }, 10);
+        }
+    }
+}
+
+
 $(document).on("keydown", function (e) {
     if ($("#game").length > 0) {
         if (!createjs.Touch.isSupported()) {
@@ -260,6 +313,9 @@ $(document).on("keydown", function (e) {
 $(document).on("keyup", function (e) {
     PRESS.CTRL = false;
     PRESS.SHIFT = false;
+    if (TOUCHER)
+        clearInterval(TOUCHER);
+    TOUCHER = undefined;
 });
 
 $(document).on("click", ".gradientclass", function () {

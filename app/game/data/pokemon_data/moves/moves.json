@@ -795,7 +795,7 @@
     "basePower": 110,
     "category": "Physical",
     "desc": "If the user is a Morpeko, this move will be Electric type. If the user is a Morpeko-Hangry, this move will be Dark type. Has a 100% chance to raise the users Speed by 1 stage. This move fails if the user is not a Morpeko or Morpeko-Hangry.",
-    "shortDesc": "Morpeko: Electric; Hangry: Dark; 100% +1 Spe.",
+    "shortDesc": "100% +1 Spe.",
     "id": "aurawheel",
     "isViable": true,
     "name": "Aura Wheel",
@@ -1107,7 +1107,7 @@
     "basePower": 0,
     "category": "Physical",
     "desc": "Hits one time for the user and one time for each unfainted Pokemon without a major status condition in the user's party. The power of each hit is equal to 5+(X\/10), where X is each participating Pokemon's base Attack; each hit is considered to come from the user.",
-    "shortDesc": "All healthy allies aid in damaging the target.",
+    "shortDesc": "Usa el poder de tu amigo mas fuerte para atacar.",
     "id": "beatup",
     "name": "Beat Up",
     "pp": 10,
@@ -1173,7 +1173,7 @@
     "basePower": 120,
     "category": "Special",
     "desc": "This move cannot be selected until the user eats a Berry, either by eating one that was held, stealing and eating one off another Pokemon with Bug Bite or Pluck, or eating one that was thrown at it with Fling. Once the condition is met, this move can be selected and used for the rest of the battle even if the user gains or uses another item or switches out. Consuming a Berry with Natural Gift does not count for the purposes of eating one.",
-    "shortDesc": "Cannot be selected until the user eats a Berry.",
+    "shortDesc": "Use it.",
     "id": "belch",
     "name": "Belch",
     "pp": 10,
@@ -1201,6 +1201,9 @@
     "flags": {
       "snatch": 1
     },
+    "boosts": {
+      "atk": 8
+    },
     "secondary": null,
     "target": "self",
     "type": "Normal",
@@ -1214,7 +1217,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The target receives the user's held item. Fails if the user has no item or is holding a Mail or Z-Crystal, if the target is already holding an item, if the user is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, a Pokemon that can Mega Evolve holding the Mega Stone for its species, or if the target is one of those Pokemon and the user is holding the respective item.",
-    "shortDesc": "User passes its held item to the target.",
+    "shortDesc": "User passes its held status to the target.",
     "id": "bestow",
     "isNonstandard": "Past",
     "name": "Bestow",
@@ -1315,7 +1318,7 @@
   {
     "num": 654,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 150,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "blackholeeclipse",
@@ -1337,7 +1340,7 @@
     "basePower": 150,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "Use it",
     "id": "blastburn",
     "name": "Blast Burn",
     "pp": 5,
@@ -1403,7 +1406,7 @@
       "chance": 10,
       "status": "frz"
     },
-    "target": "allAdjacentFoes",
+    "target": "normal",
     "type": "Ice",
     "contestType": "Beautiful",
     "keyname": "blizzard"
@@ -1423,6 +1426,7 @@
       "reflectable": 1,
       "mirror": 1
     },
+    "volatileStatus": "partiallytrapped",
     "secondary": null,
     "target": "normal",
     "type": "Normal",
@@ -1435,7 +1439,7 @@
   {
     "num": 644,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 150,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "bloomdoom",
@@ -1670,7 +1674,7 @@
       "authentic": 1
     },
     "secondary": null,
-    "target": "allAdjacent",
+    "target": "normal",
     "type": "Normal",
     "contestType": "Tough",
     "keyname": "boomburst"
@@ -1804,14 +1808,14 @@
         "atk": -1
       }
     },
-    "target": "allAdjacentFoes",
+    "target": "self",
     "type": "Dragon",
     "keyname": "breakingswipe"
   },
   {
     "num": 622,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 150,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "breakneckblitz",
@@ -1888,7 +1892,7 @@
       "mirror": 1
     },
     "secondary": null,
-    "target": "allAdjacent",
+    "target": "normal",
     "type": "Dark",
     "contestType": "Tough",
     "keyname": "brutalswing"
@@ -2111,7 +2115,7 @@
     "basePower": 130,
     "category": "Special",
     "desc": "Fails unless the user is a Fire type. If this move is successful, the user's Fire type becomes typeless as long as it remains active.",
-    "shortDesc": "User's Fire type becomes typeless; must be Fire.",
+    "shortDesc": "User's Fire",
     "id": "burnup",
     "name": "Burn Up",
     "pp": 5,

@@ -10,12 +10,30 @@
     z-index: 9;
 }
 
+.StatusText {
+    font-size: 18px;
+    margin-top: 6px;
+    color: white;
+    padding: 3px;
+    border: 1px black solid;
+    border-radius: 10px;
+}
+
+.STATSText {
+    font-size: 14px;
+    margin-top: 6px;
+    color: white;
+    padding: 3px;
+    border: 1px black solid;
+    border-radius: 10px;
+}
+
 .DialogWindow {
     background-color: #ccc;
     border: solid;
     border-image: url("../../resources/system/dialog.png") 28 / 10px 10px 10px 10px stretch;
     padding: 15px;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .DialogTitle {

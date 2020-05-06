@@ -15,6 +15,6 @@
 <script src="js/pages/ui/modals.js"></script>
 <script src="plugins/sweetalert/sweetalert.min.js"></script>
 <script src="js/api.js"></script>
-<script src="js/script.js"></script>
-<script src="js/models/pokedex.js"></script>
+<script src="js/script.js?v=<?php echo $version ?>"></script>
+<script src="js/models/pokedex.js?v=<?php echo $version ?>"></script>
 <script src="js/controller/language.js"></script>

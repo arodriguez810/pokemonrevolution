@@ -107,7 +107,7 @@ function playvars($scope) {
     createjs.Touch.enable(STAGE);
     ANIMATIONSSTAGE.mouseEnabled = false;
     ANIMATIONSSTAGE.mouseChildren = false;
-    //createjs.Ticker.maxDelta = 50;
+    createjs.Ticker.maxDelta = 30;
     for (var l = 0; l <= 9; l++) {
         eval(`layer${l} = new createjs.Container();`);
         eval(`STAGE.addChild(layer${l});`);

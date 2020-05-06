@@ -512,6 +512,46 @@ function playactions($scope) {
                     }, interval * (times + 1));
                 }
             },
+            SHAKESIZE: function (object, interval, distance, times, callback) {
+                if (object) {
+                    var point = object.scaleX;
+                    var codes = [];
+                    for (var i = 1; i <= times; i++) {
+                        codes.push(`createjs.Tween.get(object).to({scaleX: (${point} ${i % 2 === 0 ? '+' : '-'} distance ) }, interval);`);
+                    }
+                    for (var i = 1; i <= times; i++) {
+                        setTimeout(() => {
+                            eval(codes[0]);
+                            codes.shift();
+                        }, interval * i);
+                    }
+                    setTimeout(function () {
+                        createjs.Tween.get(object).to({scaleX: point}, interval);
+                        if (callback)
+                            callback()
+                    }, interval * (times + 1));
+                }
+            },
+            SHAKESIZEY: function (object, interval, distance, times, callback) {
+                if (object) {
+                    var point = object.scaleY;
+                    var codes = [];
+                    for (var i = 1; i <= times; i++) {
+                        codes.push(`createjs.Tween.get(object).to({scaleY: (${point} ${i % 2 === 0 ? '+' : '-'} distance ) }, interval);`);
+                    }
+                    for (var i = 1; i <= times; i++) {
+                        setTimeout(() => {
+                            eval(codes[0]);
+                            codes.shift();
+                        }, interval * i);
+                    }
+                    setTimeout(function () {
+                        createjs.Tween.get(object).to({scaleY: point}, interval);
+                        if (callback)
+                            callback()
+                    }, interval * (times + 1));
+                }
+            },
             SHAKEY: function (object, interval, distance, times, callback) {
                 if (object) {
                     var point = object.y;
@@ -2645,7 +2685,7 @@ function playactions($scope) {
     // Listeners
     $scope.PKM = {};
     $scope.PKM.hpc = 10;
-    $scope.PKM.statlimit = 4;
+    $scope.PKM.statlimit = 8;
     $scope.PKM.mainMenu = false;
     $scope.PKM.menu = false;
     $scope.PKM.pokemonDetail = false;
@@ -2670,7 +2710,8 @@ function playactions($scope) {
         $scope.PKM.menu = true;
     };
     $scope.PKM.friend = function (index) {
-        return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
+        if ($scope.session !== undefined)
+            return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
     };
     $scope.PKM.target = function () {
         return $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
@@ -2678,8 +2719,8 @@ function playactions($scope) {
     $scope.PKM.attack = function (move) {
         POKEMONBATTLE.RUNTURN($scope, move);
     };
-    $scope.PKM.changefriend = function () {
-        POKEMONBATTLE.RUNTURN($scope, undefined, true);
+    $scope.PKM.changefriend = function (index) {
+        POKEMONBATTLE.RUNTURN($scope, undefined, index);
     };
     $scope.PKM.hp = function (obj) {
         var base = (obj.stats.hp * $scope.PKM.hpc);
@@ -2687,8 +2728,23 @@ function playactions($scope) {
         real = real <= 0 ? 0 : real;
         return (real * 100) / base;
     };
+    $scope.PKM.hpno = function (obj) {
+        var base = (obj.stats.hp * $scope.PKM.hpc);
+        var real = (obj.stats.hp * $scope.PKM.hpc) - obj.battle.stats.hp;
+        real = real <= 0 ? 0 : real;
+        return real;
+    };
     $scope.PKM.basehp = function (obj) {
         return (obj.stats.hp * $scope.PKM.hpc);
+    };
+    $scope.PKM.gigamaxAttack = function (move) {
+        if ($scope.PKM.friend().battle.gigamax) {
+            if (move.gmaxPower)
+                return "border: 4px yellow solid";
+            else
+                return "";
+        }
+        return "";
     };
     $scope.PKM.stat = function (obj, stat, modifier) {
         if (modifier !== undefined) {
@@ -2697,6 +2753,8 @@ function playactions($scope) {
                     obj.battle.stats[stat] += parseInt(modifier);
             } else {
                 obj.battle.stats[stat] += parseInt(modifier);
+                if (!$scope.$$phase)
+                    $scope.$digest();
                 if (obj.battle.stats[stat] < 0) {
                     obj.battle.stats[stat] = 0;
                 }
