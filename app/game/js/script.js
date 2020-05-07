@@ -34,6 +34,8 @@ pokemon = angular.module('pokemon', []).directive('onLongPress', function ($time
     };
 });
 
+
+
 COLORSF = [];
 
 pokemon.config(['$httpProvider', function ($httpProvider) {

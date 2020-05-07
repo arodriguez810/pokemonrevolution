@@ -8,12 +8,16 @@ POKEMON = {
     trainersRange: {
         noob: [0],
         noobPro: [0, 0, 0],
+        noobProFull: [0, 0, 0, 0, 0, 0],
         friend: [0, 1],
         friendPro: [0, 0, 1],
+        friendProFull: [0, 0, 0, 0, 0, 1],
         npc: [0, 1, 1],
         npcPro: [0, 0, 1, 1],
+        npcProFull: [0, 0, 0, 0, 1, 1],
         special: [0, 1, 1, 1],
         specialPro: [0, 1, 1, 1, 1],
+        specialProFull: [0, 0, 1, 1, 1, 1],
         gymFriend: [1, 1, 1, 1, 1],
         gymFriendPro: [1, 1, 1, 1, 1, 1],
         gym: [1, 1, 1, 1, 1, 2],
@@ -179,7 +183,7 @@ POKEMOMFIND = {
     },
     TRAINER: function (tier, type, base) {
         var tiers = POKEMOMFIND.tier_get(tier);
-        var trainer = POKEMON.trainersRange[type || "noobPro"];
+        var trainer = POKEMON.trainersRange[type || "noobProFull"];
         var pokemons = [];
         for (var pokemon of trainer) {
             var tiersD = POKEMOMFIND.next(tiers.name, pokemon);
@@ -898,9 +902,36 @@ POKEMONBATTLE = {
             var def = "def";
             if (info.move.useSourceDefensiveAsOffensive)
                 ata = "def";
-
-            if (info.move.category === "Status")
+            if (info.move.num === 283) {
+                info.pokemonTarget.battle.stats.hp = info.pokemonTarget.stats.hp * ($scope.PKM.hp(info.pokemonFriend) / 100);
+                return 0;
+            }
+            if (info.move.category === "Status") {
+                if (info.move.num === 756) {
+                    var stats = ["atk", "def", "spa", "spd", "spe", "accuracy", "evasion"];
+                    var temp = OSO(info.pokemonFriend.battle.stats);
+                    var temp2 = OSO(info.pokemonTarget.battle.stats);
+                    for (var stat of stats)
+                        info.pokemonTarget.battle.stats[stat] = temp[stat];
+                    for (var stat of stats)
+                        info.pokemonFriend.battle.stats[stat] = temp2[stat];
+                }
                 return damage;
+            }
+            if (info.pokemonFriend.battle.status === "electrify") {
+                info.pokemonFriend.battle.statusTurn = 0;
+                info.pokemonFriend.battle.status = undefined;
+                info.move.type = "Electric";
+            }
+
+            if (info.move.num === 373) {
+                var stats = ["atk", "def", "spa", "spd", "spe", "accuracy", "evasion"];
+                var temp2 = OSO(info.pokemonTarget.battle.stats);
+                for (var stat of stats)
+                    info.pokemonFriend.battle.stats[stat] = temp2[stat];
+                POKEMONBATTLE.CLEARSTATS(info.pokemonTarget);
+            }
+
             if (info.move.category === "Special") {
                 ata = "spa";
                 def = "spd";
@@ -908,7 +939,6 @@ POKEMONBATTLE = {
                     ata = "spd";
             }
             var fata = $scope.PKM.stat(info.pokemonFriend, ata);
-
             if (info.move.num === 251) {
                 var prota = info.pokemonFriend;
                 for (var po of info.team) {
@@ -919,23 +949,20 @@ POKEMONBATTLE = {
                 }
                 ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} ha tomado la fuerza de ${prota.name}`);
             }
-
-
+            if (info.move.num === 775) {
+                $scope.PKM.stat(info.pokemonFriend, "hp", ($scope.PKM.basehp(info.pokemonFriend) / 33));
+            }
             var tdef = $scope.PKM.stat(info.pokemonTarget, def) / 2;
             var multiplier = POKEMONBATTLE.CALCS.MULTIPLIER(info.pokemonTarget.types, info.move.type);
-
-
             if (base)
                 tdef = 0;
-
+            if (info.move.ignoreDefensive)
+                tdef = 0;
             var calc = ((fata - tdef) + info.move.basePower);
             calc = eval(`calc${multiplier}`);
             if (critial)
                 calc += (calc / 3);
-
             damage = calc;
-
-
             var penaltyType = 1;
             penaltyType -= info.pokemonFriend.types.indexOf(info.move.type) !== -1 ? 0 : 0.25;
             if (info.pokemonFriend.types.indexOf(info.move.type) === -1)
@@ -944,9 +971,7 @@ POKEMONBATTLE = {
                     if (taken === 1)
                         penaltyType -= 0.25;
                 }
-
             damage = calc * penaltyType;
-
             var hits = 1;
             if (info.move.multihit) {
                 if (Array.isArray(info.move.multihit)) {
@@ -955,7 +980,6 @@ POKEMONBATTLE = {
                     hits = info.move.multihit;
                 }
             }
-
             damage *= hits;
             if (hits > 1) {
                 for (var h = 1; h <= hits; h++) {
@@ -963,12 +987,21 @@ POKEMONBATTLE = {
                     $scope.play("Cancel", SOUNDS.system);
                 }
             }
-
             if (info.pokemonTarget.battle.status === "auroraveil") {
                 ACTIONS.MESSAGE.NOTI(`${info.pokemonTarget.name} ha reducido daño por auroraveil!`);
                 damage = damage / 2;
             }
 
+            if (info.pokemonFriend.battle.status === "charge") {
+                if (info.move.type === "Electric") {
+                    damage = damage * 2;
+                    ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} atacó con sobrecarga!`);
+                }
+                if (info.pokemonFriend.battle.statusTurn >= 1) {
+                    info.pokemonFriend.battle.statusTurn = 0;
+                    info.pokemonFriend.battle.status = undefined;
+                }
+            }
             if (info.pokemonFriend.battle.status === "bide") {
                 if (info.pokemonFriend.battle.statusTurn >= 2) {
                     info.pokemonFriend.battle.statusTurn = 0;
@@ -977,6 +1010,76 @@ POKEMONBATTLE = {
                 }
             }
 
+
+            if (info.move.num === 754) {
+                if (!last) {
+                    damage = damage * 2;
+                }
+            }
+            if (info.move.num === 68) {
+                if (info.move.category === "Physical")
+                    damage = damage * 2;
+            }
+            if (info.move.num === 362) {
+                if ($scope.PKM.hp(info.pokemonFriend) <= 50) {
+                    damage = damage * 2;
+                }
+            }
+            if (info.move.num === 486) {
+                if ($scope.PKM.stat(info.pokemonFriend, "spd") > $scope.PKM.stat(info.pokemonTarget, "spd"))
+                    damage = damage * 2;
+            }
+            if (info.move.flags) {
+                if (info.move.flags.mirror) {
+                    if (last) {
+                        if (info.move.shortDesc.indexOf("doubles") !== -1) {
+                            ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} aumento en venganza!`);
+                            damage = damage * 2;
+                        }
+                    }
+                }
+            }
+            if (info.move.recoil) {
+                var recoil = damage * (info.move.recoil[0] / info.move.recoil[1]);
+                $scope.PKM.stat(info.pokemonFriend, "hp", recoil);
+                ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} se auto dañó!`);
+            }
+            if (info.pokemonTarget.battle.status === "substitute") {
+                if (info.pokemonTarget.battle.statusTurn >= 3) {
+                    info.pokemonTarget.battle.status = undefined;
+                    info.pokemonTarget.battle.statusTurn = 0;
+                    info.target.dom.style.filter = OSO(info.pokemonTarget.battle.statusfilter);
+
+                    if (!info.isEnemy) {
+                        info.target.body.y -= info.target.body.height - 39;
+                        info.target.dom.src = info.pokemonTarget.imageUrl;
+                    } else {
+                        info.target.body.y -= info.target.body.height - 38;
+                        info.target.dom.src = info.pokemonTarget.imageUrl.replace('/front/', '/back/').replace('/front_s/', '/back_s/');
+                    }
+
+                    info.pokemonTarget.battle.statusfilter = undefined;
+                } else {
+                    if (!info.pokemonTarget.battle.statusfilter) {
+
+                        info.pokemonTarget.battle.statusfilter = OSO(info.target.dom.src);
+                        $scope.PKM.stat(info.pokemonTarget, "hp", ($scope.PKM.basehp(info.pokemonTarget) / 3));
+                        if (!info.isEnemy) {
+                            info.target.body.y += info.target.body.height - 39;
+                            info.target.dom.src = "../resources/poekemon/gif/front/substitute.gif";
+                        } else {
+                            info.target.body.y += info.target.body.height - 38;
+                            info.target.dom.src = "../resources/poekemon/gif/back/substitute.gif";
+                        }
+
+                        POKEMONBATTLE.CLEARSTATS(info.pokemonTarget);
+                    }
+                    damage = damage / 16;
+                }
+            }
+            if (info.move.num === 462) {
+                damage = ($scope.PKM.hpno(info.pokemonTarget) / 3);
+            }
             if (info.pokemonFriend.battle.gigamax) {
                 if (info.move.gmaxPower) {
                     damage += info.move.gmaxPower;
@@ -989,33 +1092,17 @@ POKEMONBATTLE = {
                     damage = damage * 2;
                 }
             }
-            if (info.move.num === 754) {
-                if (!last) {
-                    damage = damage * 2;
-                }
+            if (info.move.num === 174) {
+                damage = ($scope.PKM.hpno(info.pokemonTarget) / 2);
             }
 
-            if (info.move.num === 362) {
-                if ($scope.PKM.stat(info.pokemonFriend, "hp") <= 50) {
-                    damage = damage * 2;
+            if (info.pokemonFriend.battle.status === "curse") {
+                if (info.pokemonFriend.battle.statusTurn >= 2) {
+                    info.pokemonFriend.battle.statusTurn = 0;
+                    info.pokemonFriend.battle.status = undefined;
+                    var crusLife = ($scope.PKM.hpno(info.pokemonFriend) / 2);
+                    $scope.PKM.stat(info.pokemonFriend, "hp", crusLife);
                 }
-            }
-
-            if (info.move.flags) {
-                if (info.move.flags.mirror) {
-                    if (last) {
-                        if (info.move.shortDesc.indexOf("doubles") !== -1) {
-                            ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} aumento en venganza!`);
-                            damage = damage * 2;
-                        }
-                    }
-                }
-            }
-
-            if (info.move.recoil) {
-                var recoil = damage * (info.move.recoil[0] / info.move.recoil[1]);
-                $scope.PKM.stat(info.pokemonFriend, "hp", recoil);
-                ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} se auto dañó!`);
             }
 
             console.log(info.move);
@@ -1040,6 +1127,9 @@ POKEMONBATTLE = {
             var moveAccuracy = 100 - info.move.accuracy;
             var pokemonAcur = 100 - $scope.PKM.stat(info.pokemonFriend, "accuracy");
             var targetEvasion = $scope.PKM.stat(info.pokemonTarget, "evasion");
+            targetEvasion = targetEvasion / 2;
+            if (info.move.ignoreEvasion)
+                targetEvasion = 0;
             var ratio = 5 + (moveAccuracy + pokemonAcur) + targetEvasion;
             console.log("miss ratio", ratio, "enemy evasion", targetEvasion);
             var accept = getRandomIntRange(0, 100);
@@ -1086,12 +1176,55 @@ POKEMONBATTLE = {
             var MeMulti = POKEMONBATTLE.CALCS.MULTIPLIER(info.pokemonFriend.types, info.move.type) === "*0";
             var SuMulti = POKEMONBATTLE.CALCS.MULTIPLIER(info.pokemonTarget.types, info.move.type) === "*0";
 
+            if (info.pokemonTarget.battle.status === "substitute") {
+                return "";
+            }
+            if (info.pokemonFriend.battle.status === "electricterrain") {
+                return "";
+            }
             var prob = getRandomIntRange(0, 100);
             if (info.move.secondary) {
                 if (info.move.secondary.volatileStatus) {
-                    var chance = info.move.secondary.chance;
-                    if (prob > (100 - chance)) {
-                        return info.move.secondary.volatileStatus;
+                    if (info.move.secondary.chance) {
+                        var chance = info.move.secondary.chance;
+                        if (prob > (100 - chance)) {
+                            if (info.move.target === "self" || info.move.target.toLowerCase().indexOf("ally") !== -1) {
+                                if (MeMulti)
+                                    return;
+                                info.pokemonFriend.battle.statusTurn = 0;
+                                info.pokemonFriend.battle.status = info.move.secondary.volatileStatus;
+                                info.pokemonFriend.battle.statusType = info.move.type;
+                                info.pokemonFriend.battle.statusCondition = "good";
+                            } else {
+                                if (SuMulti)
+                                    return;
+                                info.pokemonTarget.battle.statusTurn = 0;
+                                info.pokemonTarget.battle.status = info.move.secondary.volatileStatus;
+                                info.pokemonTarget.battle.statusType = info.move.type;
+                                info.pokemonTarget.battle.statusCondition = "bad";
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (info.move.status) {
+                var chance = 90;
+                if (prob > (100 - chance)) {
+                    if (info.move.target === "self" || info.move.target.toLowerCase().indexOf("ally") !== -1) {
+                        if (MeMulti)
+                            return;
+                        info.pokemonFriend.battle.statusTurn = 0;
+                        info.pokemonFriend.battle.status = info.move.status;
+                        info.pokemonFriend.battle.statusType = info.move.type;
+                        info.pokemonFriend.battle.statusCondition = "good";
+                    } else {
+                        if (SuMulti)
+                            return;
+                        info.pokemonTarget.battle.statusTurn = 0;
+                        info.pokemonTarget.battle.status = info.move.status;
+                        info.pokemonTarget.battle.statusType = info.move.type;
+                        info.pokemonTarget.battle.statusCondition = "bad";
                     }
                 }
             }
@@ -1180,74 +1313,92 @@ POKEMONBATTLE = {
                 }
             }
 
-            if (info.pokemonTarget.battle.status) {
-                if (SuMulti)
-                    return;
-                if (info.pokemonTarget.battle.status === 'confusion') {
-                    info.pokemonTarget.battle.statusType = "Psychic";
-                    info.pokemonTarget.battle.statusCondition = "bad";
+            var changeTypes = {
+                "confusion": "Psychic",
+                "brn": "Fire",
+                "frz": "Ice",
+                "aquaring": "Water",
+                "tox": "Poison",
+                "par": "Electric",
+                "slp": "Grass",
+                "attract": "Fairy"
+            };
+            for (var tt in changeTypes) {
+                var item = changeTypes[tt];
+                if (info.pokemonTarget.battle.status) {
+                    if (info.pokemonTarget.battle.status === tt) {
+                        info.pokemonTarget.battle.statusType = item;
+                    }
+                }
+                if (info.pokemonFriend.battle.status) {
+                    if (info.pokemonFriend.battle.status === tt) {
+                        info.pokemonFriend.battle.statusType = item;
+                    }
                 }
             }
 
-            if (info.pokemonFriend.battle.status)
-                if (MeMulti)
-                    return;
-            if (info.pokemonFriend.battle.status === 'confusion') {
-                info.pokemonFriend.battle.statusType = "Psychic";
-                info.pokemonFriend.battle.statusCondition = "bad";
-            }
             return "";
         },
-        Status: function (info, $scope, callback, knowstop) {
+        /**
+         * @return {string}
+         */
+        RunStatus: function (result, $scope, info, neddanimation) {
+            if (info.pokemonTarget.battle.status === "substitute") {
+                return "";
+            }
+            console.log("Run Status ", info.pokemonFriend.battle.status, info.pokemonFriend.battle.statusType, info.pokemonFriend.battle.statusCondition);
+            if (neddanimation) {
+                if (info.pokemonFriend.battle.status === "confusion") {
+                    if (!result.miss)
+                        $scope.PKM.stat(info.pokemonFriend, "hp", result.damage);
+                }
+                if (info.pokemonFriend.battle.status === "aquaring") {
+                    $scope.PKM.stat(info.pokemonFriend, "hp", ($scope.PKM.basehp(info.pokemonFriend) / 16) * -1);
+                }
+                if (info.pokemonFriend.battle.status === "tox") {
+                    $scope.PKM.stat(info.pokemonFriend, "hp", (info.pokemonFriend.battle.statusTurn + 1) * 15);
+                }
+                if (info.pokemonFriend.battle.status === "brn") {
+                    $scope.PKM.stat(info.pokemonFriend, "hp", ($scope.PKM.basehp(info.pokemonFriend) / 10));
+                }
+
+            }
+        },
+        Status: function (result, info, $scope, callback) {
+            if (result.miss) {
+                callback(false, false);
+                return;
+            }
+            if (info.pokemonTarget.battle.status === "substitute") {
+                callback(false, false);
+                return;
+            }
             var prob = getRandomIntRange(0, 100);
             var normalcallback = true;
             var twocallback = false;
             var neddanimation = false;
             if (info.pokemonFriend.battle.status) {
+                info.pokemonFriend.battle.statusTurn++;
 
-                if (!knowstop)
-                    info.pokemonFriend.battle.statusTurn++;
-                console.log("current Status ", info.pokemonFriend.battle.status, info.pokemonFriend.battle.statusType, info.pokemonFriend.battle.statusCondition);
+                var stop = false;
                 if (info.pokemonFriend.battle.status === "aquaring") {
-                    if (knowstop) {
-                        if (callback)
-                            callback(false);
-                        return;
-                    }
                     neddanimation = true;
-                    $scope.PKM.stat(info.pokemonFriend, "hp", ($scope.PKM.basehp(info.pokemonFriend) / 16) * -1);
                 }
                 if (info.pokemonFriend.battle.status === "tox") {
-                    if (knowstop) {
-                        if (callback)
-                            callback(false);
-                        return;
-                    }
                     neddanimation = true;
-                    $scope.PKM.stat(info.pokemonFriend, "hp", (info.pokemonFriend.battle.statusTurn + 1) * 15);
                 }
+
                 if (info.pokemonFriend.battle.status === "brn") {
-                    if (knowstop) {
-                        if (callback)
-                            callback(false);
-                        return;
-                    }
                     neddanimation = true;
-                    $scope.PKM.stat(info.pokemonFriend, "hp", ($scope.PKM.basehp(info.pokemonFriend) / 12));
                 }
                 if (info.pokemonFriend.battle.status === "par") {
                     if (prob > 50) {
-                        if (knowstop) {
-                            if (callback)
-                                callback(true);
-                            return;
-                        }
+                        stop = true;
                         info.pokemonFriend.battle.statusType = "Electric";
                         info.pokemonFriend.battle.statusCondition = "bad";
                         neddanimation = true;
                     }
                 }
-
                 if (info.pokemonFriend.battle.status === "confusion") {
                     var confprob = getRandomInt(100);
                     if ((info.pokemonFriend.battle.statusTurn * 10) > confprob) {
@@ -1255,26 +1406,28 @@ POKEMONBATTLE = {
                         info.pokemonFriend.battle.status = undefined;
                     } else {
                         if (confprob > 50) {
-                            if (knowstop) {
-                                if (callback)
-                                    callback(true);
-                                return;
-                            }
+                            stop = true;
+                            info.pokemonFriend.battle.statusType = "Psychic";
+                            info.pokemonFriend.battle.statusCondition = "bad";
                             neddanimation = true;
-
                         }
                     }
-                } else {
-
                 }
-
+                if (info.pokemonFriend.battle.status === "slp") {
+                    var confprob = getRandomInt(100);
+                    if ((info.pokemonFriend.battle.statusTurn * 25) > confprob) {
+                        info.pokemonFriend.battle.statusTurn = 0;
+                        info.pokemonFriend.battle.status = undefined;
+                    } else {
+                        stop = true;
+                        info.pokemonFriend.battle.statusType = "Grass";
+                        info.pokemonFriend.battle.statusCondition = "bad";
+                        neddanimation = true;
+                    }
+                }
                 if (info.pokemonFriend.battle.status === "frz") {
                     if (prob > ((info.pokemonFriend.battle.statusTurn) * 10)) {
-                        if (knowstop) {
-                            if (callback)
-                                callback(true);
-                            return;
-                        }
+                        stop = true;
                         info.pokemonFriend.battle.statusType = "Ice";
                         info.pokemonFriend.battle.statusCondition = "bad";
                         neddanimation = true;
@@ -1283,15 +1436,10 @@ POKEMONBATTLE = {
                         info.pokemonFriend.battle.status = undefined;
                     }
                 }
-
                 if (info.pokemonFriend.battle.status === "attract") {
                     if (info.pokemonFriend.gender !== info.pokemonTarget.gender) {
                         if (prob > 50) {
-                            if (knowstop) {
-                                if (callback)
-                                    callback(true);
-                                return;
-                            }
+                            stop = true;
                             info.pokemonFriend.battle.statusType = "Fairy";
                             info.pokemonFriend.battle.statusCondition = "good";
                             neddanimation = true;
@@ -1299,12 +1447,15 @@ POKEMONBATTLE = {
                     }
                 }
                 if (info.pokemonFriend.battle.status === "auroraveil") {
-                    if (knowstop) {
-                        if (callback)
-                            callback(false);
-                        return;
-                    }
                     if (info.pokemonFriend.battle.statusTurn >= 6) {
+                        info.pokemonFriend.battle.statusTurn = 0;
+                        info.pokemonFriend.battle.status = undefined;
+                    } else {
+                        neddanimation = true;
+                    }
+                }
+                if (info.pokemonFriend.battle.status === "electricterrain") {
+                    if (info.pokemonFriend.battle.statusTurn >= 5) {
                         info.pokemonFriend.battle.statusTurn = 0;
                         info.pokemonFriend.battle.status = undefined;
                     } else {
@@ -1313,11 +1464,7 @@ POKEMONBATTLE = {
                 }
                 if (info.pokemonTarget.battle.status === "magiccoat") {
                     if (info.move.category === "Status") {
-                        if (knowstop) {
-                            if (callback)
-                                callback(true);
-                            return;
-                        }
+                        neddanimation = true;
                     }
                     if (info.pokemonTarget.battle.statusTurn >= 2) {
                         info.pokemonTarget.battle.statusTurn = 0;
@@ -1325,22 +1472,14 @@ POKEMONBATTLE = {
                     }
                 }
                 if (info.pokemonFriend.battle.status === "banefulbunker") {
-                    if (knowstop) {
-                        if (callback)
-                            callback(false);
-                        return;
-                    }
+
                     if (info.pokemonFriend.battle.statusTurn >= 2) {
                         info.pokemonFriend.battle.statusTurn = 0;
                         info.pokemonFriend.battle.status = undefined;
                     }
                 }
                 if (info.pokemonFriend.battle.status === "reflect") {
-                    if (knowstop) {
-                        if (callback)
-                            callback(false);
-                        return;
-                    }
+
                     if (info.pokemonFriend.battle.statusTurn >= 5) {
                         info.pokemonFriend.battle.statusTurn = 0;
                         info.pokemonFriend.battle.status = undefined;
@@ -1348,34 +1487,23 @@ POKEMONBATTLE = {
                         neddanimation = true;
                     }
                 }
-                normalcallback = false;
 
                 if (neddanimation) {
-                    ACTIONS.ANIMATION.PLAYNATURAL("Generic_" + info.pokemonFriend.battle.statusType + "_" + info.pokemonFriend.battle.statusCondition,
-                        POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
-                        POKEMONBATTLE.YS(info.friend.body.y + (info.friend.body.height / 2)),
-                        function () {
-                            if (!twocallback)
-                                if (callback)
-                                    callback(false);
-                            twocallback = true;
-                        }, undefined, undefined, undefined, undefined, undefined);
-                } else {
-                    setTimeout(function () {
-                        if (!twocallback)
-                            if (callback)
-                                callback(false);
-                        twocallback = true;
-                    }, 1000)
-                }
+                    if (callback)
+                        callback(stop, neddanimation);
 
+                } else {
+                    if (callback)
+                        callback(false, false);
+                }
+                return;
             } else {
                 info.pokemonFriend.battle.statusTurn = 0;
             }
-            if (normalcallback) {
-                if (callback)
-                    callback(false);
-            }
+
+            if (callback)
+                callback(false, false);
+
         },
         MyEffect: function (info, $scope, critial, miss, callback) {
             if (miss) {
@@ -1383,6 +1511,12 @@ POKEMONBATTLE = {
                     callback();
                 return;
             }
+            if (info.pokemonTarget.battle.status === "substitute") {
+                if (callback)
+                    callback();
+                return;
+            }
+
             var prob = getRandomIntRange(0, 100);
             var normalcallback = true;
             var twocallback = false;
@@ -1513,9 +1647,11 @@ POKEMONBATTLE = {
                 if (info.move.flags.heal) {
                     if (info.move.drain) {
                         var healme = POKEMONBATTLE.CALCS.DAMAGE($scope, info, critial, true, false);
-                        var percent = 100;
-                        percent = percent / info.move.drain[1];
-                        healme = (healme * percent) / 100;
+                        if (info.move.num === 176) {
+                            healme = $scope.PKM.basehp(info.pokemonTarget);
+                        }
+                        var percent = info.move.drain[0] / info.move.drain[1];
+                        healme = (healme * percent);
                         $scope.PKM.stat(info.pokemonFriend, "hp", healme * -1);
                         console.log("heal", healme);
                         normalcallback = false;
@@ -1587,7 +1723,7 @@ POKEMONBATTLE = {
                 return;
             }
             if (pokemon.giga) {
-                if (prob > 90) {
+                if (prob > 98) {
                     pokemon.battle.gigamax = true;
                     ACTIONS.ANIMATION.THROWNATURAL("gigamax",
                         POKEMONBATTLE.XS(friend.body.x + (friend.body.width / 2)),
@@ -1620,10 +1756,8 @@ POKEMONBATTLE = {
             if (result.miss) {
                 $scope.play("Jump", SOUNDS.system);
                 ACTIONS.MESSAGE.NOTI(`${info.pokemonFriend.name} falló!`);
-                ACTIONS.GAME.SHAKE(info.target.body, 100, 50, 1, function () {
-                    if (callback)
-                        callback(false);
-                });
+                if (callback)
+                    callback(false);
                 return;
             }
             if (result.critical) {
@@ -1631,19 +1765,7 @@ POKEMONBATTLE = {
                 ACTIONS.ANIMATION.PLAYNATURAL('b_rage', POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
                     POKEMONBATTLE.YS(info.friend.body.y + (info.friend.body.height / 2)));
             }
-            if (last !== true) {
-                if (result.volatile === "flinch") {
-                    ACTIONS.MESSAGE.NOTI(`${info.pokemonTarget.name} ha sido paralizado!`);
-                    ACTIONS.ANIMATION.PLAYNATURAL("flinch",
-                        POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),
-                        POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),
-                        function () {
-                            if (callback)
-                                callback(true);
-                        }, undefined, undefined, undefined, undefined, undefined);
-                    return;
-                }
-            }
+
             if (callback)
                 callback(false);
 
@@ -1651,14 +1773,75 @@ POKEMONBATTLE = {
     },
     TURNING: function ($scope, info, callback, last) {
 
-        if ($scope.PKM.hp(info.pokemonFriend) <= 0) {
-            info.pokemonFriend.battle.status = undefined;
-            POKEMONBATTLE.RUNLOSE($scope);
-            if (callback)
-                callback({critical: false, miss: true, damage: 0});
-            return;
+        if ($scope.BATTLEOBJS.numTurn % 3 === 0) {
+            if (info.pokemonTarget.battle.status === "protect") {
+                info.pokemonTarget.battle.status = undefined;
+                info.pokemonTarget.battle.statusTurn = 0;
+                if (callback)
+                    callback({critical: false, miss: true, damage: 0});
+                return;
+            }
         }
-        info.hero.body.gotoAndPlay(info.emotion);
+        if (info.pokemonTarget.battle.status === "safeguard") {
+            if (info.move.category === "Status") {
+                info.pokemonTarget.battle.statusTurn = 0;
+                info.pokemonTarget.battle.status = undefined;
+                info.move = OSO($scope.PKM.lastMove);
+                return;
+            }
+        }
+
+        if (info.move.num === 50) {
+            $scope.BATTLEOBJS.disableMove = $scope.PKM.lastMove;
+        }
+
+        if (info.pokemonTarget.battle.status === "encore") {
+            info.pokemonTarget.battle.statusTurn = 0;
+            info.pokemonTarget.battle.status = undefined;
+            info.move = OSO($scope.PKM.lastMove);
+        }
+
+
+        if (info.move.forceSwitch) {
+            if (info.isEnemy) {
+                var lives = [];
+                for (var pok in $scope.session.pokemons)
+                    if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)
+                        if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)
+                            lives.push(pok);
+                if (lives.length > 0) {
+                    $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);
+                    POKEMONBATTLE.CHANGEPOKEMON($scope, $scope.BATTLEOBJS.FRIENDINDEX, function () {
+                        if (callback)
+                            callback({volatile: "", critical: false, miss: false, damage: 0, last: last});
+                    });
+
+                    return;
+                }
+            } else {
+                if ($scope.BATTLEOBJS.TARGETS.length > 1) {
+                    $scope.BATTLEOBJS.TARGETINDEX = POKEMONBATTLE.IACHANGE($scope, true);
+                    POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX, false, function () {
+                        if (callback)
+                            callback({volatile: "", critical: false, miss: false, damage: 0, last: last});
+                    });
+                    return;
+                }
+            }
+        }
+        if ($scope.PKM.hp(info.pokemonFriend) <= 0) {
+            if (info.pokemonFriend.battle.status === "endure") {
+                info.pokemonFriend.battle.status = undefined;
+                info.pokemonFriend.battle.statusTurn = 0;
+                info.pokemonFriend.battle.stats.hp = info.pokemonFriend.stats.hp - 10;
+            } else {
+                info.pokemonFriend.battle.status = undefined;
+                POKEMONBATTLE.RUNLOSE($scope);
+                if (callback)
+                    callback({critical: false, miss: true, damage: 0});
+                return;
+            }
+        }
         if (info.isEnemy) {
             $scope.PKM.talk(`Usa ${info.move.name}`, 2);
             if (info.move.num === 226) {
@@ -1679,13 +1862,14 @@ POKEMONBATTLE = {
                 return;
             }
         }
-
         if (info.move.num === 274) {
             var pokemonRandom = randomObject(info.team);
             var moveRandon = randomObject(pokemonRandom.moves);
             info.move = moveRandon;
         }
-
+        if (info.move.num === 383 && last) {
+            info.move = OSO($scope.PKM.lastMove);
+        }
 
         console.log(info.move.name + "-----------------------------------------");
         var volatileStop = POKEMONBATTLE.CALCS.VolatileStatus(info, $scope, last);
@@ -1707,6 +1891,9 @@ POKEMONBATTLE = {
                 }
             }
 
+        if (info.move.num === 499) {
+            POKEMONBATTLE.CLEARSTATS(info.pokemonTarget);
+        }
 
         if (info.pokemonTarget.battle.status)
             if (info.pokemonTarget.battle.status === "reflect") {
@@ -1721,27 +1908,84 @@ POKEMONBATTLE = {
                 }
             }
 
+
         var result = {volatile: volatileStop, critical: critical, miss: miss, damage: damage, last: last};
 
-
-        POKEMONBATTLE.CALCS.Status(info, $scope, function (statusstop) {
-            if (statusstop) {
-                console.log(info.move.name + "------------------------------------------");
-                if (info.pokemonFriend.battle.status === "confusion")
-                    $scope.PKM.stat(info.pokemonFriend, "hp", damage);
-                POKEMONBATTLE.CALCS.Status(info, $scope, function () {
-                    setTimeout(function () {
-                        if ($scope.PKM.hp(info.pokemonTarget) <= 0) {
-                            info.pokemonTarget.battle.status = undefined;
-                            if (!info.isEnemy) {
-                                POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX, true);
-                            }
-                        }
-                        POKEMONBATTLE.RUNLOSE($scope);
+        if (last) {
+            if (info.pokemonFriend.battle.status === "flinch") {
+                info.pokemonFriend.battle.status = undefined;
+                ACTIONS.ANIMATION.PLAYNATURAL("flinch",
+                    POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
+                    POKEMONBATTLE.YS(info.friend.body.y + (info.friend.body.height / 2)),
+                    function () {
                         if (callback)
                             callback(result);
-                    }, 2100);
-                });
+                    }, undefined, undefined, undefined, undefined, undefined);
+                return;
+            }
+        } else {
+            if (info.pokemonFriend.battle.status === "flinch") {
+                info.pokemonFriend.battle.status = undefined;
+            }
+        }
+
+        if (info.pokemonTarget.battle.status === "craftyshield") {
+            info.pokemonTarget.battle.status = undefined;
+            if (info.move.category === "Status") {
+                ACTIONS.ANIMATION.PLAYNATURAL("barrier",
+                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),
+                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),
+                    function () {
+                        if (callback)
+                            callback(result);
+                    }, undefined, undefined, undefined, undefined, undefined);
+                return;
+            }
+        }
+
+        if (info.pokemonTarget.battle.status === "disable") {
+            if (info.pokemonTarget.battle.statusTurn >= 4) {
+                info.pokemonTarget.battle.status = undefined;
+                info.pokemonTarget.battle.statusTurn = 0;
+                $scope.BATTLEOBJS.disableMove = undefined;
+            }
+        }
+
+
+        POKEMONBATTLE.CALCS.Status(result, info, $scope, function (statusstop, animation) {
+            if (statusstop) {
+                console.log(info.move.name + "------------------------------------------");
+                var time = 2100;
+                if (animation) {
+                    ACTIONS.ANIMATION.PLAYNATURAL("Generic_" + info.pokemonFriend.battle.statusType + "_" + info.pokemonFriend.battle.statusCondition,
+                        POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
+                        POKEMONBATTLE.YS(info.friend.body.y + (info.friend.body.height / 2)),
+                        function () {
+                            POKEMONBATTLE.CALCS.RunStatus(result, $scope, info, animation);
+                        }, undefined, undefined, undefined, undefined, undefined);
+                    time += 1000;
+                }
+                setTimeout(function () {
+                    if ($scope.PKM.hp(info.pokemonTarget) <= 0) {
+                        info.pokemonTarget.battle.status = undefined;
+
+
+                        if (info.pokemonTarget.battle.status === "endure") {
+                            info.pokemonTarget.battle.status = undefined;
+                            info.pokemonTarget.battle.statusTurn = 0;
+                            info.pokemonTarget.battle.stats.hp = info.pokemonTarget.stats.hp - 10;
+                        } else if (!info.isEnemy) {
+                            POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX, true);
+                        }
+                    }
+                    POKEMONBATTLE.RUNLOSE($scope);
+                    if (info.pokemonTarget.battle.status === "destinybond") {
+                        info.pokemonFriend.battle.stats.hp = info.pokemonFriend.stats.hp * ($scope.PKM.hp(info.pokemonTarget) / 100);
+                    }
+                    if (callback)
+                        callback(result);
+                }, time);
+
             } else {
                 POKEMONBATTLE.ATTACK($scope, info.move, info.hero, info.enemy, info.friend, info.target,
                     function () {
@@ -1750,24 +1994,36 @@ POKEMONBATTLE = {
                                 $scope.PKM.stat(info.pokemonTarget, "hp", damage);
                             }
                             console.log(info.move.name + "-----------------------------------------");
-                            POKEMONBATTLE.CALCS.Status(info, $scope, function () {
-                                setTimeout(function () {
-                                    if ($scope.PKM.hp(info.pokemonTarget) <= 0) {
-                                        info.pokemonTarget.battle.status = undefined;
-                                        if (!info.isEnemy) {
-                                            POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX, true);
-                                        }
+                            var time = 2000;
+                            if (animation) {
+                                ACTIONS.ANIMATION.PLAYNATURAL("Generic_" + info.pokemonFriend.battle.statusType + "_" + info.pokemonFriend.battle.statusCondition,
+                                    POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
+                                    POKEMONBATTLE.YS(info.friend.body.y + (info.friend.body.height / 2)),
+                                    function () {
+                                        POKEMONBATTLE.CALCS.RunStatus(result, $scope, info, animation);
+                                    }, undefined, undefined, undefined, undefined, undefined);
+                                time += 1000;
+                            }
+
+                            setTimeout(function () {
+                                if ($scope.PKM.hp(info.pokemonTarget) <= 0) {
+                                    info.pokemonTarget.battle.status = undefined;
+                                    if (!info.isEnemy) {
+                                        POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX, true);
                                     }
-                                    $scope.PKM.lastMove = info.move;
-                                    POKEMONBATTLE.RUNLOSE($scope);
-                                    if (callback)
-                                        callback(result);
-                                }, 2000);
-                            });
+                                }
+                                $scope.PKM.lastMove = info.move;
+                                POKEMONBATTLE.RUNLOSE($scope);
+                                if (info.pokemonTarget.battle.status === "destinybond") {
+                                    info.pokemonFriend.battle.stats.hp = info.pokemonFriend.stats.hp * ($scope.PKM.hp(info.pokemonTarget) / 100);
+                                }
+                                if (callback)
+                                    callback(result);
+                            }, time);
                         });
                     });
             }
-        }, true);
+        });
 
 
     },
@@ -1779,111 +2035,245 @@ POKEMONBATTLE = {
         var index = getRandomInt(3);
         var pokemon = $scope.PKM.friend();
         var count = 0;
-
+        var report = [];
         for (var move of moves) {
-            var prob = 20;
+
+            report[move.name] = [];
+            if ($scope.BATTLEOBJS.disableMove)
+                if ($scope.BATTLEOBJS.disableMove.num === move.num) {
+                    report[move.name].push("disabled");
+                    continue;
+                }
+
+            var prob = 10;
             var multiplier = POKEMONBATTLE.CALCS.MULTIPLIER(pokemon.types, move.type, true);
-            if (multiplier > 3) {
-                prob += 30;
+            if (multiplier < 1) {
+                report[move.name].push("no le afecta");
+                continue;
             }
             if (move.category !== "Status") {
-                prob += 30;
+                report[move.name].push("no es estatus");
+                prob += 20;
+                if (pokemon.types.indexOf(move.type) !== -1) {
+                    report[move.name].push("es de mi tipo");
+                    prob += 20;
+                }
+                if (move.basePower > 100) {
+                    report[move.name].push("tiene mucho poder");
+                    prob += 20;
+                }
+
+                if ($scope.PKM.stat(pokemon, "spa") > $scope.PKM.stat(pokemon, "atk"))
+                    if (move.category === "Special") {
+                        report[move.name].push("pega con mis estadisticas especial");
+                        prob += 10;
+                    }
+                if ($scope.PKM.stat(pokemon, "spa") < $scope.PKM.stat(pokemon, "atk"))
+                    if (move.category === "Physical") {
+                        report[move.name].push("pega con mis estadisticas fisica");
+                        prob += 10;
+                    }
+                if (pokemon.battle.stats.accuracy > 0) {
+                    if (move.category.accuracy === true) {
+                        report[move.name].push("porque me segaron");
+                        prob += 30;
+                    }
+                }
+
+
+                if (multiplier > 3) {
+                    report[move.name].push("porque lo debilito");
+                    prob += 20;
+                } else if (multiplier > 4) {
+                    report[move.name].push("porque lo debilito mucho");
+                    prob += 50;
+                } else if (multiplier < 3) {
+                    report[move.name].push("porque no lo debilito");
+                    prob -= 30;
+                }
+
+            } else {
+                if (move.boosts) {
+                    report[move.name].push("porque me sube estadisticas");
+                    prob += 20;
+                }
+                if (move.secondary) {
+                    report[move.name].push("porque baja estadisticas");
+                    prob += 20;
+                }
+                if (move.status) {
+                    prob += 20;
+                }
+                if (move.volatileStatus) {
+                    prob += 30;
+                }
             }
-            if (move.boosts) {
-                prob += 10;
-            }
-            if (move.secondary) {
-                prob += 10;
-            }
-            if (multiplier < 3) {
-                prob -= 50;
-            }
-            if (multiplier < 1) {
-                prob -= 10;
-            }
+
+
             var proby = getRandomInt(100);
-            if (proby <= prob) {
+            if (prob >= proby) {
+                report[move.name].push("seleccionado!");
+                console.log(report);
                 return count;
             }
             count++;
         }
+        console.log(report);
+        console.log("pero como quiera voy a probar " + moves[index].name);
         return index;
     },
-    IACHANGE: function ($scope) {
-        if ($scope.PKM.target().battle.status === 'partiallytrapped') {
-            return {change: false, index: 0};
-        }
+    IAKNOW: function () {
+        POKEMONBATTLE.IACHANGE(ACTIONS.UNIT.TEST())
+        ACTIONS.UNIT.TEST().PKM.target().moves[POKEMONBATTLE.IAMOVE(ACTIONS.UNIT.TEST())];
+    },
+    IACHANGE: function ($scope, getinde) {
+        if (!getinde)
+            if ($scope.PKM.target().battle.status === 'partiallytrapped') {
+                return {change: false, index: 0};
+            }
         var enemyChange = false;
         var attindex = 1;
+        if (getinde)
+            attindex = 0;
         var reazons = 0;
         //change logic
         if ($scope.BATTLEOBJS.TARGETS.length > 1) {
-            if ($scope.PKM.target().power < ($scope.PKM.friend().power - 50)) {
-                console.log("es mucho mas poderoso que yo");
-                reazons++;
-            }
-            if ($scope.PKM.target().power < ($scope.PKM.friend().power - 100)) {
-                console.log("es mucho mas poderoso que yo 2");
-                reazons++;
-            }
-            var multiplier = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.target().types, $scope.PKM.friend().types[0]);
+            var propfrad = getRandomInt(100);
 
-            if (["*2", "*4"].indexOf(multiplier) !== -1) {
+            if ($scope.PKM.target().power < ($scope.PKM.friend().power - 50)) {
+                console.log("es mas poderoso que yo");
                 reazons += 2;
-                console.log("me debilitan");
             }
-            var index = 0;
-            var mydesitions = false;
+            if ($scope.PKM.target().power < ($scope.PKM.friend().power - 80)) {
+                console.log("es mucho mas poderoso que yo 2");
+                reazons += 3;
+            }
+            if (reazons > 2) {
+                var indexD = 0;
+                for (var mypok of $scope.BATTLEOBJS.TARGETS) {
+                    if (indexD === 0) {
+                        indexD++;
+                        continue;
+                    }
+                    if (mypok.power > ($scope.PKM.friend().power + 50)) {
+
+                        attindex = indexD;
+                        console.log("tengo a " + mypok.name + " que es mas poderoso");
+                        reazons++;
+                    }
+                    indexD++;
+                }
+            }
+            var medebilitan = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.target().types, $scope.PKM.friend().types[0], true);
+
+            if (medebilitan === 4) {
+                reazons += 4;
+                console.log("me debilitan con " + $scope.PKM.friend().types[0]);
+            }
+            if (medebilitan > 4) {
+                reazons += 6;
+                console.log("me debilitan mucho con" + $scope.PKM.friend().types[0]);
+            }
+
+            if ($scope.PKM.friend().types.length > 1) {
+                var medebilitan2 = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.target().types, $scope.PKM.friend().types[1], true);
+                if (medebilitan2 === 4) {
+                    reazons += 2;
+                    console.log("me debilitan aun más con" + $scope.PKM.friend().types[1]);
+                }
+                if (medebilitan2 === 4) {
+                    reazons += 2;
+                    console.log("me debilitan mucho y aun más con" + $scope.PKM.friend().types[1]);
+                }
+            }
+
+
+            var indexD = 0;
             for (var mypok of $scope.BATTLEOBJS.TARGETS) {
-                if (index === 0) {
-                    index++;
+                if (indexD === 0) {
+                    indexD++;
                     continue;
                 }
-                var multiplier = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mypok.types[0]);
-                if (["*2", "*4"].indexOf(multiplier) !== -1) {
+                var lodebilito = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, $scope.PKM.target().types[0], true);
+                if (lodebilito === 4) {
+                    attindex = indexD;
                     reazons += 2;
-                    attindex = index;
-                    mydesitions = true;
-                    console.log("tengo que lo debilite");
+                    console.log("lo debilito con " + mypok.name);
+                    break;
+
+                } else if (lodebilito > 4) {
+                    attindex = indexD;
+                    reazons += 3;
+                    console.log("uff lo debilito mucho con " + mypok.name);
                     break;
                 }
-            }
-            var candoSomething = false;
-            for (var mov of $scope.PKM.target().moves) {
-                var multiplier = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mov.type);
-                if (["*2", "*4"].indexOf(multiplier) !== -1) {
-                    candoSomething = true;
-                    break;
+                for (var mov of mypok.moves) {
+                    var conataqueeste = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mov.type, true);
+                    if (conataqueeste > 3) {
+                        reazons += 1;
+                        attindex = indexD;
+                        console.log(`mmm, ${mypok.name} tiene: ` + mov.name);
+                    }
                 }
-            }
-            var enemyCanDoSomeThing = false;
-            for (var mov of $scope.PKM.friend().moves) {
-                var multiplier = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.target().types, mov.type);
-                if (["*2", "*4"].indexOf(multiplier) !== -1) {
-                    enemyCanDoSomeThing = true;
-                    break;
-                }
-            }
-            if (!candoSomething) {
-                console.log("no pudeo hacer nada");
-                reazons++;
-            }
-            if (enemyCanDoSomeThing) {
-                console.log("me pueden debilitar");
-                reazons++;
+                indexD++;
             }
 
-            var prob = getRandomIntRange(3, 10);
+
+            var conataqueeste = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, $scope.PKM.target().type, true);
+            if (conataqueeste > 3) {
+                reazons -= 3;
+                console.log("puedo debilitarlo con este");
+            }
+
+            var puedoatacar = false;
+            for (var mov of $scope.PKM.target().moves) {
+                var conataqueeste = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mov.type, true);
+                if (conataqueeste > 3) {
+                    reazons -= 3;
+                    console.log("pero puedo atacarlo con " + mov.name);
+                    puedoatacar = true;
+                }
+            }
+            if (!puedoatacar) {
+                reazons += 1;
+                console.log("no tengo con que atacar");
+            }
+
+            for (var mov of $scope.PKM.friend().moves) {
+                var conataqueeste = POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.target().types, mov.type, true);
+                if (conataqueeste < 3) {
+                    reazons -= 2;
+                    console.log("posiblemente el no sepa que no me afecta " + mov.name);
+                }
+            }
+
+            if ($scope.PKM.hp($scope.PKM.target()) < 40) {
+                reazons -= 3;
+                console.log(`pero no vale la pena ${$scope.PKM.target().name} esta casi muerto`);
+            }
+
+            var prob = getRandomIntRange(2, 8);
+
+            if (propfrad >= 99) {
+                console.log("bueno quizas por amor al arte");
+                var randomIndex = getRandomIntRange(1, $scope.BATTLEOBJS.TARGETS.length - 1);
+                attindex = randomIndex;
+                reazons += 5;
+            }
+
 
             if (prob < reazons) {
                 enemyChange = true;
-                if (!mydesitions) {
-                    var randomIndex = getRandomIntRange(1, $scope.BATTLEOBJS.TARGETS.length - 1);
-                    attindex = randomIndex;
-                }
+                console.log("cambiaré!", prob, reazons);
+            } else {
+                if (reazons <= 0)
+                    console.log("No cambiare por nada del mundo este pokemon");
+                else
+                    console.log("no cambiaré", prob, reazons);
             }
-            console.log("voy a cambiar?", prob, reazons, enemyChange);
         }
+        if (getinde)
+            return attindex;
         return {change: enemyChange, index: attindex};
     },
     RUNLOSE: function ($scope) {
@@ -1905,7 +2295,10 @@ POKEMONBATTLE = {
         $scope.PKM.pokemonDetail = false;
         $scope.PKM.menu = false;
         $scope.PKM.mainMenu = false;
-
+        if ($scope.BATTLEOBJS.numTurn === undefined)
+            $scope.BATTLEOBJS.numTurn = 1;
+        else
+            $scope.BATTLEOBJS.numTurn++;
         if (move)
             if ([226, 516].indexOf(move.num) !== -1) {
                 $scope.BATTLEOBJS.batonpass = true;
@@ -2017,9 +2410,14 @@ POKEMONBATTLE = {
 
                 } else {
                     var enemySpeed = $scope.PKM.stat($scope.PKM.target(), 'spd') * (enemyAction.move.priority + 1);
+                    if ($scope.PKM.target().battle.status === "par")
+                        enemySpeed = enemySpeed / 3;
                     var friendSpeed = $scope.PKM.stat($scope.PKM.friend(), 'spd') * (friendAction.move.priority + 1);
+                    if ($scope.PKM.friend().battle.status === "par")
+                        friendSpeed = friendSpeed / 3;
                     var primero = {};
                     var segundo = {};
+
 
                     if (enemySpeed > friendSpeed) {
                         primero = enemyAction;

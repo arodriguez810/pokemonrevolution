@@ -4,7 +4,7 @@
 
 <?php
 
-$version = "1.0.0.51";
+$version = "1.0.0.52";
 
 function TitleImg()
 {
@@ -83,7 +83,7 @@ function TitleImg()
     <div style="display: none" class="g-signin2" data-onsuccess="onSignIn"></div>
 
 
-    <div ng-show="!isBattlening && !menuOpen"
+    <div ng-show="!isBattlening && !menuOpen && menu"
          style="position: absolute;bottom: 10px;right: 10px;text-align: center;z-index: 999;opacity: 0.6;">
         <button ontouchstart="PADMOVE('w')" ontouchend="PADMOVE('q')" type="button"
                 class="btn btn-lg bg-green waves-effect"

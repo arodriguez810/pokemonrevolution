@@ -165,14 +165,19 @@
                         </div>
                     </center>
                     <br><br><br>
-                    <div style="width: {{bound().w}}px;height: {{bound().h}}px;position: relative" class="bg-black">
+                    <h4>{{form.frames.length}} = {{form.frames.length/form.framerate}} seconds</h4>
+                    <div style="width: {{bound().w}}px;height: {{bound().h}}px;position: relative;user-select: none" class="bg-black">
 
-                        <img id="currentImage" style="position: absolute;z-index: 1;" src="{{form.file}}">
-                        <div ng-click="form.frames.push(value)"
-                             style="position: relative;z-index: 999999;background-color: transparent;padding: 0 0 0 0;width: {{img().w}}px;height: {{img().h}}px;float: left;border: {{form.frames.indexOf(value)!==-1?'red':'blue'}} solid 1px;"
+                        <img id="currentImage" style="position: absolute;z-index: 1;user-select: none" src="{{form.file}}">
+                        <div ng-mouseaout="removeFlag()"
+                             ng-mouseup="removeFlag()"
+                             ng-mousedown="setFlag(value)"
+                             ng-mousemove="setOne(value)"
+                             style="user-select: none;position: relative;z-index: 999999;background-color: transparent;padding: 0 0 0 0;width: {{img().w}}px;height: {{img().h}}px;float: left;border: {{form.frames.indexOf(value)!==-1?'red':'blue'}} solid 1px;"
                              ng-repeat="(key, value) in getObjects()"></div>
 
                     </div>
+                    <h4>{{form.frames.length}} = {{form.frames.length/form.framerate}} seconds</h4>
 
 
                 </div>

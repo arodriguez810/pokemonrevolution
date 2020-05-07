@@ -2753,16 +2753,9 @@ function playactions($scope) {
                     obj.battle.stats[stat] += parseInt(modifier);
             } else {
                 obj.battle.stats[stat] += parseInt(modifier);
-                if (!$scope.$$phase)
-                    $scope.$digest();
-                if (obj.battle.stats[stat] < 0) {
-                    obj.battle.stats[stat] = 0;
-                }
             }
         }
         if (stat !== "hp") {
-            return (obj.stats[stat]) - (obj.battle.stats[stat] * 10);
-        } else {
             return (obj.stats[stat]) - obj.battle.stats[stat];
         }
     };

@@ -158,6 +158,28 @@ pokemon.controller('animation', ['$scope', function ($scope) {
         if ($scope.sounds[id])
             createjs.Sound.play($scope.sounds[id], config);
     };
+    $scope.setFlag = function (value) {
+        $scope.mouseIsDown = true;
+        $scope.form.frames.push(value)
+    };
+
+    $scope.removeFlag = function () {
+        $scope.mouseIsDown = false;
+    };
+
+    $scope.setOne = function (frame) {
+        if ($scope.mouseIsDown) {
+            var lastFrame = $scope.form.frames[$scope.form.frames.length - 1];
+
+            if (PRESS.SHIFT) {
+                if (frame === lastFrame)
+                    $scope.form.frames.pop();
+            } else {
+                if (frame !== lastFrame)
+                    $scope.form.frames.push(frame);
+            }
+        }
+    };
     $scope.setall = function (reverse, push) {
         var final = $scope.getObjects();
         if (reverse) {

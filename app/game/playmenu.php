@@ -669,7 +669,7 @@
      style="position: absolute;bottom: 10px;text-align: center;z-index: 999;opacity: 0.9;width: 98%">
 
 
-    <btn ng-show="PKM.hp(PKM.friend())>0"
+    <btn ng-show="PKM.hp(PKM.friend())>0 && move.num!==(BATTLEOBJS.disableMove||1).num"
          ng-repeat="(mkey,move) in  PKM.friend().moves"
          ng-click="PKM.attack(move)"
 
