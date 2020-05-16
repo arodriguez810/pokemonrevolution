@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -32,16 +34,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-
-//        String url = "http://10.0.0.3.xip.io:8080/pokemon/app/admin/home.php";
-//        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-//        builder.enableUrlBarHiding();
-//        builder.setShowTitle(false);
-//        CustomTabsIntent customTabsIntent = builder.build();
-//
-//        customTabsIntent.launchUrl(this, Uri.parse(url));
-
-
         PokemonRevolution = findViewById(R.id.PokemonRevolution);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(PokemonRevolution, true);
@@ -49,24 +41,29 @@ public class MainActivity extends AppCompatActivity {
             CookieManager.getInstance().setAcceptCookie(true);
         }
 
+
+
         WebSettings settings = PokemonRevolution.getSettings();
         settings.setJavaScriptEnabled(true);
         PokemonRevolution.setWebChromeClient(new WebChromeClient());
-        settings.setUserAgentString("example_android_app");
+        settings.setUserAgentString("mangalosmobile");
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAppCacheEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
+        //settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setAllowContentAccess(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setDomStorageEnabled(true);
         settings.setSupportMultipleWindows(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
-        //settings.setSupportZoom(false);
-        PokemonRevolution.loadUrl("http://mangalos.com");
-//        PokemonRevolution.setInitialScale(getScale(576, 384));
+        PokemonRevolution.setInitialScale(getScale(576, 384));
+
+
         PokemonRevolution.setWebViewClient(new WebViewClient()
         {
-            // overcome the ontouchstart registration bug !
+
             @Override
             public void onPageFinished(WebView view, String url)
             {
@@ -76,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 PokemonRevolution.scrollTo(0, 0);
             }
         });
+
+        PokemonRevolution.loadUrl("file:///android_asset/game/index.html");
 
     }
 

@@ -1,11 +1,11 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/animations/System";
+$root = "{$GLOBALS['resourcesFolder']}animations/System";
 $response = array();
 
 function getDirContents($dir, &$results = array())
 {
-    $root = "../resources/animations/System";
+    $root = "{$GLOBALS['resourcesFolder']}animations/System";
     $fileType = "png";
     $files = scandir($dir);
     $numbers = array();

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Pokemon Revolution</title>
+    <!-- Favicon-->
+    <link rel="icon" href="images/logo/favicon.ico" type="image/x-icon">
+
+
+    <link href="js/font/material.css" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <link href="css/game.css" rel="stylesheet">
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet"/>
+    <!-- Morris Chart Css-->
+    <link href="plugins/morrisjs/morris.css" rel="stylesheet"/>
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet"/>
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet"/>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+          content="1002650457102-m57p66ca2bnf2oe830bf1mvlfimscr79.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <style>
+        .swal2-container {
+            z-index: 999999999999;
+        }
+    </style>
+    <script>
+        LOADEDG = 0;
+
+        function loadedg() {
+            LOADEDG++;
+        }
+    </script>
+</head>
+<div class="page-loader-wrapper">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p>Please wait...</p>
+    </div>
+</div>
+<div class="page-loader-wrapper2" id="globalload" style="display: none">
+    <div class="loader">
+        <div class="preloader">
+            <div class="spinner-layer pl-red">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <p id="loadingtext">Please wait...</p>
+    </div>
+</div>
+<body class="theme-light-green">
+<div class="overlay"></div>
+<style>
+    body {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: black;
+    }
+
+    canvas {
+        width: 100%;
+    }
+
+    .card {
+        background: transparent;
+        min-height: 50px;
+        color: white !important;
+        box-shadow: -1px 0px 17px 20px rgba(0, 0, 0, 0.2);
+        position: relative;
+        margin-bottom: 30px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        -ms-border-radius: 2px;
+        border-radius: 2px;
+    }
+
+    input {
+        background: transparent !important;
+        font-size: 24px !important;
+        margin-top: 20px;
+    }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<body oncontextmenu="return false;" style="overflow: hidden" onload="autoNotify()" onclick="autoNotify()">
+<section id="play" ng-app="pokemon" ng-controller="home">
+
+    <center>
+        <div class="card" style="opacity: 0.8;font-size: 24px !important;">
+            <div class="body">
+                <form id="sign_in" method="POST" novalidate="novalidate">
+                    <center>
+                        <button style="width: 30%;font-size: 24px !important;margin-right: 12px;" role="button"
+                                ng-show="mode==='selecting'" type="button"
+                                ng-click="mode='login'"
+                                class="btn bg-pink btn-lg m-l-15 waves-effect animated bounceInLeft in">
+                            <i class="material-icons">adb</i>
+                            Play
+                        </button>
+                        <img src="images/logo/logo.png" style="width: 20%;border-radius: 65px;"
+                             class="animated shake in">
+                        <button style="width: 30%;font-size: 24px !important;" role="button"
+                                ng-show="mode==='selecting'" type="button"
+                                ng-click="mode='register'"
+                                class="btn bg-blue btn-lg m-l-15 waves-effect animated bounceInRight in">
+                            <i class="material-icons">face</i>
+                            Register
+                        </button>
+                    </center>
+                    <h2 id="mark" ng-show="mode==='selecting'" class="animated fadeInDown  in" >
+                        Pokemon Revolution</h2>
+                    <div class="input-group" ng-show="mode!=='selecting'">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" required ng-model="entrenador" maxlength="20"
+                                           class="form-control"
+                                           placeholder="Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="password" required ng-model="pin" maxlength="10" class="form-control"
+                                           placeholder="Password">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="float: right">
+                            <button style="font-size: 24px !important;margin-right: 12px;" role="button"
+                                    ng-show="mode==='login'" type="button"
+                                    ng-click="login()"
+                                    class="btn bg-green btn-lg m-l-15 waves-effect animated bounceInLeft in">
+                                <i class="material-icons">adb</i>
+                                Enter
+                            </button>
+                            <button style="font-size: 24px !important;" role="button"
+                                    ng-show="mode==='register'" type="button"
+                                    ng-click="register()"
+                                    class="btn bg-orange btn-lg m-l-15 waves-effect animated bounceInLeft in">
+                                <i class="material-icons">face</i>
+                                {{registerText}}
+                            </button>
+                        </div>
+                        <div style="float: left">
+                            <button style="font-size: 24px !important;" role="button"
+                                    type="button"
+                                    ng-click="mode='selecting'"
+                                    class="btn bg-red btn-lg m-l-15 waves-effect animated bounceInRight in">
+                                <i class="material-icons">subdirectory_arrow_left</i>
+
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </center>
+    <audio id="sound" loop src="{{DOMAINRESOURCE}}/resources/audio/pokemon/adventure.ogg" style="display: none"></audio>
+</section>
+
+<script src="js/tools/angular.min.js?version=1"></script>
+<script src="plugins/jquery/jquery.min.js?version=1"></script>
+<script src="plugins/bootstrap/js/bootstrap.js?version=1"></script>
+<script src="js/tools/createjs.min.js?version=1"></script>
+<script src="js/tools/ThresholdFilter.js?version=1"></script>
+<script src="js/tools/tinycolor-min.js?version=1"></script>
+<script src="js/tools/ScaleBitmap.js?version=1"></script>
+<script src="js/admin.js?version=1"></script>
+<script src="js/pages/ui/animations.js?version=1"></script>
+<script src="js/pages/ui/modals.js?version=1"></script>
+<script src="plugins/sweetalert/sweetalert.min.js?version=1"></script>
+<script src="js/api.js?version=1"></script>
+<script src="js/script.js?version=1"></script>
+<script src="js/models/pokedex.js?version=1"></script>
+<script src="js/controller/language.js?version=1"></script>
+<script src="js/controller/home.js?version=1"></script>
+
+
+<script>
+    /**
+     * @return {string}
+     */
+    function TitleImg() {
+        var h = new Date().getHours();
+        if (h >= 0 && h <= 3) {
+            return "Madrugada";
+        } else if (h >= 4 && h <= 6) {
+            return "Amanecer";
+        } else if (h >= 7 && h <= 16) {
+            return "Dia";
+        } else if (h >= 17 && h <= 18) {
+            return "Atardecer";
+        } else if (h >= 19 && h <= 23) {
+            return "Noche";
+        }
+    }
+
+    function TitleColor() {
+        var h = new Date().getHours();
+        if (h >= 0 && h <= 3) {
+            return "white";
+        } else if (h >= 4 && h <= 6) {
+            return "black";
+        } else if (h >= 7 && h <= 16) {
+            return "black";
+        } else if (h >= 17 && h <= 18) {
+            return "black";
+        } else if (h >= 19 && h <= 23) {
+            return "white";
+        }
+    }
+
+    $(document).ready(function () {
+        $("body").css("background-image", `url('../resources/parallaxes/${TitleImg()}.png')`);
+        $("#mark").css('color', TitleColor());
+        check();
+    });
+
+    async function check() {
+        if (STORAGED.exist()) {
+            var player = await HOME_.PLAYERPROFILE(STORAGED.get());
+            if (player.avatar)
+                location.href = "play.html";
+            else
+                location.href = "face.html";
+        }
+    }
+
+
+    function autoNotify() {
+        var popupsound = document.getElementById("sound");
+        popupsound.play(); //play the audio file
+    }
+</script>
+<script>
+    function onSignIn(googleUser) {
+        PROFILE = googleUser.getBasicProfile();
+        HOME_.PLAYERPROFILE(STORAGED.get()).then(function (profile) {
+            if (!profile.avatar) {
+                location.href = "face.html";
+            } else {
+                location.href = "play.html";
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

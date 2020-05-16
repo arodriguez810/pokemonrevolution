@@ -1,11 +1,11 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/colors";
+$root = "{$GLOBALS['resourcesFolder']}colors";
 $response = array();
 
 function getDirContents($dir, &$results = array())
 {
-    $root = "../resources/colors";
+    $root = "{$GLOBALS['resourcesFolder']}colors";
     $files = scandir($dir);
     $numbers = array();
     foreach ($files as $key => $value) {

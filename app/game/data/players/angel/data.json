@@ -1,0 +1,195 @@
+{
+  "id": "angel",
+  "name": "angel",
+  "pin": "123123",
+  "email": "",
+  "avatar": 1,
+  "tier": "Todos",
+  "logros": [
+    "Saltarin",
+    "Bucear",
+    "Destello",
+    "Vuelo",
+    "Destruir",
+    "Mover",
+    "Invisibilidad",
+    "Teletransportacion",
+    "SoyAgua",
+    "SoyFuego",
+    "SoyTierra",
+    "SoyTrueno",
+    "Tiempo"
+  ],
+  "canJump": true,
+  "canDive": true,
+  "canFly": true,
+  "canBreak": true,
+  "canMove": true,
+  "canHide": true,
+  "canWater": true,
+  "pokemons": [
+    {
+      "quality": 15,
+      "shiny": false,
+      "gender": "female",
+      "superShiny": false,
+      "style": "",
+      "imageUrl": "http:\/\/mangalos.com\/app\/resources\/poekemon\/gif\/front\/pikachu.gif",
+      "cryUrl": "http:\/\/mangalos.com\/app\/resources\/poekemon\/audio\/cries_anime\/pikachu.ogg",
+      "date": "2020-05-15T05:42:22.929Z",
+      "nick": "pikachu",
+      "name": "pikachu",
+      "types": [
+        "Electric"
+      ],
+      "moves": [
+        {
+          "num": 192,
+          "accuracy": 50,
+          "basePower": 120,
+          "category": "Special",
+          "desc": "Has a 100% chance to paralyze the target.",
+          "shortDesc": "100% chance to paralyze the target.",
+          "id": "zapcannon",
+          "name": "Zap Cannon",
+          "pp": 5,
+          "priority": 0,
+          "flags": {
+            "bullet": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "secondary": {
+            "chance": 100,
+            "status": "par"
+          },
+          "target": "normal",
+          "type": "Electric",
+          "contestType": "Cool",
+          "keyname": "zapcannon"
+        },
+        {
+          "num": 19,
+          "accuracy": 95,
+          "basePower": 90,
+          "category": "Physical",
+          "desc": "This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thousand Arrows, Thunder, and Twister, and Gust and Twister have doubled power when used against it. If the user is holding a Power Herb, the move completes in one turn.",
+          "shortDesc": "Flies up on first turn",
+          "id": "fly",
+          "name": "Fly",
+          "pp": 15,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "charge": 1,
+            "protect": 1,
+            "mirror": 1,
+            "gravity": 1,
+            "distance": 1
+          },
+          "effect": {
+            "duration": 2
+          },
+          "secondary": null,
+          "target": "any",
+          "type": "Water",
+          "contestType": "Clever",
+          "keyname": "fly"
+        },
+        {
+          "num": 24,
+          "accuracy": 100,
+          "basePower": 30,
+          "category": "Physical",
+          "desc": "Hits twice. If the first hit breaks the target's substitute, it will take damage for the second hit.",
+          "shortDesc": "Hits 2 times in one turn.",
+          "id": "doublekick",
+          "name": "Double Kick",
+          "pp": 30,
+          "priority": 0,
+          "flags": {
+            "contact": 1,
+            "protect": 1,
+            "mirror": 1
+          },
+          "multihit": 2,
+          "secondary": null,
+          "target": "normal",
+          "type": "Fighting",
+          "gmaxPower": 80,
+          "contestType": "Cool",
+          "keyname": "doublekick"
+        },
+        {
+          "num": 111,
+          "accuracy": true,
+          "basePower": 0,
+          "category": "Status",
+          "desc": "Raises the user's Defense by 1 stage. As long as the user remains active, the power of the user's Ice Ball and Rollout will be doubled (this effect is not stackable).",
+          "shortDesc": "Raises the user's Defense by 1.",
+          "id": "defensecurl",
+          "name": "Defense Curl",
+          "pp": 40,
+          "priority": 0,
+          "flags": {
+            "snatch": 1
+          },
+          "boosts": {
+            "def": 3
+          },
+          "effect": {
+            "noCopy": true
+          },
+          "secondary": null,
+          "target": "self",
+          "type": "Normal",
+          "zMoveBoost": {
+            "accuracy": 1
+          },
+          "contestType": "Cute",
+          "keyname": "defensecurl"
+        }
+      ],
+      "stats": {
+        "hp": 500,
+        "atk": 55,
+        "def": 40,
+        "spa": 50,
+        "spd": 50,
+        "spe": 90,
+        "accuracy": 100,
+        "evasion": 0
+      },
+      "ability": {
+        "shortDesc": "On switch-in, extremely harsh sunlight begins until this Ability is not active in battle.",
+        "name": "Desolate Land",
+        "keyname": "download"
+      },
+      "heightm": 0.4,
+      "weightkg": 6,
+      "evos": [
+        "raichu",
+        "raichualola"
+      ],
+      "evosProb": 1,
+      "giga": "pikachugmax",
+      "mega": false,
+      "battle": {
+        "stats": {
+          "hp": 0,
+          "atk": 0,
+          "def": 0,
+          "spa": 0,
+          "spd": 0,
+          "spe": 0,
+          "accuracy": 0,
+          "evasion": 0
+        }
+      },
+      "power": 320
+    }
+  ],
+  "bobeda": [],
+  "items": [],
+  "friends": []
+}

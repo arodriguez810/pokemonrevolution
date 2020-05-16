@@ -4,10 +4,10 @@ try {
     if ($data) {
         $newresponse = array();
         if ($data->folder) {
-            if (!is_dir("$root$data->folder"))
-                mkdir("$root$data->folder", 0777);
+            if (!is_dir("{$GLOBALS['dataFolder']}$data->folder"))
+                mkdir("{$GLOBALS['dataFolder']}$data->folder", 0777);
 
-            @$filesInFolder = scandir("$root$data->folder");
+            @$filesInFolder = scandir("{$GLOBALS['dataFolder']}$data->folder");
             if (@$filesInFolder) {
                 array_shift($filesInFolder);
                 array_shift($filesInFolder);
@@ -18,7 +18,7 @@ try {
                                 continue;
                             }
                         }
-                        $path = "$root$data->folder/$value";
+                        $path = "{$GLOBALS['dataFolder']}$data->folder/$value";
                         $file = fopen($path, "r");
                         $read = fread($file, filesize($path));
                         fclose($file);

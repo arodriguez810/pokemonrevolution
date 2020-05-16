@@ -23,13 +23,13 @@ try {
     if ($data) {
         $newresponse = array();
         if ($data->folder) {
-            @$filesInFolder = scandir("$root$data->folder");
+            @$filesInFolder = scandir("{$GLOBALS['dataFolder']}$data->folder");
             if (@$filesInFolder) {
                 $response["status"] = "success";
                 $response["message"] = "deleted";
-                unlink("$root$data->folder/$data->name.json");
-                if (file_exists("$root$data->folder" . "_file/$data->name")) {
-                    delete_directory("$root$data->folder" . "_file/$data->name");
+                unlink("{$GLOBALS['dataFolder']}$data->folder/$data->name.json");
+                if (file_exists("{$GLOBALS['dataFolder']}$data->folder" . "_file/$data->name")) {
+                    delete_directory("{$GLOBALS['dataFolder']}$data->folder" . "_file/$data->name");
                 }
                 die(json_encode($response));
             } else {

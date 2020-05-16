@@ -4,7 +4,7 @@ try {
     if ($data) {
         $newresponse = array();
         if ($data->folder) {
-            @$filesInFolder = scandir("$root$data->folder");
+            @$filesInFolder = scandir("{$GLOBALS['dataFolder']}$data->folder");
             if (@$filesInFolder) {
                 array_shift($filesInFolder);
                 array_shift($filesInFolder);
@@ -14,7 +14,7 @@ try {
                             continue;
                         }
                     }
-                    $path = "$root$data->folder/$value";
+                    $path = "{$GLOBALS['dataFolder']}$data->folder/$value";
                     $file = fopen($path, "r");
                     $read = fread($file, filesize($path));
                     fclose($file);

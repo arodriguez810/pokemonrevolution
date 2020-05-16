@@ -15,6 +15,10 @@
     "name": "Adaptability",
     "rating": 4,
     "num": 91,
+    "blocks": [
+      "penalty"
+    ],
+    "code": "penaltyType = (penaltyType===1?1.5:penaltyType);",
     "keyname": "adaptability"
   },
   {
@@ -26,6 +30,10 @@
     "name": "Aerilate",
     "rating": 4,
     "num": 185,
+    "blocks": [
+      "changeType"
+    ],
+    "code": "if (info.move.type === 'Normal') {\n                info.move.type = 'Flying';\n                info.move.basePower *= 1.2;\n            }",
     "keyname": "aerilate"
   },
   {
@@ -36,6 +44,10 @@
     "onDamagingHitOrder": 1,
     "rating": 2.5,
     "num": 106,
+    "blocks": [
+      "ohkotarget"
+    ],
+    "code": "$scope.PKM.stat(info.pokemonFriend, \"hp\", $scope.PKM.basehp(info.pokemonFriend) * (1 / 4));",
     "keyname": "aftermath"
   },
   {
@@ -45,6 +57,10 @@
     "name": "Air Lock",
     "rating": 2,
     "num": 76,
+    "blocks": [
+      "begin"
+    ],
+    "code": "$scope.BATTLEOBJS.clima = \"\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "airlock"
   },
   {
@@ -55,15 +71,23 @@
     "name": "Analytic",
     "rating": 2.5,
     "num": 148,
+    "blocks": [
+      "calcstats"
+    ],
+    "code": "if(last) fata *= 1.3;",
     "keyname": "analytic"
   },
   {
     "desc": "If this Pokemon, but not its substitute, is struck by a critical hit, its Attack is raised by 12 stages.",
-    "shortDesc": "If this Pokemon (not its substitute) takes a critical hit, its Attack is raised 12 stages.",
+    "shortDesc": "If this Pokemon takes a critical hit, its Attack is raised 4 stages.",
     "id": "angerpoint",
     "name": "Anger Point",
     "rating": 1.5,
     "num": 83,
+    "blocks": [
+      "target_critical"
+    ],
+    "code": "$scope.PKM.stat(info.pokemonTarget,\"atk\",-4);",
     "keyname": "angerpoint"
   },
   {
@@ -73,6 +97,10 @@
     "name": "Anticipation",
     "rating": 0.5,
     "num": 107,
+    "blocks": [
+      "switch_friend"
+    ],
+    "code": "for (var mov of $scope.PKM.target().moves) \n\tif (mov.category !== \"Status\") \n\t\tif (POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mov.type, true) > 3) {\n\t\t\tswal(\"Anticipación: Me debilita con \" + mov.name);\n\t\t\tbreak;\n\t\t}",
     "keyname": "anticipation"
   },
   {
@@ -82,6 +110,10 @@
     "name": "Arena Trap",
     "rating": 5,
     "num": 71,
+    "blocks": [
+      "begin"
+    ],
+    "code": "info.pokemonTarget.battle.status = \"partiallytrapped\";",
     "keyname": "arenatrap"
   },
   {
@@ -91,15 +123,23 @@
     "name": "Aroma Veil",
     "rating": 2,
     "num": 165,
+    "blocks": [
+      "target_begin"
+    ],
+    "code": "if ([\"attract\", \"disable\", \"encore\", \"healblock\", \"taunt\", \"torment\"].indexOf(info.move.keyname) !== -1) {\n            if (callback)\n                callback({critical: false, miss: true, damage: 0});\n            return;\n        }",
     "keyname": "aromaveil"
   },
   {
     "desc": "While this Pokemon is active, the effects of the Dark Aura and Fairy Aura Abilities are reversed, multiplying the power of Dark- and Fairy-type moves, respectively, by 3\/4 instead of 1.33.",
-    "shortDesc": "While this Pokemon is active, the Dark Aura and Fairy Aura power modifier is 0.75x.",
+    "shortDesc": "While this Pokemon is active, the Darks and Fairys power modifier is 0.75x.",
     "id": "aurabreak",
     "name": "Aura Break",
     "rating": 1,
     "num": 188,
+    "blocks": [
+      "calcstats"
+    ],
+    "code": "if(info.move.type===\"Fairy\") fata *= 0.75;if(info.move.type===\"Dark\") fata *= 0.75;",
     "keyname": "aurabreak"
   },
   {
@@ -111,6 +151,10 @@
     "name": "Bad Dreams",
     "rating": 1.5,
     "num": 123,
+    "blocks": [
+      "begin"
+    ],
+    "code": "if (info.pokemonTarget.battle.status === \"slp\")  $scope.PKM.stat(info.pokemonFriend, \"hp\", ($scope.PKM.basehp(info.pokemonFriend) * (1 / 8)));",
     "keyname": "baddreams"
   },
   {
@@ -128,6 +172,10 @@
     "name": "Battery",
     "rating": 0,
     "num": 217,
+    "blocks": [
+      "calcstats"
+    ],
+    "code": "if(ata==='spa') fata *= 1.3",
     "keyname": "battery"
   },
   {
@@ -137,16 +185,24 @@
     "name": "Battle Armor",
     "rating": 1,
     "num": 4,
+    "blocks": [
+      "target_critical"
+    ],
+    "code": "accept=-999",
     "keyname": "battlearmor"
   },
   {
     "desc": "If this Pokemon is a Greninja, it transforms into Ash-Greninja after knocking out a Pokemon. As Ash-Greninja, its Water Shuriken has 20 base power and always hits 3 times.",
-    "shortDesc": "After KOing a Pokemon: becomes Ash-Greninja, Water Shuriken: 20 power, hits 3x.",
+    "shortDesc": "After KOing a Pokemon: becomes full ofensive",
     "onModifyMovePriority": -1,
     "id": "battlebond",
     "name": "Battle Bond",
     "rating": 4,
     "num": 210,
+    "blocks": [
+      "afterko"
+    ],
+    "code": "$scope.PKM.stat(info.pokemonFriend, \"atk\", -99);\n                                    $scope.PKM.stat(info.pokemonFriend, \"spa\", -99);\n                                    $scope.PKM.stat(info.pokemonFriend, \"def\", 99);\n                                    $scope.PKM.stat(info.pokemonFriend, \"spd\", 99);",
     "keyname": "battlebond"
   },
   {
@@ -156,6 +212,10 @@
     "name": "Beast Boost",
     "rating": 3.5,
     "num": 224,
+    "blocks": [
+      "afterko"
+    ],
+    "code": "$scope.PKM.stat(info.pokemonFriend, $scope.PKM.hihgstat(info.pokemonFriend), -1);",
     "keyname": "beastboost"
   },
   {
@@ -165,6 +225,10 @@
     "name": "Berserk",
     "rating": 2.5,
     "num": 201,
+    "blocks": [
+      "begin"
+    ],
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=50)  $scope.PKM.stat(info.pokemonFriend, \"spa\", -1);",
     "keyname": "berserk"
   },
   {
@@ -173,6 +237,10 @@
     "name": "Big Pecks",
     "rating": 0.5,
     "num": 145,
+    "blocks": [
+      "begin"
+    ],
+    "code": "if(info.pokemonFriend.battle.stats.def>0) info.pokemonFriend.battle.stats.def=0;",
     "keyname": "bigpecks"
   },
   {
@@ -184,6 +252,10 @@
     "name": "Blaze",
     "rating": 2,
     "num": 66,
+    "blocks": [
+      "calcstats"
+    ],
+    "code": "if ($scope.PKM.hp(info.pokemonFriend) <= 33)  if(info.move.type===\"Fire\") fata *= 1.5;",
     "keyname": "blaze"
   },
   {
@@ -193,15 +265,23 @@
     "name": "Bulletproof",
     "rating": 3,
     "num": 171,
+    "blocks": [
+      "target_multiplier"
+    ],
+    "code": "if(info.move.flags) if(info.move.flags.bullet) multiplier = \"=-1\";",
     "keyname": "bulletproof"
   },
   {
     "desc": "If this Pokemon eats a Berry, it restores 1\/3 of its maximum HP, rounded down, in addition to the Berry's effect.",
-    "shortDesc": "If this Pokemon eats a Berry, it restores 1\/3 of its max HP after the Berry's effect.",
+    "shortDesc": "If this Pokemon increase a stat, it restores 1\/3 of its max HP",
     "id": "cheekpouch",
     "name": "Cheek Pouch",
     "rating": 1.5,
     "num": 167,
+    "blocks": [
+      "up_stat"
+    ],
+    "code": "$scope.PKM.stat(obj, \"hp\", ($scope.PKM.basehp(obj) * (1 / 3)) * -1);",
     "keyname": "cheekpouch"
   },
   {
@@ -211,6 +291,10 @@
     "name": "Chlorophyll",
     "rating": 3,
     "num": 34,
+    "blocks": [
+      "speed"
+    ],
+    "code": "if($scope.BATTLEOBJS.clima===\"sunnyday\") {\n                        if (yosoy === \"target\") enemySpeed *= 2;\n                        if (yosoy === \"friend\") friendSpeed *= 2;\n                    }",
     "keyname": "chlorophyll"
   },
   {
@@ -219,8 +303,11 @@
     "name": "Clear Body",
     "rating": 2,
     "num": 29,
-    "keyname": "clearbody",
-    "code": "a=1;"
+    "blocks": [
+      "begin"
+    ],
+    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
+    "keyname": "clearbody"
   },
   {
     "shortDesc": "While this Pokemon is active, the effects of weather conditions are disabled.",
@@ -229,15 +316,23 @@
     "name": "Cloud Nine",
     "rating": 2,
     "num": 13,
+    "blocks": [
+      "begin"
+    ],
+    "code": "$scope.BATTLEOBJS.clima = \"\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "cloudnine"
   },
   {
     "desc": "This Pokemon's type changes to match the type of the last move that hit it, unless that type is already one of its types. This effect applies after all hits from a multi-hit move; Sheer Force prevents it from activating if the move has a secondary effect.",
-    "shortDesc": "This Pokemon's type changes to the type of a move it's hit by, unless it has the type.",
+    "shortDesc": "This Pokemon's type changes to the type of a move it's hit by",
     "id": "colorchange",
     "name": "Color Change",
     "rating": 0,
     "num": 16,
+    "blocks": [
+      "target_finaldamage"
+    ],
+    "code": "info.pokemonTarget.battle.status = \"Am_\" + info.move.type;",
     "keyname": "colorchange"
   },
   {
@@ -248,6 +343,10 @@
     "name": "Comatose",
     "rating": 3.5,
     "num": 213,
+    "blocks": [
+      "mid_begin"
+    ],
+    "code": "info.pokemonFriend.battle.status = undefined;info.pokemonFriend.battle.statusTurn = 0;",
     "keyname": "comatose"
   },
   {
@@ -257,6 +356,10 @@
     "name": "Competitive",
     "rating": 2.5,
     "num": 172,
+    "blocks": [
+      "down_stat"
+    ],
+    "code": "obj.battle.stats[\"spa\"]-=2;",
     "keyname": "competitive"
   },
   {
@@ -265,6 +368,10 @@
     "name": "Compound Eyes",
     "rating": 3,
     "num": 14,
+    "blocks": [
+      "pokemonAcur"
+    ],
+    "code": "pokemonAcur*=1.3;",
     "keyname": "compoundeyes"
   },
   {
@@ -274,6 +381,10 @@
     "name": "Contrary",
     "rating": 4.5,
     "num": 126,
+    "blocks": [
+      "before_stat"
+    ],
+    "code": "modifier*=-1;",
     "keyname": "contrary"
   },
   {
@@ -282,6 +393,10 @@
     "name": "Corrosion",
     "rating": 2.5,
     "num": 212,
+    "blocks": [
+      "target_multiplier"
+    ],
+    "code": "if (info.move.type === \"Poison\") if (multiplier === \"=-1\") multiplier = \"*1\";",
     "keyname": "corrosion"
   },
   {
@@ -291,6 +406,10 @@
     "name": "Cotton Down",
     "rating": 2,
     "num": 238,
+    "blocks": [
+      "target_finaldamage"
+    ],
+    "code": "$scope.PKM.stat(info.pokemonFriend,\"spe\",1);",
     "keyname": "cottondown"
   },
   {
@@ -300,6 +419,10 @@
     "name": "Cursed Body",
     "rating": 2,
     "num": 130,
+    "blocks": [
+      "target_finaldamage"
+    ],
+    "code": "if(getRandomInt(100)>=70) $scope.BATTLEOBJS.disableMove = OSO(info.move);",
     "keyname": "cursedbody"
   },
   {
@@ -309,15 +432,23 @@
     "name": "Cute Charm",
     "rating": 0.5,
     "num": 56,
+    "blocks": [
+      "target_finaldamage"
+    ],
+    "code": "if (info.move.flags) if (info.move.flags.contact) if (getRandomInt(100) >= 70) info.pokemonFriend.battle.status = \"attract\";",
     "keyname": "cutecharm"
   },
   {
     "desc": "While this Pokemon is active, Explosion, Mind Blown, Self-Destruct, and the Aftermath Ability are prevented from having an effect.",
-    "shortDesc": "Prevents Explosion\/Mind Blown\/Self-Destruct\/Aftermath while this Pokemon is active.",
+    "shortDesc": "Prevents Self-Destructs while this Pokemon is active.",
     "id": "damp",
     "name": "Damp",
     "rating": 1,
     "num": 6,
+    "blocks": [
+      "target_begin"
+    ],
+    "code": "if(info.move.selfdestruct)  if (callback) callback({critical: false, miss: true, damage: 0});",
     "keyname": "damp"
   },
   {
@@ -327,16 +458,25 @@
     "name": "Dancer",
     "rating": 1.5,
     "num": 216,
+    "blocks": [
+      "begin"
+    ],
+    "code": "if($scope.PKM.lastMove) if ($scope.PKM.lastMove.flags) if ($scope.PKM.lastMove.flags.dance) info.move = OSO($scope.PKM.lastMove);",
     "keyname": "dancer"
   },
   {
     "desc": "While this Pokemon is active, the power of Dark-type moves used by active Pokemon is multiplied by 1.33.",
-    "shortDesc": "While this Pokemon is active, a Dark move used by any Pokemon has 1.33x power.",
+    "shortDesc": "Dark move used by any Pokemon has 1.33x power.",
     "isUnbreakable": true,
     "id": "darkaura",
     "name": "Dark Aura",
     "rating": 3.5,
     "num": 186,
+    "blocks": [
+      "calcstats",
+      "target_calcstats"
+    ],
+    "code": "if (info.move.type === \"Dark\") fata *= 1.3;",
     "keyname": "darkaura"
   },
   {
@@ -345,6 +485,10 @@
     "name": "Dauntless Shield",
     "rating": 3,
     "num": 235,
+    "blocks": [
+      "switch"
+    ],
+    "code": "if(yosoy===\"friend\") $scope.PKM.stat($scope.PKM.friend(),\"def\",-1);\n                                if(yosoy===\"target\") $scope.PKM.stat($scope.PKM.target(),\"def\",-1);",
     "keyname": "dauntlessshield"
   },
   {
@@ -354,6 +498,10 @@
     "name": "Dazzling",
     "rating": 2,
     "num": 219,
+    "blocks": [
+      "before_speed"
+    ],
+    "code": "  if (yosoy === \"friend\") if(friendAction.move.priority>0) friendAction.move.priority= 0;\n                    if (yosoy === \"target\") if(enemyAction.move.priority>0) enemyAction.move.priority= 0;",
     "keyname": "dazzling"
   },
   {
@@ -365,6 +513,10 @@
     "name": "Defeatist",
     "rating": -1,
     "num": 129,
+    "blocks": [
+      "begin"
+    ],
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=50) { $scope.PKM.stat(info.pokemonFriend, \"spa\", -2);   $scope.PKM.stat(info.pokemonFriend, \"atk\", -2); }",
     "keyname": "defeatist"
   },
   {
@@ -374,6 +526,10 @@
     "name": "Defiant",
     "rating": 2.5,
     "num": 128,
+    "blocks": [
+      "down_stat"
+    ],
+    "code": "obj.battle.stats[\"atk\"]-=2;",
     "keyname": "defiant"
   },
   {
@@ -383,34 +539,52 @@
     "name": "Delta Stream",
     "rating": 4,
     "num": 191,
+    "blocks": [
+      "begin",
+      "switch"
+    ],
+    "code": "$scope.BATTLEOBJS.clima = \"strongwinds\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "deltastream"
   },
   {
     "desc": "On switch-in, the weather becomes extremely harsh sunlight that prevents damaging Water-type moves from executing, in addition to all the effects of Sunny Day. This weather remains in effect until this Ability is no longer active for any Pokemon, or the weather is changed by Delta Stream or Primordial Sea.",
-    "shortDesc": "On switch-in, extremely harsh sunlight begins until this Ability is not active in battle.",
+    "shortDesc": "On switch-in, extremely harsh sunlight prevents damaging Water-type moves be strong begins until this Ability is not active in battle.",
     "id": "desolateland",
     "name": "Desolate Land",
     "rating": 5,
     "num": 190,
+    "blocks": [
+      "begin",
+      "switch"
+    ],
+    "code": "$scope.BATTLEOBJS.clima = \"sunlight\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "desolateland"
   },
   {
     "desc": "If this Pokemon is a Mimikyu, the first hit it takes in battle deals 0 neutral damage. Its disguise is then broken, it changes to Busted Form, and it loses 1\/8 of its max HP. Confusion damage also breaks the disguise.",
-    "shortDesc": "(Mimikyu only) The first hit it takes is blocked, and it takes 1\/8 HP damage instead.",
+    "shortDesc": "The hit it takes is blocked, enemy takes 1\/8 HP damage.",
     "onDamagePriority": 1,
     "id": "disguise",
     "name": "Disguise",
     "rating": 4,
     "num": 209,
+    "blocks": [
+      "blocked"
+    ],
+    "code": "$scope.PKM.stat(info.pokemonFriend, \"hp\", $scope.PKM.basehp(info.pokemonFriend) * (1 / 8));",
     "keyname": "disguise"
   },
   {
     "desc": "On switch-in, this Pokemon's Attack or Special Attack is raised by 1 stage based on the weaker combined defensive stat of all opposing Pokemon. Attack is raised if their Defense is lower, and Special Attack is raised if their Special Defense is the same or lower.",
-    "shortDesc": "On switch-in, Attack or Sp. Atk is raised 1 stage based on the foes' weaker Defense.",
+    "shortDesc": "On switch-in, Attack and Sp. Atk is raised 1 stage",
     "id": "download",
     "name": "Download",
     "rating": 3.5,
     "num": 88,
+    "blocks": [
+      "switch"
+    ],
+    "code": " if (yosoy === \"friend\") {\n                                    $scope.PKM.stat($scope.PKM.friend(), \"atk\", -1);\n                                    $scope.PKM.stat($scope.PKM.friend(), \"spa\", -1);\n                                }\n                                if (yosoy === \"target\") {\n                                    $scope.PKM.stat($scope.PKM.target(), \"atk\", -1);\n                                    $scope.PKM.stat($scope.PKM.target(), \"spa\", -1);\n                                }",
     "keyname": "download"
   },
   {
@@ -419,6 +593,10 @@
     "name": "Drizzle",
     "rating": 4.5,
     "num": 2,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "drizzle"
   },
   {
@@ -427,6 +605,10 @@
     "name": "Drought",
     "rating": 4.5,
     "num": 70,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "drought"
   },
   {
@@ -437,6 +619,10 @@
     "name": "Dry Skin",
     "rating": 3,
     "num": 87,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "dryskin"
   },
   {
@@ -445,6 +631,10 @@
     "name": "Early Bird",
     "rating": 1.5,
     "num": 48,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "earlybird"
   },
   {
@@ -454,6 +644,10 @@
     "name": "Effect Spore",
     "rating": 2,
     "num": 27,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "effectspore"
   },
   {
@@ -462,6 +656,10 @@
     "name": "Electric Surge",
     "rating": 4,
     "num": 226,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "electricsurge"
   },
   {
@@ -471,6 +669,10 @@
     "name": "Emergency Exit",
     "rating": 1,
     "num": 194,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "emergencyexit"
   },
   {
@@ -481,6 +683,10 @@
     "name": "Fairy Aura",
     "rating": 3.5,
     "num": 187,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "fairyaura"
   },
   {
@@ -489,6 +695,10 @@
     "name": "Filter",
     "rating": 3,
     "num": 111,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "filter"
   },
   {
@@ -497,6 +707,10 @@
     "name": "Flame Body",
     "rating": 2,
     "num": 49,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "flamebody"
   },
   {
@@ -507,6 +721,10 @@
     "name": "Flare Boost",
     "rating": 2,
     "num": 138,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "flareboost"
   },
   {
@@ -521,6 +739,10 @@
     "name": "Flash Fire",
     "rating": 3.5,
     "num": 18,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "flashfire"
   },
   {
@@ -532,6 +754,10 @@
     "name": "Flower Gift",
     "rating": 1,
     "num": 122,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "flowergift"
   },
   {
@@ -541,6 +767,10 @@
     "name": "Flower Veil",
     "rating": 0,
     "num": 166,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "flowerveil"
   },
   {
@@ -550,6 +780,10 @@
     "name": "Fluffy",
     "rating": 3,
     "num": 218,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "fluffy"
   },
   {
@@ -559,6 +793,10 @@
     "name": "Forecast",
     "rating": 2,
     "num": 59,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "forecast"
   },
   {
@@ -568,6 +806,10 @@
     "name": "Forewarn",
     "rating": 0.5,
     "num": 108,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "forewarn"
   },
   {
@@ -576,6 +818,10 @@
     "name": "Friend Guard",
     "rating": 0,
     "num": 132,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "friendguard"
   },
   {
@@ -584,6 +830,10 @@
     "name": "Frisk",
     "rating": 1.5,
     "num": 119,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "frisk"
   },
   {
@@ -594,6 +844,10 @@
     "name": "Full Metal Body",
     "rating": 2,
     "num": 230,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "fullmetalbody"
   },
   {
@@ -603,6 +857,10 @@
     "name": "Fur Coat",
     "rating": 4,
     "num": 169,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "furcoat"
   },
   {
@@ -611,6 +869,10 @@
     "name": "Gale Wings",
     "rating": 3,
     "num": 177,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "galewings"
   },
   {
@@ -622,6 +884,10 @@
     "name": "Galvanize",
     "rating": 4,
     "num": 206,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "galvanize"
   },
   {
@@ -630,6 +896,10 @@
     "name": "Gluttony",
     "rating": 1.5,
     "num": 82,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "gluttony"
   },
   {
@@ -638,6 +908,10 @@
     "name": "Gooey",
     "rating": 2,
     "num": 183,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "gooey"
   },
   {
@@ -647,6 +921,10 @@
     "name": "Gorilla Tactics",
     "rating": 4.5,
     "num": 255,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "gorillatactics"
   },
   {
@@ -656,6 +934,10 @@
     "name": "Grass Pelt",
     "rating": 0.5,
     "num": 179,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "grasspelt"
   },
   {
@@ -664,6 +946,10 @@
     "name": "Grassy Surge",
     "rating": 4,
     "num": 229,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "grassysurge"
   },
   {
@@ -673,6 +959,10 @@
     "name": "Gulp Missile",
     "rating": 1.5,
     "num": 241,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "gulpmissile"
   },
   {
@@ -683,6 +973,10 @@
     "name": "Guts",
     "rating": 3,
     "num": 62,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "guts"
   },
   {
@@ -694,6 +988,10 @@
     "onResidualSubOrder": 1,
     "rating": 2.5,
     "num": 139,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "harvest"
   },
   {
@@ -705,6 +1003,10 @@
     "onResidualSubOrder": 1,
     "rating": 0,
     "num": 131,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "healer"
   },
   {
@@ -715,6 +1017,10 @@
     "name": "Heatproof",
     "rating": 2,
     "num": 85,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "heatproof"
   },
   {
@@ -724,6 +1030,10 @@
     "name": "Heavy Metal",
     "rating": 0,
     "num": 134,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "heavymetal"
   },
   {
@@ -732,6 +1042,10 @@
     "name": "Honey Gather",
     "rating": 0,
     "num": 118,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "honeygather"
   },
   {
@@ -741,6 +1055,10 @@
     "name": "Huge Power",
     "rating": 5,
     "num": 37,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "hugepower"
   },
   {
@@ -749,6 +1067,10 @@
     "name": "Hunger Switch",
     "rating": 1,
     "num": 258,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "hungerswitch"
   },
   {
@@ -760,6 +1082,10 @@
     "name": "Hustle",
     "rating": 3.5,
     "num": 55,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "hustle"
   },
   {
@@ -771,6 +1097,10 @@
     "name": "Hydration",
     "rating": 1.5,
     "num": 93,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "hydration"
   },
   {
@@ -779,6 +1109,10 @@
     "name": "Hyper Cutter",
     "rating": 1.5,
     "num": 52,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "hypercutter"
   },
   {
@@ -788,6 +1122,10 @@
     "name": "Ice Body",
     "rating": 1,
     "num": 115,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "icebody"
   },
   {
@@ -798,6 +1136,10 @@
     "name": "Ice Face",
     "rating": 3.5,
     "num": 248,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "iceface"
   },
   {
@@ -806,6 +1148,10 @@
     "name": "Ice Scales",
     "rating": 3.5,
     "num": 246,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "icescales"
   },
   {
@@ -814,6 +1160,10 @@
     "name": "Illuminate",
     "rating": 0,
     "num": 35,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "illuminate"
   },
   {
@@ -824,6 +1174,10 @@
     "name": "Illusion",
     "rating": 4.5,
     "num": 149,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "illusion"
   },
   {
@@ -832,6 +1186,10 @@
     "name": "Immunity",
     "rating": 2,
     "num": 17,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "immunity"
   },
   {
@@ -841,6 +1199,10 @@
     "name": "Imposter",
     "rating": 5,
     "num": 150,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "imposter"
   },
   {
@@ -850,6 +1212,10 @@
     "name": "Infiltrator",
     "rating": 2.5,
     "num": 151,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "infiltrator"
   },
   {
@@ -860,6 +1226,10 @@
     "onDamagingHitOrder": 1,
     "rating": 3.5,
     "num": 215,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "innardsout"
   },
   {
@@ -868,6 +1238,10 @@
     "name": "Inner Focus",
     "rating": 1.5,
     "num": 39,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "innerfocus"
   },
   {
@@ -876,6 +1250,10 @@
     "name": "Insomnia",
     "rating": 2,
     "num": 15,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "insomnia"
   },
   {
@@ -885,6 +1263,10 @@
     "name": "Intimidate",
     "rating": 3.5,
     "num": 22,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "intimidate"
   },
   {
@@ -893,6 +1275,10 @@
     "name": "Intrepid Sword",
     "rating": 4,
     "num": 234,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "intrepidsword"
   },
   {
@@ -903,6 +1289,10 @@
     "name": "Iron Barbs",
     "rating": 2.5,
     "num": 160,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "ironbarbs"
   },
   {
@@ -913,6 +1303,10 @@
     "name": "Iron Fist",
     "rating": 3,
     "num": 89,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "ironfist"
   },
   {
@@ -921,6 +1315,10 @@
     "name": "Justified",
     "rating": 2.5,
     "num": 154,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "justified"
   },
   {
@@ -930,6 +1328,10 @@
     "name": "Keen Eye",
     "rating": 0.5,
     "num": 51,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "keeneye"
   },
   {
@@ -939,6 +1341,10 @@
     "name": "Klutz",
     "rating": -1,
     "num": 103,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "klutz"
   },
   {
@@ -948,6 +1354,10 @@
     "name": "Leaf Guard",
     "rating": 0.5,
     "num": 102,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "leafguard"
   },
   {
@@ -957,6 +1367,10 @@
     "name": "Levitate",
     "rating": 3.5,
     "num": 26,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "levitate"
   },
   {
@@ -966,6 +1380,10 @@
     "name": "Libero",
     "rating": 4.5,
     "num": 236,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "libero"
   },
   {
@@ -974,6 +1392,10 @@
     "name": "Light Metal",
     "rating": 1,
     "num": 135,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "lightmetal"
   },
   {
@@ -983,6 +1405,10 @@
     "name": "Lightning Rod",
     "rating": 3,
     "num": 32,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "lightningrod"
   },
   {
@@ -991,6 +1417,10 @@
     "name": "Limber",
     "rating": 2,
     "num": 7,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "limber"
   },
   {
@@ -999,6 +1429,10 @@
     "name": "Liquid Ooze",
     "rating": 1.5,
     "num": 64,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "liquidooze"
   },
   {
@@ -1009,6 +1443,10 @@
     "name": "Liquid Voice",
     "rating": 1.5,
     "num": 204,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "liquidvoice"
   },
   {
@@ -1017,6 +1455,10 @@
     "name": "Long Reach",
     "rating": 1,
     "num": 203,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "longreach"
   },
   {
@@ -1030,6 +1472,10 @@
     },
     "rating": 4,
     "num": 156,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "magicbounce"
   },
   {
@@ -1039,6 +1485,10 @@
     "name": "Magic Guard",
     "rating": 4,
     "num": 98,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "magicguard"
   },
   {
@@ -1048,6 +1498,10 @@
     "name": "Magician",
     "rating": 1.5,
     "num": 170,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "magician"
   },
   {
@@ -1056,6 +1510,10 @@
     "name": "Magma Armor",
     "rating": 1,
     "num": 40,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "magmaarmor"
   },
   {
@@ -1065,6 +1523,10 @@
     "name": "Magnet Pull",
     "rating": 4.5,
     "num": 42,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "magnetpull"
   },
   {
@@ -1075,6 +1537,10 @@
     "name": "Marvel Scale",
     "rating": 2.5,
     "num": 63,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "marvelscale"
   },
   {
@@ -1085,6 +1551,10 @@
     "name": "Mega Launcher",
     "rating": 3,
     "num": 178,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "megalauncher"
   },
   {
@@ -1093,6 +1563,10 @@
     "name": "Merciless",
     "rating": 2,
     "num": 196,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "merciless"
   },
   {
@@ -1102,6 +1576,10 @@
     "name": "Mimicry",
     "rating": 0.5,
     "num": 250,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "mimicry"
   },
   {
@@ -1112,6 +1590,10 @@
     "name": "Minus",
     "rating": 0,
     "num": 58,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "minus"
   },
   {
@@ -1121,6 +1603,10 @@
     "name": "Mirror Armor",
     "rating": 2,
     "num": 240,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "mirrorarmor"
   },
   {
@@ -1129,6 +1615,10 @@
     "name": "Misty Surge",
     "rating": 4,
     "num": 228,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "mistysurge"
   },
   {
@@ -1137,6 +1627,10 @@
     "name": "Mold Breaker",
     "rating": 3.5,
     "num": 104,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "moldbreaker"
   },
   {
@@ -1148,6 +1642,10 @@
     "name": "Moody",
     "rating": 5,
     "num": 141,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "moody"
   },
   {
@@ -1157,6 +1655,10 @@
     "name": "Motor Drive",
     "rating": 3,
     "num": 78,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "motordrive"
   },
   {
@@ -1166,6 +1668,10 @@
     "name": "Moxie",
     "rating": 3.5,
     "num": 153,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "moxie"
   },
   {
@@ -1174,6 +1680,10 @@
     "name": "Multiscale",
     "rating": 3.5,
     "num": 136,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "multiscale"
   },
   {
@@ -1182,6 +1692,10 @@
     "name": "Multitype",
     "rating": 4,
     "num": 121,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "multitype"
   },
   {
@@ -1191,6 +1705,10 @@
     "name": "Mummy",
     "rating": 2.5,
     "num": 152,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "mummy"
   },
   {
@@ -1199,6 +1717,10 @@
     "name": "Natural Cure",
     "rating": 3,
     "num": 30,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "naturalcure"
   },
   {
@@ -1207,6 +1729,10 @@
     "name": "Neuroforce",
     "rating": 2.5,
     "num": 233,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "neuroforce"
   },
   {
@@ -1216,6 +1742,10 @@
     "name": "Neutralizing Gas",
     "rating": 5,
     "num": 256,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "neutralizinggas"
   },
   {
@@ -1225,6 +1755,10 @@
     "name": "No Guard",
     "rating": 4,
     "num": 99,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "noguard"
   },
   {
@@ -1236,6 +1770,10 @@
     "name": "Normalize",
     "rating": 0,
     "num": 96,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "normalize"
   },
   {
@@ -1245,6 +1783,10 @@
     "name": "Oblivious",
     "rating": 1.5,
     "num": 12,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "oblivious"
   },
   {
@@ -1254,6 +1796,10 @@
     "name": "Overcoat",
     "rating": 2,
     "num": 142,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "overcoat"
   },
   {
@@ -1265,6 +1811,10 @@
     "name": "Overgrow",
     "rating": 2,
     "num": 65,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "overgrow"
   },
   {
@@ -1274,6 +1824,10 @@
     "name": "Own Tempo",
     "rating": 1.5,
     "num": 20,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "owntempo"
   },
   {
@@ -1284,6 +1838,10 @@
     "name": "Parental Bond",
     "rating": 4.5,
     "num": 184,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "parentalbond"
   },
   {
@@ -1292,6 +1850,10 @@
     "name": "Pastel Veil",
     "rating": 2,
     "num": 257,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "pastelveil"
   },
   {
@@ -1301,6 +1863,10 @@
     "name": "Perish Body",
     "rating": 1,
     "num": 253,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "perishbody"
   },
   {
@@ -1310,6 +1876,10 @@
     "name": "Pickpocket",
     "rating": 1,
     "num": 124,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "pickpocket"
   },
   {
@@ -1320,6 +1890,10 @@
     "name": "Pickup",
     "rating": 0.5,
     "num": 53,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "pickup"
   },
   {
@@ -1331,6 +1905,10 @@
     "name": "Pixilate",
     "rating": 4,
     "num": 182,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "pixilate"
   },
   {
@@ -1341,6 +1919,10 @@
     "name": "Plus",
     "rating": 0,
     "num": 57,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "plus"
   },
   {
@@ -1351,6 +1933,10 @@
     "name": "Poison Heal",
     "rating": 4,
     "num": 90,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "poisonheal"
   },
   {
@@ -1359,6 +1945,10 @@
     "name": "Poison Point",
     "rating": 1.5,
     "num": 38,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "poisonpoint"
   },
   {
@@ -1367,6 +1957,10 @@
     "name": "Poison Touch",
     "rating": 2,
     "num": 143,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "poisontouch"
   },
   {
@@ -1377,6 +1971,10 @@
     "name": "Power Construct",
     "rating": 5,
     "num": 211,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "powerconstruct"
   },
   {
@@ -1386,6 +1984,10 @@
     "name": "Power of Alchemy",
     "rating": 0,
     "num": 223,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "powerofalchemy"
   },
   {
@@ -1395,6 +1997,10 @@
     "name": "Power Spot",
     "rating": 0,
     "num": 249,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "powerspot"
   },
   {
@@ -1403,6 +2009,10 @@
     "name": "Prankster",
     "rating": 4,
     "num": 158,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "prankster"
   },
   {
@@ -1412,6 +2022,10 @@
     "name": "Pressure",
     "rating": 2.5,
     "num": 46,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "pressure"
   },
   {
@@ -1421,6 +2035,10 @@
     "name": "Primordial Sea",
     "rating": 4.5,
     "num": 189,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "primordialsea"
   },
   {
@@ -1431,6 +2049,10 @@
     "name": "Prism Armor",
     "rating": 3,
     "num": 232,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "prismarmor"
   },
   {
@@ -1439,6 +2061,10 @@
     "name": "Propeller Tail",
     "rating": 0,
     "num": 239,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "propellertail"
   },
   {
@@ -1448,6 +2074,10 @@
     "name": "Protean",
     "rating": 4.5,
     "num": 168,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "protean"
   },
   {
@@ -1456,6 +2086,10 @@
     "name": "Psychic Surge",
     "rating": 4,
     "num": 227,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "psychicsurge"
   },
   {
@@ -1466,6 +2100,10 @@
     "name": "Punk Rock",
     "rating": 3,
     "num": 244,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "punkrock"
   },
   {
@@ -1475,6 +2113,10 @@
     "name": "Pure Power",
     "rating": 5,
     "num": 74,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "purepower"
   },
   {
@@ -1484,6 +2126,10 @@
     "name": "Queenly Majesty",
     "rating": 2,
     "num": 214,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "queenlymajesty"
   },
   {
@@ -1493,6 +2139,10 @@
     "name": "Quick Feet",
     "rating": 2.5,
     "num": 95,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "quickfeet"
   },
   {
@@ -1502,6 +2152,10 @@
     "name": "Rain Dish",
     "rating": 1.5,
     "num": 44,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "raindish"
   },
   {
@@ -1511,6 +2165,10 @@
     "name": "Rattled",
     "rating": 1.5,
     "num": 155,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "rattled"
   },
   {
@@ -1520,6 +2178,10 @@
     "name": "Receiver",
     "rating": 0,
     "num": 222,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "receiver"
   },
   {
@@ -1530,6 +2192,10 @@
     "name": "Reckless",
     "rating": 3,
     "num": 120,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "reckless"
   },
   {
@@ -1541,6 +2207,10 @@
     "name": "Refrigerate",
     "rating": 4,
     "num": 174,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "refrigerate"
   },
   {
@@ -1549,6 +2219,10 @@
     "name": "Regenerator",
     "rating": 4.5,
     "num": 144,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "regenerator"
   },
   {
@@ -1557,6 +2231,10 @@
     "name": "Ripen",
     "rating": 2.5,
     "num": 247,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "ripen"
   },
   {
@@ -1567,6 +2245,10 @@
     "name": "Rivalry",
     "rating": 0,
     "num": 79,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "rivalry"
   },
   {
@@ -1575,6 +2257,10 @@
     "name": "RKS System",
     "rating": 4,
     "num": 225,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "rkssystem"
   },
   {
@@ -1584,6 +2270,10 @@
     "name": "Rock Head",
     "rating": 3,
     "num": 69,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "rockhead"
   },
   {
@@ -1594,6 +2284,10 @@
     "name": "Rough Skin",
     "rating": 2.5,
     "num": 24,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "roughskin"
   },
   {
@@ -1602,6 +2296,10 @@
     "name": "Run Away",
     "rating": 0,
     "num": 50,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "runaway"
   },
   {
@@ -1612,6 +2310,10 @@
     "name": "Sand Force",
     "rating": 2,
     "num": 159,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sandforce"
   },
   {
@@ -1621,6 +2323,10 @@
     "name": "Sand Rush",
     "rating": 3,
     "num": 146,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sandrush"
   },
   {
@@ -1630,6 +2336,10 @@
     "name": "Sand Spit",
     "rating": 2,
     "num": 245,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sandspit"
   },
   {
@@ -1638,6 +2348,10 @@
     "name": "Sand Stream",
     "rating": 4,
     "num": 45,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sandstream"
   },
   {
@@ -1647,6 +2361,10 @@
     "name": "Sand Veil",
     "rating": 1.5,
     "num": 8,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sandveil"
   },
   {
@@ -1657,6 +2375,10 @@
     "name": "Sap Sipper",
     "rating": 3,
     "num": 157,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sapsipper"
   },
   {
@@ -1667,6 +2389,10 @@
     "name": "Schooling",
     "rating": 2.5,
     "num": 208,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "schooling"
   },
   {
@@ -1677,6 +2403,10 @@
     "name": "Scrappy",
     "rating": 3,
     "num": 113,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "scrappy"
   },
   {
@@ -1685,6 +2415,10 @@
     "name": "Screen Cleaner",
     "rating": 2,
     "num": 251,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "screencleaner"
   },
   {
@@ -1694,6 +2428,10 @@
     "name": "Serene Grace",
     "rating": 3.5,
     "num": 32,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "serenegrace"
   },
   {
@@ -1704,6 +2442,10 @@
     "name": "Shadow Shield",
     "rating": 4,
     "num": 231,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "shadowshield"
   },
   {
@@ -1713,6 +2455,10 @@
     "name": "Shadow Tag",
     "rating": 5,
     "num": 23,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "shadowtag"
   },
   {
@@ -1724,6 +2470,10 @@
     "name": "Shed Skin",
     "rating": 3,
     "num": 61,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "shedskin"
   },
   {
@@ -1734,6 +2484,10 @@
     "name": "Sheer Force",
     "rating": 3.5,
     "num": 125,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sheerforce"
   },
   {
@@ -1743,6 +2497,10 @@
     "name": "Shell Armor",
     "rating": 1,
     "num": 75,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "shellarmor"
   },
   {
@@ -1751,6 +2509,10 @@
     "name": "Shield Dust",
     "rating": 2,
     "num": 19,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "shielddust"
   },
   {
@@ -1762,6 +2524,10 @@
     "name": "Shields Down",
     "rating": 3.5,
     "num": 197,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "shieldsdown"
   },
   {
@@ -1771,6 +2537,10 @@
     "name": "Simple",
     "rating": 4.5,
     "num": 86,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "simple"
   },
   {
@@ -1779,6 +2549,10 @@
     "name": "Skill Link",
     "rating": 3,
     "num": 92,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "skilllink"
   },
   {
@@ -1791,6 +2565,10 @@
     "name": "Slow Start",
     "rating": -1,
     "num": 112,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "slowstart"
   },
   {
@@ -1799,6 +2577,10 @@
     "name": "Slush Rush",
     "rating": 2.5,
     "num": 202,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "slushrush"
   },
   {
@@ -1807,6 +2589,10 @@
     "name": "Sniper",
     "rating": 2,
     "num": 97,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sniper"
   },
   {
@@ -1816,6 +2602,10 @@
     "name": "Snow Cloak",
     "rating": 1.5,
     "num": 81,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "snowcloak"
   },
   {
@@ -1824,6 +2614,10 @@
     "name": "Snow Warning",
     "rating": 4,
     "num": 117,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "snowwarning"
   },
   {
@@ -1834,6 +2628,10 @@
     "name": "Solar Power",
     "rating": 2,
     "num": 94,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "solarpower"
   },
   {
@@ -1842,6 +2640,10 @@
     "name": "Solid Rock",
     "rating": 3,
     "num": 116,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "solidrock"
   },
   {
@@ -1852,6 +2654,10 @@
     "name": "Soul-Heart",
     "rating": 3.5,
     "num": 220,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "soulheart"
   },
   {
@@ -1860,6 +2666,10 @@
     "name": "Soundproof",
     "rating": 1.5,
     "num": 43,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "soundproof"
   },
   {
@@ -1871,6 +2681,10 @@
     "name": "Speed Boost",
     "rating": 4.5,
     "num": 3,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "speedboost"
   },
   {
@@ -1881,6 +2695,10 @@
     "name": "Stakeout",
     "rating": 4.5,
     "num": 198,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stakeout"
   },
   {
@@ -1889,6 +2707,10 @@
     "name": "Stall",
     "rating": -1,
     "num": 100,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stall"
   },
   {
@@ -1897,6 +2719,10 @@
     "name": "Stalwart",
     "rating": 0,
     "num": 242,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stalwart"
   },
   {
@@ -1905,6 +2731,10 @@
     "name": "Stamina",
     "rating": 3.5,
     "num": 192,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stamina"
   },
   {
@@ -1915,6 +2745,10 @@
     "name": "Stance Change",
     "rating": 4.5,
     "num": 176,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stancechange"
   },
   {
@@ -1923,6 +2757,10 @@
     "name": "Static",
     "rating": 2,
     "num": 9,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "static"
   },
   {
@@ -1931,6 +2769,10 @@
     "name": "Steadfast",
     "rating": 1,
     "num": 80,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "steadfast"
   },
   {
@@ -1939,6 +2781,10 @@
     "name": "Steam Engine",
     "rating": 1,
     "num": 243,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "steamengine"
   },
   {
@@ -1949,6 +2795,10 @@
     "name": "Steelworker",
     "rating": 3.5,
     "num": 200,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "steelworker"
   },
   {
@@ -1958,6 +2808,10 @@
     "name": "Steely Spirit",
     "rating": 3,
     "num": 252,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "steelyspirit"
   },
   {
@@ -1967,6 +2821,10 @@
     "name": "Stench",
     "rating": 0.5,
     "num": 1,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stench"
   },
   {
@@ -1975,6 +2833,10 @@
     "name": "Sticky Hold",
     "rating": 1.5,
     "num": 60,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stickyhold"
   },
   {
@@ -1984,6 +2846,10 @@
     "name": "Storm Drain",
     "rating": 3,
     "num": 114,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "stormdrain"
   },
   {
@@ -1994,6 +2860,10 @@
     "name": "Strong Jaw",
     "rating": 3,
     "num": 173,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "strongjaw"
   },
   {
@@ -2004,6 +2874,10 @@
     "name": "Sturdy",
     "rating": 3,
     "num": 5,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sturdy"
   },
   {
@@ -2013,6 +2887,10 @@
     "name": "Suction Cups",
     "rating": 1,
     "num": 21,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "suctioncups"
   },
   {
@@ -2021,6 +2899,10 @@
     "name": "Super Luck",
     "rating": 1.5,
     "num": 105,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "superluck"
   },
   {
@@ -2029,6 +2911,10 @@
     "name": "Surge Surfer",
     "rating": 2.5,
     "num": 207,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "surgesurfer"
   },
   {
@@ -2040,6 +2926,10 @@
     "name": "Swarm",
     "rating": 2,
     "num": 68,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "swarm"
   },
   {
@@ -2048,6 +2938,10 @@
     "name": "Sweet Veil",
     "rating": 2,
     "num": 175,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "sweetveil"
   },
   {
@@ -2057,6 +2951,10 @@
     "name": "Swift Swim",
     "rating": 3,
     "num": 33,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "swiftswim"
   },
   {
@@ -2066,6 +2964,10 @@
     "name": "Symbiosis",
     "rating": 0,
     "num": 180,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "symbiosis"
   },
   {
@@ -2075,6 +2977,10 @@
     "name": "Synchronize",
     "rating": 2,
     "num": 28,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "synchronize"
   },
   {
@@ -2083,6 +2989,10 @@
     "name": "Tangled Feet",
     "rating": 1,
     "num": 77,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "tangledfeet"
   },
   {
@@ -2091,6 +3001,10 @@
     "name": "Tangling Hair",
     "rating": 2,
     "num": 221,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "tanglinghair"
   },
   {
@@ -2101,6 +3015,10 @@
     "name": "Technician",
     "rating": 3.5,
     "num": 101,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "technician"
   },
   {
@@ -2109,6 +3027,10 @@
     "name": "Telepathy",
     "rating": 0,
     "num": 140,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "telepathy"
   },
   {
@@ -2117,6 +3039,10 @@
     "name": "Teravolt",
     "rating": 3.5,
     "num": 164,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "teravolt"
   },
   {
@@ -2128,6 +3054,10 @@
     "name": "Thick Fat",
     "rating": 3.5,
     "num": 47,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "thickfat"
   },
   {
@@ -2136,6 +3066,10 @@
     "name": "Tinted Lens",
     "rating": 4,
     "num": 110,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "tintedlens"
   },
   {
@@ -2147,6 +3081,10 @@
     "name": "Torrent",
     "rating": 2,
     "num": 67,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "torrent"
   },
   {
@@ -2156,6 +3094,10 @@
     "name": "Tough Claws",
     "rating": 3.5,
     "num": 181,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "toughclaws"
   },
   {
@@ -2166,6 +3108,10 @@
     "name": "Toxic Boost",
     "rating": 2.5,
     "num": 137,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "toxicboost"
   },
   {
@@ -2175,6 +3121,10 @@
     "name": "Trace",
     "rating": 2.5,
     "num": 36,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "trace"
   },
   {
@@ -2183,6 +3133,10 @@
     "name": "Triage",
     "rating": 3.5,
     "num": 205,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "triage"
   },
   {
@@ -2193,6 +3147,10 @@
     "name": "Truant",
     "rating": -1,
     "num": 54,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "truant"
   },
   {
@@ -2201,6 +3159,10 @@
     "name": "Turboblaze",
     "rating": 3.5,
     "num": 163,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "turboblaze"
   },
   {
@@ -2210,6 +3172,10 @@
     "name": "Unaware",
     "rating": 3.5,
     "num": 109,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "unaware"
   },
   {
@@ -2220,6 +3186,10 @@
     "name": "Unburden",
     "rating": 3.5,
     "num": 84,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "unburden"
   },
   {
@@ -2230,6 +3200,10 @@
     "name": "Unnerve",
     "rating": 1.5,
     "num": 127,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "unnerve"
   },
   {
@@ -2238,6 +3212,10 @@
     "name": "Victory Star",
     "rating": 2.5,
     "num": 162,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "victorystar"
   },
   {
@@ -2246,6 +3224,10 @@
     "name": "Vital Spirit",
     "rating": 2,
     "num": 72,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "vitalspirit"
   },
   {
@@ -2255,6 +3237,10 @@
     "name": "Volt Absorb",
     "rating": 3.5,
     "num": 10,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "voltabsorb"
   },
   {
@@ -2263,6 +3249,10 @@
     "name": "Wandering Spirit",
     "rating": 2.5,
     "num": 254,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "wanderingspirit"
   },
   {
@@ -2272,6 +3262,10 @@
     "name": "Water Absorb",
     "rating": 3.5,
     "num": 11,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "waterabsorb"
   },
   {
@@ -2283,6 +3277,10 @@
     "name": "Water Bubble",
     "rating": 4.5,
     "num": 199,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "waterbubble"
   },
   {
@@ -2291,6 +3289,10 @@
     "name": "Water Compaction",
     "rating": 1.5,
     "num": 195,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "watercompaction"
   },
   {
@@ -2299,6 +3301,10 @@
     "name": "Water Veil",
     "rating": 2,
     "num": 41,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "waterveil"
   },
   {
@@ -2308,6 +3314,10 @@
     "name": "Weak Armor",
     "rating": 1,
     "num": 133,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "weakarmor"
   },
   {
@@ -2316,6 +3326,10 @@
     "name": "White Smoke",
     "rating": 2,
     "num": 73,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "whitesmoke"
   },
   {
@@ -2325,6 +3339,10 @@
     "name": "Wimp Out",
     "rating": 1,
     "num": 193,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "wimpout"
   },
   {
@@ -2333,6 +3351,10 @@
     "name": "Wonder Guard",
     "rating": 5,
     "num": 25,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "wonderguard"
   },
   {
@@ -2343,6 +3365,10 @@
     "name": "Wonder Skin",
     "rating": 2,
     "num": 147,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "wonderskin"
   },
   {
@@ -2354,6 +3380,10 @@
     "name": "Zen Mode",
     "rating": 0,
     "num": 161,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "zenmode"
   },
   {
@@ -2363,6 +3393,10 @@
     "name": "Mountaineer",
     "rating": 3,
     "num": -2,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "mountaineer"
   },
   {
@@ -2377,6 +3411,10 @@
     },
     "rating": 3,
     "num": -3,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "rebound"
   },
   {
@@ -2387,6 +3425,10 @@
     "name": "Persistent",
     "rating": 3,
     "num": -4,
+    "blocks": [
+      "begin"
+    ],
+    "code": "",
     "keyname": "persistent"
   }
 ]

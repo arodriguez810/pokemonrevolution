@@ -215,7 +215,8 @@
                         <div>
                             <label>Cantidad: {{listFilter().length}}</label>,
                             <label ng-repeat="(tkey, type) in types">
-                                <img style="margin-left: 5px" src="../resources/poekemon/types/{{tkey}}.png">:
+                                <img style="margin-left: 5px"
+                                     src="../resources/poekemon/types/{{tkey}}.png">:
                                 {{byType(tkey)}} </label>
                         </div>
                         <input ng-model="currentFilter" style="width: 100%" disabled>

@@ -4,15 +4,15 @@ try {
     if ($data) {
         $newresponse = array();
         if ($data->folder) {
-            if (!is_dir("$root$data->folder"))
-                mkdir("$root$data->folder", 0777);
-            @$filesInFolder = scandir("$root$data->folder");
+            if (!is_dir("{$GLOBALS['dataFolder']}$data->folder"))
+                mkdir("{$GLOBALS['dataFolder']}$data->folder", 0777);
+            @$filesInFolder = scandir("{$GLOBALS['dataFolder']}$data->folder");
             if (@$filesInFolder) {
                 array_shift($filesInFolder);
                 array_shift($filesInFolder);
                 if (isset($data->name)) {
 
-                    $myfile = fopen("$root$data->folder/$data->name.json", "w+") or die("Unable to open file!");
+                    $myfile = fopen("{$GLOBALS['dataFolder']}$data->folder/$data->name.json", "w+") or die("Unable to open file!");
                     fwrite($myfile, json_encode($data->data));
                     fclose($myfile);
                     array_push($newresponse, $data->data);

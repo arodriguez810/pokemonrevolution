@@ -1,6 +1,6 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/character";
+$root = "{$GLOBALS['resourcesFolder']}character";
 $response = array();
 
 function getDirContents($dir, &$results = array())
@@ -15,7 +15,7 @@ function getDirContents($dir, &$results = array())
                 $url = explode("character", $path);
                 $gender = explode("\\", $path)[count(explode("\\", $path)) - 2];
                 $url = str_replace("\\", "/", $url[1]);
-                $url = "../resources/character$url";
+                $url = "{$GLOBALS['resourcesFolder']}character$url";
                 //var_dump($data);
                 $prop = array(
                     "url" => $url,

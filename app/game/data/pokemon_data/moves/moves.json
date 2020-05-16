@@ -172,7 +172,7 @@
     "accuracy": 100,
     "basePower": 55,
     "category": "Physical",
-    "shortDesc": "Power doubles if the user has no held item.",
+    "shortDesc": "Power doubles if last",
     "id": "acrobatics",
     "isViable": true,
     "name": "Acrobatics",
@@ -263,17 +263,17 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The target makes its move immediately after the user this turn, no matter the priority of its selected move. Fails if the target would have moved next anyway, or if the target already moved this turn.",
-    "shortDesc": "The target makes its move right after the user.",
+    "shortDesc": "Increase your speed",
     "id": "afteryou",
     "name": "After You",
     "pp": 15,
-    "priority": 0,
+    "priority": 1,
     "flags": {
       "authentic": 1,
       "mystery": 1
     },
     "secondary": null,
-    "target": "normal",
+    "target": "self",
     "type": "Normal",
     "boosts": {
       "spe": 1
@@ -436,6 +436,7 @@
       "mirror": 1
     },
     "preventChange": true,
+    "volatileStatus": "partiallytrapped",
     "secondary": {
       "chance": 100
     },
@@ -639,7 +640,7 @@
       "spd": 1
     },
     "secondary": null,
-    "target": "adjacentAlly",
+    "target": "self",
     "type": "Fairy",
     "zMoveBoost": {
       "spd": 2
@@ -1172,7 +1173,7 @@
     "accuracy": 90,
     "basePower": 120,
     "category": "Special",
-    "desc": "This move cannot be selected until the user eats a Berry, either by eating one that was held, stealing and eating one off another Pokemon with Bug Bite or Pluck, or eating one that was thrown at it with Fling. Once the condition is met, this move can be selected and used for the rest of the battle even if the user gains or uses another item or switches out. Consuming a Berry with Natural Gift does not count for the purposes of eating one.",
+    "desc": "This move cannot be selected until the user eats a : stat, either by eating one that was held, stealing and eating one off another Pokemon with Bug Bite or Pluck, or eating one that was thrown at it with Fling. Once the condition is met, this move can be selected and used for the rest of the battle even if the user gains or uses another stat or switches out. Consuming a : stat with Natural Gift does not count for the purposes of eating one.",
     "shortDesc": "Use it.",
     "id": "belch",
     "name": "Belch",
@@ -1202,7 +1203,7 @@
       "snatch": 1
     },
     "boosts": {
-      "atk": 8
+      "atk": 4
     },
     "secondary": null,
     "target": "self",
@@ -1216,8 +1217,8 @@
     "accuracy": true,
     "basePower": 0,
     "category": "Status",
-    "desc": "The target receives the user's held item. Fails if the user has no item or is holding a Mail or Z-Crystal, if the target is already holding an item, if the user is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, a Pokemon that can Mega Evolve holding the Mega Stone for its species, or if the target is one of those Pokemon and the user is holding the respective item.",
-    "shortDesc": "User passes its held status to the target.",
+    "desc": "The target receives the user's held stat. Fails if the user has no stat or is holding a Mail or Z-Crystal, if the target is already holding an stat, if the user is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, a Pokemon that can Mega Evolve holding the Mega Stone for its species, or if the target is one of those Pokemon and the user is holding the respective stat.",
+    "shortDesc": "User passes its held status to the friend.",
     "id": "bestow",
     "isNonstandard": "Past",
     "name": "Bestow",
@@ -1685,7 +1686,7 @@
     "basePower": 85,
     "category": "Physical",
     "desc": "Has a 30% chance to paralyze the target. This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thousand Arrows, Thunder, and Twister, and Gust and Twister have doubled power when used against it. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Bounces turn 1. Hits turn 2. 30% paralyze.",
+    "shortDesc": "Hits . 30% paralyze.",
     "id": "bounce",
     "name": "Bounce",
     "pp": 5,
@@ -1789,7 +1790,7 @@
   {
     "num": 784,
     "accuracy": 100,
-    "basePower": 60,
+    "basePower": 100,
     "category": "Physical",
     "desc": "100% chance to lower the foe's Attack by 1 stage. Hits all adjacent foes.",
     "shortDesc": "100% chance to lower adjacent foes' Atk by 1.",
@@ -1955,8 +1956,8 @@
     "accuracy": 100,
     "basePower": 60,
     "category": "Physical",
-    "desc": "If this move is successful and the user has not fainted, it steals the target's held Berry if it is holding one and eats it immediately, gaining its effects even if the user's item is being ignored. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
-    "shortDesc": "User steals and eats the target's Berry.",
+    "desc": "If this move is successful and the user has not fainted, it steals the target's held : stat if it is holding one and eats it immediately, gaining its effects even if the user's stat is being ignored. stats lost to this move cannot be regained with Recycle or the Harvest Ability.",
+    "shortDesc": "User steals and eats the target's : stat.",
     "id": "bugbite",
     "name": "Bug Bite",
     "pp": 20,
@@ -2290,7 +2291,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the user's Special Defense by 1 stage. If the user uses an Electric-type attack on the next turn, its power will be doubled.",
-    "shortDesc": "+1 SpD, user's Electric move next turn 2x power.",
+    "shortDesc": "+1 SpD, user's Electric move next x power.",
     "id": "charge",
     "name": "Charge",
     "pp": 20,
@@ -2495,7 +2496,7 @@
       "def": -1
     },
     "secondary": null,
-    "target": "self",
+    "target": "normal",
     "type": "Dragon",
     "contestType": "Tough",
     "keyname": "clangingscales"
@@ -3050,7 +3051,7 @@
     "accuracy": 100,
     "basePower": 60,
     "category": "Physical",
-    "desc": "If this attack was successful and the user has not fainted, it steals the target's held item if the user is not holding one. The target's item is not stolen if it is a Mail or Z-Crystal, or if the target is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, or a Pokemon that can Mega Evolve holding the Mega Stone for its species. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
+    "desc": "If this attack was successful and the user has not fainted, it steals the target's held stat if the user is not holding one. The target's stat is not stolen if it is a Mail or Z-Crystal, or if the target is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, or a Pokemon that can Mega Evolve holding the Mega Stone for its species. stats lost to this move cannot be regained with Recycle or the Harvest Ability.",
     "shortDesc": "it steals the target's.",
     "id": "covet",
     "name": "Covet",
@@ -3400,7 +3401,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Sharply raises the target's Attack and Special Attack stats.",
-    "shortDesc": "Raises the target's Atk and Sp. Atk by 2.",
+    "shortDesc": "Raises the user's Atk and Sp. Atk by 2.",
     "id": "decorate",
     "name": "Decorate",
     "pp": 15,
@@ -3413,7 +3414,7 @@
       "atk": 2,
       "spa": 2
     },
-    "target": "normal",
+    "target": "self",
     "type": "Fairy",
     "keyname": "decorate"
   },
@@ -3479,7 +3480,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Lowers the target's evasiveness by 1 stage. If this move is successful and whether or not the target's evasiveness was affected, the effects of Reflect, Light Screen, Aurora Veil, Safeguard, Mist, Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the target's side, and the effects of Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the user's side. Ignores a target's substitute, although a substitute will still block the lowering of evasiveness.",
-    "shortDesc": "-1 evasion; clears user and target side's hazards.",
+    "shortDesc": "-1 evasion; clears user and target side's stats.",
     "id": "defog",
     "isViable": true,
     "name": "Defog",
@@ -3493,7 +3494,7 @@
     },
     "boosts": {
       "evasion": -1,
-      "accuracy": 1
+      "accuracy": -1
     },
     "secondary": null,
     "target": "normal",
@@ -3610,7 +3611,7 @@
     "basePower": 80,
     "category": "Physical",
     "desc": "This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks other than Earthquake and Magnitude but takes double damage from them, and is also unaffected by weather. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Digs underground turn 1, strikes turn 2.",
+    "shortDesc": "Digs underground , strikes .",
     "id": "dig",
     "name": "Dig",
     "pp": 10,
@@ -3717,7 +3718,7 @@
     "basePower": 80,
     "category": "Physical",
     "desc": "This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks other than Surf and Whirlpool but takes double damage from them, and is also unaffected by weather. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Dives underwater turn 1, strikes turn 2.",
+    "shortDesc": "Dives underwater , strikes .",
     "id": "Dive",
     "name": "Dive",
     "pp": 10,
@@ -3770,7 +3771,7 @@
     "accuracy": 100,
     "basePower": 140,
     "category": "Special",
-    "desc": "Deals damage two turns after this move is used. At the end of that turn, the damage is calculated at that time and dealt to the Pokemon at the position the target had when the move was used. If the user is no longer active at the time, damage is calculated based on the user's natural Special Attack stat, types, and level, with no boosts from its held item or Ability. Fails if this move or Future Sight is already in effect for the target's position.",
+    "desc": "Deals damage two turns after this move is used. At the end of that turn, the damage is calculated at that time and dealt to the Pokemon at the position the target had when the move was used. If the user is no longer active at the time, damage is calculated based on the user's natural Special Attack stat, types, and level, with no boosts from its held stat or Ability. Fails if this move or Future Sight is already in effect for the target's position.",
     "shortDesc": "Hits hard.",
     "id": "doomdesire",
     "name": "Doom Desire",
@@ -4272,7 +4273,7 @@
     "basePower": 100,
     "category": "Special",
     "desc": "The target is unaffected by this move unless it is asleep. The user recovers 1\/2 the HP lost by the target, rounded half up. If Big Root is held by the user, the HP recovered is 1.3x normal, rounded half down.",
-    "shortDesc": "User gains 1\/2 HP inflicted. Sleeping target only.",
+    "shortDesc": "User gains 1\/2 HP inflicted. target only.",
     "id": "dreameater",
     "name": "Dream Eater",
     "pp": 15,
@@ -4508,6 +4509,7 @@
     "secondary": null,
     "target": "normal",
     "type": "Normal",
+    "doubled": true,
     "contestType": "Beautiful",
     "keyname": "echoedvoice"
   },
@@ -4567,7 +4569,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "For 5 turns, the terrain becomes Electric Terrain. During the effect, the power of Electric-type attacks made by grounded Pokemon is multiplied by 1.3 and grounded Pokemon cannot fall asleep; Pokemon already asleep do not wake up. Camouflage transforms the user into an Electric type, Nature Power becomes Thunderbolt, and Secret Power has a 30% chance to cause paralysis. Fails if the current terrain is Electric Terrain.",
-    "shortDesc": "5 turns. Grounded: +Electric power, can't status.",
+    "shortDesc": "5 turns, can't status.",
     "id": "electricterrain",
     "name": "Electric Terrain",
     "pp": 10,
@@ -4575,7 +4577,7 @@
     "flags": {
       "nonsky": 1
     },
-    "terrain": "electricterrain",
+    "pseudoWeather": "electricterrain",
     "effect": {
       "duration": 5,
       "onResidualOrder": 21,
@@ -4675,7 +4677,7 @@
     "accuracy": 100,
     "basePower": 0,
     "category": "Status",
-    "desc": "For 5 turns, the target's held item has no effect. An item's effect of causing forme changes is unaffected, but any other effects from such items are negated. During the effect, Fling and Natural Gift are prevented from being used by the target. Items thrown at the target with Fling will still activate for it. If the target uses Baton Pass, the replacement will remain unable to use items.",
+    "desc": "For 5 turns, the target's held stat has no effect. An stat's effect of causing forme changes is unaffected, but any other effects from such stats are negated. During the effect, Fling and Natural Gift are prevented from being used by the target. stats thrown at the target with Fling will still activate for it. If the target uses Baton Pass, the replacement will remain unable to use stats.",
     "shortDesc": "the target's stats",
     "id": "embargo",
     "isNonstandard": "Past",
@@ -4841,7 +4843,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target's Ability to become the same as the user's. Fails if the target's Ability is Battle Bond, Comatose, Disguise, Multitype, Power Construct, RKS System, Schooling, Shields Down, Stance Change, Truant, or the same Ability as the user, or if the user's Ability is Battle Bond, Comatose, Disguise, Flower Gift, Forecast, Illusion, Imposter, Multitype, Power Construct, Power of Alchemy, Receiver, RKS System, Schooling, Shields Down, Stance Change, Trace, or Zen Mode.",
-    "shortDesc": "The target's Ability changes to match the user's.",
+    "shortDesc": "The target's Stats",
     "id": "entrainment",
     "name": "Entrainment",
     "pp": 15,
@@ -4889,7 +4891,7 @@
     "basePower": 160,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "Great Power",
     "id": "eternabeam",
     "name": "Eternabeam",
     "pp": 10,
@@ -4910,7 +4912,7 @@
   {
     "num": 153,
     "accuracy": 100,
-    "basePower": 250,
+    "basePower": 800,
     "category": "Physical",
     "desc": "The user faints after using this move, even if this move fails for having no target. This move is prevented from executing if any active Pokemon has the Damp Ability.",
     "shortDesc": "Hits adjacent Pokemon. The user faints.",
@@ -5035,7 +5037,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Prevents all active Pokemon from switching next turn. A Pokemon can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, U-turn, or Volt Switch. Fails if the effect is already active.",
-    "shortDesc": "Prevents all Pokemon from switching next turn.",
+    "shortDesc": "Prevents Pokemon from switching",
     "id": "fairylock",
     "name": "Fairy Lock",
     "pp": 10,
@@ -5044,7 +5046,7 @@
       "mirror": 1,
       "authentic": 1
     },
-    "pseudoWeather": "fairylock",
+    "volatileStatus": "partiallytrapped",
     "effect": {
       "duration": 2
     },
@@ -5083,7 +5085,7 @@
     "basePower": 40,
     "category": "Physical",
     "desc": "Has a 100% chance to flinch the target. Fails unless it is the user's first turn on the field.",
-    "shortDesc": "Hits first. First turn out only. 100% flinch chance.",
+    "shortDesc": "Hihg OP 40% flinch chance.",
     "id": "fakeout",
     "isViable": true,
     "name": "Fake Out",
@@ -5095,7 +5097,7 @@
       "mirror": 1
     },
     "secondary": {
-      "chance": 100,
+      "chance": 40,
       "volatileStatus": "flinch"
     },
     "target": "normal",
@@ -5159,7 +5161,7 @@
     "basePower": 40,
     "category": "Physical",
     "desc": "Leaves the target with at least 1 HP.",
-    "shortDesc": "Always leaves the target with at least 1 HP.",
+    "shortDesc": "Always leaves the target",
     "id": "falseswipe",
     "name": "False Swipe",
     "pp": 40,
@@ -5212,7 +5214,7 @@
     "basePower": 30,
     "category": "Physical",
     "desc": "If this move is successful, it breaks through the target's Baneful Bunker, Detect, King's Shield, Protect, or Spiky Shield for this turn, allowing other Pokemon to attack the target normally. If the target's side is protected by Crafty Shield, Mat Block, Quick Guard, or Wide Guard, that protection is also broken for this turn and other Pokemon may attack the target's side normally.",
-    "shortDesc": "Nullifies Detect, Protect, and Quick\/Wide Guard.",
+    "shortDesc": "Nullifies Status",
     "id": "feint",
     "name": "Feint",
     "pp": 10,
@@ -5255,7 +5257,7 @@
     "basePower": 50,
     "category": "Physical",
     "desc": "Raises the user's Attack by 3 stages if this move knocks out the target.",
-    "shortDesc": "Raises user's Attack by 3 if this KOes the target.",
+    "shortDesc": "Raises user's Attack by 8 if this KOes the target.",
     "id": "fellstinger",
     "name": "Fell Stinger",
     "pp": 25,
@@ -5305,10 +5307,10 @@
   {
     "num": 515,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 1300,
     "category": "Special",
     "desc": "Deals damage to the target equal to the user's current HP. If this move is successful, the user faints.",
-    "shortDesc": "Does damage equal to the user's HP. User faints.",
+    "shortDesc": "Does damage",
     "id": "finalgambit",
     "name": "Final Gambit",
     "pp": 5,
@@ -5355,7 +5357,7 @@
     "basePower": 65,
     "category": "Physical",
     "desc": "Has a 10% chance to burn the target and a 10% chance to flinch it.",
-    "shortDesc": "10% chance to burn. 10% chance to flinch.",
+    "shortDesc": "30% chance to flinch.",
     "id": "firefang",
     "isViable": true,
     "name": "Fire Fang",
@@ -5367,16 +5369,10 @@
       "protect": 1,
       "mirror": 1
     },
-    "secondaries": [
-      {
-        "chance": 10,
-        "status": "brn"
-      },
-      {
-        "chance": 10,
-        "volatileStatus": "flinch"
-      }
-    ],
+    "secondary": {
+      "chance": 30,
+      "status": "flinch"
+    },
     "target": "normal",
     "type": "Fire",
     "contestType": "Cool",
@@ -5416,18 +5412,15 @@
     "basePower": 80,
     "category": "Special",
     "desc": "If one of the user's allies chose to use Grass Pledge or Water Pledge this turn and has not moved yet, it takes its turn immediately after the user and the user's move does nothing. If combined with Grass Pledge, the ally uses Fire Pledge with 150 power and a sea of fire appears on the target's side for 4 turns, which causes damage to non-Fire types equal to 1\/8 of their maximum HP, rounded down, at the end of each turn during effect, including the last turn. If combined with Water Pledge, the ally uses Water Pledge with 150 power and a rainbow appears on the user's side for 4 turns, which doubles secondary effect chances but does not stack with the Serene Grace Ability. When used as a combined move, this move gains STAB no matter what the user's type is. This move does not consume the user's Fire Gem.",
-    "shortDesc": "Use with Grass or Water Pledge for added effect.",
+    "shortDesc": "Use it first",
     "id": "firepledge",
     "name": "Fire Pledge",
     "pp": 10,
-    "priority": 0,
+    "priority": 2,
     "flags": {
       "protect": 1,
       "mirror": 1,
       "nonsky": 1
-    },
-    "effect": {
-      "duration": 4
     },
     "secondary": null,
     "target": "normal",
@@ -5454,7 +5447,7 @@
       "punch": 1
     },
     "secondary": {
-      "chance": 10,
+      "chance": 20,
       "status": "brn"
     },
     "target": "normal",
@@ -5832,8 +5825,8 @@
     "accuracy": 100,
     "basePower": 0,
     "category": "Physical",
-    "desc": "The power of this move is based on the user's held item. The held item is lost and it activates for the target if applicable. If there is no target or the target avoids this move by protecting itself, the user's held item is still lost. The user can regain a thrown item with Recycle or the Harvest Ability. Fails if the user has no held item, if the held item cannot be thrown, if the user is under the effect of Embargo or Magic Room, or if the user has the Klutz Ability.",
-    "shortDesc": "Flings the user's item at the target. Power varies.",
+    "desc": "The power of this move is based on the user's held stat. The held stat is lost and it activates for the target if applicable. If there is no target or the target avoids this move by protecting itself, the user's held stat is still lost. The user can regain a thrown stat with Recycle or the Harvest Ability. Fails if the user has no held stat, if the held stat cannot be thrown, if the user is under the effect of Embargo or Magic Room, or if the user has the Klutz Ability.",
+    "shortDesc": "Flings the user's stats.",
     "id": "fling",
     "name": "Fling",
     "pp": 10,
@@ -5891,11 +5884,15 @@
     "flags": {
       "protect": 1,
       "reflectable": 1,
-      "heal": 1,
+      "heal": 50,
       "mystery": 1
     },
+    "boosts": {
+      "def": -3,
+      "spd": -3
+    },
     "secondary": null,
-    "target": "normal",
+    "target": "self",
     "type": "Fairy",
     "zMoveEffect": "clearnegativeboost",
     "contestType": "Beautiful",
@@ -5907,7 +5904,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the Defense of all active Grass-type Pokemon by 1 stage. Fails if there are no active Grass-type Pokemon.",
-    "shortDesc": "Raises Defense by 1 of all active Grass types.",
+    "shortDesc": "Raises Defense by 1.",
     "id": "flowershield",
     "name": "Flower Shield",
     "pp": 10,
@@ -5916,9 +5913,9 @@
       "distance": 1
     },
     "secondary": null,
-    "target": "all",
+    "target": "self",
     "type": "Fairy",
-    "zMoveBoost": {
+    "boosts": {
       "def": 1
     },
     "contestType": "Beautiful",
@@ -5930,7 +5927,7 @@
     "basePower": 90,
     "category": "Physical",
     "desc": "This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thousand Arrows, Thunder, and Twister, and Gust and Twister have doubled power when used against it. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Flies up on first turn, then strikes the next turn.",
+    "shortDesc": "Flies up on first turn",
     "id": "fly",
     "name": "Fly",
     "pp": 15,
@@ -5958,7 +5955,7 @@
     "basePower": 100,
     "category": "Physical",
     "desc": "This move combines Flying in its type effectiveness against the target. Damage doubles and no accuracy check is done if the target has used Minimize while active.",
-    "shortDesc": "Combines Flying in its type effectiveness.",
+    "shortDesc": "Combines",
     "id": "flyingpress",
     "name": "Flying Press",
     "pp": 10,
@@ -6051,6 +6048,7 @@
     "effect": {
       "duration": 1
     },
+    "missLast": true,
     "secondary": null,
     "target": "normal",
     "type": "Fighting",
@@ -6069,7 +6067,7 @@
     "pp": 20,
     "priority": 2,
     "flags": {},
-    "volatileStatus": "followme",
+    "volatileStatus": "encore",
     "effect": {
       "duration": 1,
       "onFoeRedirectTargetPriority": 1
@@ -6112,7 +6110,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "As long as the target remains active, its evasiveness stat stage is ignored during accuracy checks against it if it is greater than 0, and Normal- and Fighting-type attacks can hit the target if it is a Ghost type. Fails if the target is already affected, or affected by Miracle Eye or Odor Sleuth.",
-    "shortDesc": "Fighting, Normal hit Ghost. Evasiveness ignored.",
+    "shortDesc": "Fighting, Normal hit Nulled. Evasiveness ignored.",
     "id": "foresight",
     "isNonstandard": "Past",
     "name": "Foresight",
@@ -6141,7 +6139,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the Grass type to be added to the target, effectively making it have two or three types. Fails if the target is already a Grass type. If Trick-or-Treat adds a type to the target, it replaces the type added by this move and vice versa.",
-    "shortDesc": "Adds Grass to the target's type(s).",
+    "shortDesc": "Burst",
     "id": "forestscurse",
     "name": "Forest's Curse",
     "pp": 20,
@@ -6153,9 +6151,9 @@
       "mystery": 1
     },
     "secondary": null,
-    "target": "normal",
+    "target": "self",
     "type": "Grass",
-    "zMoveBoost": {
+    "boosts": {
       "atk": 1,
       "def": 1,
       "spa": 1,
@@ -6170,7 +6168,7 @@
     "accuracy": 100,
     "basePower": 95,
     "category": "Physical",
-    "desc": "Damage is calculated using the target's Attack stat, including stat stage changes. The user's Ability, item, and burn are used as normal.",
+    "desc": "Damage is calculated using the target's Attack stat, including stat stage changes. The user's Ability, stat, and burn are used as normal.",
     "shortDesc": "Uses target's Attack stat in damage calculation.",
     "id": "foulplay",
     "isViable": true,
@@ -6195,7 +6193,7 @@
     "basePower": 70,
     "category": "Special",
     "desc": "Has a 10% chance to freeze the target. This move's type effectiveness against Water is changed to be super effective no matter what this move's type is.",
-    "shortDesc": "10% chance to freeze. Super effective on Water.",
+    "shortDesc": "10% chance to freeze.",
     "id": "freezedry",
     "isViable": true,
     "name": "Freeze-Dry",
@@ -6206,7 +6204,7 @@
       "mirror": 1
     },
     "secondary": {
-      "chance": 10,
+      "chance": 15,
       "status": "frz"
     },
     "target": "normal",
@@ -6220,7 +6218,7 @@
     "basePower": 140,
     "category": "Physical",
     "desc": "Has a 30% chance to paralyze the target. This attack charges on the first turn and executes on the second. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Charges turn 1. Hits turn 2. 30% paralyze.",
+    "shortDesc": "Hits 30% paralyze.",
     "id": "freezeshock",
     "name": "Freeze Shock",
     "pp": 5,
@@ -6267,7 +6265,7 @@
     "basePower": 150,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "User OP",
     "id": "frenzyplant",
     "name": "Frenzy Plant",
     "pp": 5,
@@ -6277,9 +6275,6 @@
       "protect": 1,
       "mirror": 1,
       "nonsky": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -6312,10 +6307,10 @@
   {
     "num": 218,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 100,
     "category": "Physical",
     "desc": "Power is equal to the greater of ((255 - user's Happiness) * 2\/5), rounded down, or 1.",
-    "shortDesc": "Max 102 power at minimum Happiness.",
+    "shortDesc": "Max power.",
     "id": "frustration",
     "isNonstandard": "Past",
     "isViable": true,
@@ -6367,7 +6362,7 @@
     "basePower": 40,
     "category": "Physical",
     "desc": "Power doubles with each successful hit, up to a maximum of 160 power. The power is reset if this move misses or another move is used.",
-    "shortDesc": "Power doubles with each hit, up to 160.",
+    "shortDesc": "Power doubles",
     "id": "furycutter",
     "name": "Fury Cutter",
     "pp": 20,
@@ -6380,6 +6375,7 @@
     "effect": {
       "duration": 2
     },
+    "doubled": true,
     "secondary": null,
     "target": "normal",
     "type": "Bug",
@@ -6419,7 +6415,7 @@
     "basePower": 100,
     "category": "Physical",
     "desc": "Power doubles if the last move used by any Pokemon this turn was Fusion Flare.",
-    "shortDesc": "Power doubles if used after Fusion Flare.",
+    "shortDesc": "Use it.",
     "id": "fusionbolt",
     "isViable": true,
     "name": "Fusion Bolt",
@@ -6429,6 +6425,7 @@
       "protect": 1,
       "mirror": 1
     },
+    "doubled": true,
     "secondary": null,
     "target": "normal",
     "type": "Electric",
@@ -6441,7 +6438,7 @@
     "basePower": 100,
     "category": "Special",
     "desc": "Power doubles if the last move used by any Pokemon this turn was Fusion Bolt.",
-    "shortDesc": "Power doubles if used after Fusion Bolt.",
+    "shortDesc": "Power doubles",
     "id": "fusionflare",
     "isViable": true,
     "name": "Fusion Flare",
@@ -6452,6 +6449,7 @@
       "mirror": 1,
       "defrost": 1
     },
+    "doubled": true,
     "secondary": null,
     "target": "normal",
     "type": "Fire",
@@ -6463,13 +6461,14 @@
     "accuracy": 100,
     "basePower": 120,
     "category": "Special",
-    "desc": "Deals damage two turns after this move is used. At the end of that turn, the damage is calculated at that time and dealt to the Pokemon at the position the target had when the move was used. If the user is no longer active at the time, damage is calculated based on the user's natural Special Attack stat, types, and level, with no boosts from its held item or Ability. Fails if this move or Doom Desire is already in effect for the target's position.",
+    "desc": "Deals damage two turns after this move is used. At the end of that turn, the damage is calculated at that time and dealt to the Pokemon at the position the target had when the move was used. If the user is no longer active at the time, damage is calculated based on the user's natural Special Attack stat, types, and level, with no boosts from its held stat or Ability. Fails if this move or Doom Desire is already in effect for the target's position.",
     "shortDesc": "Hits two turns after being used.",
     "id": "futuresight",
     "name": "Future Sight",
     "pp": 10,
     "priority": 0,
     "flags": {},
+    "future": true,
     "ignoreImmunity": true,
     "isFutureMove": true,
     "secondary": null,
@@ -6484,7 +6483,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target's Ability to be rendered ineffective as long as it remains active. If the target uses Baton Pass, the replacement will remain under this effect. If the target's Ability is Battle Bond, Comatose, Disguise, Multitype, Power Construct, RKS System, Schooling, Shields Down, Stance Change, or Zen Mode, this move fails, and receiving the effect through Baton Pass ends the effect immediately.",
-    "shortDesc": "Nullifies the target's Ability.",
+    "shortDesc": "Nullifies the target's stats.",
     "id": "gastroacid",
     "name": "Gastro Acid",
     "pp": 10,
@@ -6538,7 +6537,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the Attack and Special Attack of Pokemon on the user's side with the Plus or Minus Abilities by 1 stage.",
-    "shortDesc": "Raises Atk, Sp. Atk of allies with Plus\/Minus by 1.",
+    "shortDesc": "Raises Atk, Sp. Atk by 1.",
     "id": "gearup",
     "name": "Gear Up",
     "pp": 20,
@@ -6548,9 +6547,9 @@
       "authentic": 1
     },
     "secondary": null,
-    "target": "allySide",
+    "target": "self",
     "type": "Steel",
-    "zMoveBoost": {
+    "boosts": {
       "spa": 1
     },
     "contestType": "Clever",
@@ -6562,7 +6561,7 @@
     "basePower": 185,
     "category": "Special",
     "desc": "If this move is successful, the terrain becomes Psychic Terrain.",
-    "shortDesc": "Summons Psychic Terrain.",
+    "shortDesc": "Summons Psychic.",
     "id": "genesissupernova",
     "isNonstandard": "Past",
     "isViable": true,
@@ -6586,7 +6585,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the user's Special Attack, Special Defense, and Speed by 2 stages. This attack charges on the first turn and executes on the second. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Charges, then raises SpA, SpD, Spe by 2 turn 2.",
+    "shortDesc": "Charges, then raises SpA, SpD, Spe by 2 .",
     "id": "geomancy",
     "isNonstandard": "Past",
     "name": "Geomancy",
@@ -6658,9 +6657,6 @@
       "protect": 1,
       "mirror": 1
     },
-    "self": {
-      "volatileStatus": "mustrecharge"
-    },
     "secondary": null,
     "target": "normal",
     "type": "Normal",
@@ -6670,7 +6666,7 @@
   {
     "num": 646,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "gigavolthavoc",
@@ -6767,16 +6763,20 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 180,
     "category": "Physical",
     "desc": "Sleeps, poisons, or paralyzes opponent(s). Base Power scales with the base move's Base Power.",
-    "shortDesc": "Foes: SLP\/PSN\/PAR. BP scales with base move.",
+    "shortDesc": "Foes: PAR. BP scales with base move.",
     "id": "gmaxbefuddle",
     "isNonstandard": "Unobtainable",
     "name": "G-Max Befuddle",
     "pp": 5,
     "priority": 0,
     "flags": {},
+    "secondary": {
+      "chance": 40,
+      "status": "par"
+    },
     "isMax": "Butterfree",
     "self": {},
     "target": "adjacentFoe",
@@ -6787,10 +6787,10 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1\/8 of its maximum HP (1\/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, Teleport, U-turn, or Volt Switch. The effect ends if target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move. Base Power scales with the base move's Base Power.",
-    "shortDesc": "Traps\/damages foes. BP scales w\/ base move.",
+    "shortDesc": "Burn",
     "id": "gmaxcentiferno",
     "isNonstandard": "Unobtainable",
     "name": "G-Max Centiferno",
@@ -6799,7 +6799,10 @@
     "flags": {},
     "isMax": "Centiskorch",
     "self": {},
-    "secondary": null,
+    "secondary": {
+      "chance": 40,
+      "status": "brn"
+    },
     "target": "adjacentFoe",
     "type": "Fire",
     "contestType": "Cool",
@@ -6808,7 +6811,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Applies Focus Energy to the user and its allies. Base Power scales with the base move's Base Power.",
     "shortDesc": "User side: Focus Energy. BP scales w\/ base move.",
@@ -6829,7 +6832,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Infatuates opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Infatuates opponents. BP scales with base move.",
@@ -6850,7 +6853,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 180,
     "category": "Physical",
     "desc": "Lowers the PP of the opponent(s) last used move. Base Power scales with the base move's Base Power.",
     "shortDesc": "Foe: Lowers PP of last move. BP scales w\/ base move.",
@@ -6871,7 +6874,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Heals user and allies for 1\/6 of their post-Gigantamax max HP. Base Power scales with the base move's Base Power.",
     "shortDesc": "Heals user and allies. BP scales with base move.",
@@ -6892,7 +6895,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Lowers the Speed of opponents by 2 stages. Base Power scales with the base move's Base Power.",
     "shortDesc": "Foes: -2 Speed. BP scales with base move's BP.",
@@ -6913,7 +6916,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Confuses opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Confuses foes. BP scales with base move's BP.",
@@ -6934,7 +6937,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Summons Gravity. Base Power scales with the base move's Base Power.",
     "shortDesc": "Summons Gravity. BP scales with base move.",
@@ -6956,7 +6959,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Poisons opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Poisons opponents. BP scales with base move.",
@@ -6976,7 +6979,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Applies Torment to opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Applies Torment to foes. BP scales with base move.",
@@ -6997,7 +7000,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Has a 50% chance of restoring all Berries on the user's side. Base Power scales with the base move's Base Power.",
     "shortDesc": "50% restore berries. BP scales w\/ base move.",
@@ -7018,7 +7021,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Summons Aurora Veil. Base Power scales with the base move's Base Power.",
     "shortDesc": "Summons Aurora Veil. BP scales w\/ base move.",
@@ -7041,7 +7044,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1\/8 of its maximum HP (1\/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, Teleport, U-turn, or Volt Switch. The effect ends if target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move. Base Power scales with the base move's Base Power.",
     "shortDesc": "Traps\/damages foes. BP scales w\/ base move.",
@@ -7062,7 +7065,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Confuses opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Confuses opponents. BP scales with base move.",
@@ -7083,7 +7086,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Has a 50% chance of applying Yawn to the target. Base Power scales with the base move's Base Power.",
     "shortDesc": "50% Yawn chance. BP scales w\/ base move.",
@@ -7103,7 +7106,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Sets a Steel-type entry hazard. Base Power scales with the base move's Base Power.",
     "shortDesc": "Sets Steel entry hazard. BP scales w\/ base move.",
@@ -7125,7 +7128,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Sets Stealth Rock. Base Power scales with the base move's Base Power.",
     "shortDesc": "Sets Stealth Rock. BP scales w\/ base move's BP.",
@@ -7146,7 +7149,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Opponents are each randomly paralyzed or poisoned. Base Power scales with the base move's Base Power.",
     "shortDesc": "Foe(s): Par\/Psn. BP scales with base move's BP.",
@@ -7167,7 +7170,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Cures status on user's team. Base Power scales with the base move's Base Power.",
     "shortDesc": "Cures team's statuses. BP scales with base move's BP.",
@@ -7188,7 +7191,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Lowers opponents' evasion by 1 stage. Base Power scales with the base move's Base Power.",
     "shortDesc": "Foe(s): -1 evasion. BP scales with base move's BP.",
@@ -7209,7 +7212,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Traps opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Traps foe(s). BP scales with base move's BP.",
@@ -7230,7 +7233,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Damages opponent(s) by 1\/6 of their maximum HP for four turns. Base Power scales with the base move's Base Power.",
     "shortDesc": "Damages foes for 4 turns. BP scales w\/ base move.",
@@ -7254,7 +7257,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Paralyzes opponents. Base Power scales with the base move's Base Power.",
     "shortDesc": "Paralyzes foe(s). BP scales with base move's BP.",
@@ -7275,7 +7278,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Damages non-Fire-type opponent(s) by 1\/6 of their maximum HP for four turns. Base Power scales with the base move's Base Power.",
     "shortDesc": "Damages foes for 4 turns. BP scales w\/ base move.",
@@ -7299,7 +7302,7 @@
   {
     "num": 1000,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 150,
     "category": "Physical",
     "desc": "Removes Reflect, Light Screen, Aurora Veil, Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Mist, Safeguard, G-Max Steelsurge, and Terrains from the field. This move's Base Power scales with the base move's Base Power.",
     "shortDesc": "Clears field. BP scales with base move's BP.",
@@ -7320,10 +7323,10 @@
   {
     "num": 447,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 100,
     "category": "Special",
     "desc": "This move's power is 20 if the target weighs less than 10 kg, 40 if less than 25 kg, 60 if less than 50 kg, 80 if less than 100 kg, 100 if less than 200 kg, and 120 if greater than or equal to 200 kg.",
-    "shortDesc": "More power the heavier the target.",
+    "shortDesc": "More power",
     "id": "grassknot",
     "isViable": true,
     "name": "Grass Knot",
@@ -7349,7 +7352,7 @@
     "basePower": 80,
     "category": "Special",
     "desc": "If one of the user's allies chose to use Fire Pledge or Water Pledge this turn and has not moved yet, it takes its turn immediately after the user and the user's move does nothing. If combined with Fire Pledge, the ally uses Fire Pledge with 150 power and a sea of fire appears on the target's side for 4 turns, which causes damage to non-Fire types equal to 1\/8 of their maximum HP, rounded down, at the end of each turn during effect, including the last turn. If combined with Water Pledge, the ally uses Grass Pledge with 150 power and a swamp appears on the target's side for 4 turns, which quarters the Speed of each Pokemon on that side. When used as a combined move, this move gains STAB no matter what the user's type is. This move does not consume the user's Grass Gem.",
-    "shortDesc": "Use with Fire or Water Pledge for added effect.",
+    "shortDesc": "Use it",
     "id": "grasspledge",
     "name": "Grass Pledge",
     "pp": 10,
@@ -7358,9 +7361,6 @@
       "protect": 1,
       "mirror": 1,
       "nonsky": 1
-    },
-    "effect": {
-      "duration": 4
     },
     "secondary": null,
     "target": "normal",
@@ -7410,7 +7410,7 @@
     "flags": {
       "nonsky": 1
     },
-    "terrain": "grassyterrain",
+    "pseudoWeather": "grassyterrain",
     "effect": {
       "duration": 5,
       "onResidualOrder": 5,
@@ -7500,6 +7500,7 @@
     "boosts": {
       "atk": -1
     },
+    "sound": true,
     "secondary": null,
     "target": "allAdjacentFoes",
     "type": "Normal",
@@ -7527,6 +7528,7 @@
       "atk": 1,
       "spa": 1
     },
+    "sound": true,
     "secondary": null,
     "target": "self",
     "type": "Normal",
@@ -7542,7 +7544,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Until the user's next turn, if an opposing Pokemon's attack knocks the user out, that move loses all its remaining PP.",
-    "shortDesc": "If the user faints, the attack used loses all its PP.",
+    "shortDesc": "If the user faints, the attack used loses.",
     "id": "grudge",
     "name": "Grudge",
     "pp": 5,
@@ -7554,6 +7556,7 @@
     "effect": {
       "onBeforeMovePriority": 100
     },
+    "sound": true,
     "secondary": null,
     "target": "self",
     "type": "Ghost",
@@ -7687,7 +7690,7 @@
     "basePower": 40,
     "category": "Special",
     "desc": "Power doubles if the target is using Bounce, Fly, or Sky Drop, or is under the effect of Sky Drop.",
-    "shortDesc": "Power doubles during Bounce, Fly, and Sky Drop.",
+    "shortDesc": "Power",
     "id": "gust",
     "name": "Gust",
     "pp": 35,
@@ -7706,10 +7709,10 @@
   {
     "num": 360,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 100,
     "category": "Physical",
     "desc": "Power is equal to (25 * target's current Speed \/ user's current Speed) + 1, rounded down, but not more than 150. If the user's current Speed is 0, this move's power is 1.",
-    "shortDesc": "More power the slower the user than the target.",
+    "shortDesc": "doubles power the slower the user than the target.",
     "id": "gyroball",
     "isViable": true,
     "name": "Gyro Ball",
@@ -7792,9 +7795,9 @@
     "priority": 0,
     "flags": {},
     "secondary": null,
-    "target": "allySide",
+    "target": "self",
     "type": "Normal",
-    "zMoveBoost": {
+    "boosts": {
       "atk": 1,
       "def": 1,
       "spa": 1,
@@ -7810,7 +7813,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the user's Defense by 1 stage.",
-    "shortDesc": "Raises the user's Defense by 1.",
+    "shortDesc": "Raises the user's Defense by 2.",
     "id": "harden",
     "name": "Harden",
     "pp": 30,
@@ -7819,7 +7822,7 @@
       "snatch": 1
     },
     "boosts": {
-      "def": 1
+      "def": 2
     },
     "secondary": null,
     "target": "self",
@@ -7948,7 +7951,8 @@
       "snatch": 1,
       "sound": 1,
       "distance": 1,
-      "authentic": 1
+      "authentic": 1,
+      "cure": 1
     },
     "target": "allyTeam",
     "type": "Normal",
@@ -7961,7 +7965,7 @@
     "accuracy": 100,
     "basePower": 0,
     "category": "Status",
-    "desc": "For 5 turns, the target is prevented from restoring any HP as long as it remains active. During the effect, healing and draining moves are unusable, and Abilities and items that grant healing will not heal the user. If an affected Pokemon uses Baton Pass, the replacement will remain unable to restore its HP. Pain Split and the Regenerator Ability are unaffected.",
+    "desc": "For 5 turns, the target is prevented from restoring any HP as long as it remains active. During the effect, healing and draining moves are unusable, and Abilities and stats that grant healing will not heal the user. If an affected Pokemon uses Baton Pass, the replacement will remain unable to restore its HP. Pain Split and the Regenerator Ability are unaffected.",
     "shortDesc": "For 5 turns, the foe(s) is prevented from healing.",
     "id": "healblock",
     "isNonstandard": "Past",
@@ -8001,8 +8005,7 @@
     "pp": 10,
     "priority": 0,
     "flags": {
-      "snatch": 1,
-      "heal": 1
+      "snatch": 1
     },
     "selfdestruct": "ifHit",
     "slotCondition": "healingwish",
@@ -8124,7 +8127,7 @@
     "basePower": 0,
     "category": "Physical",
     "desc": "The power of this move depends on (user's weight \/ target's weight), rounded down. Power is equal to 120 if the result is 5 or more, 100 if 4, 80 if 3, 60 if 2, and 40 if 1 or less. Damage doubles and no accuracy check is done if the target has used Minimize while active.",
-    "shortDesc": "More power the heavier the user than the target.",
+    "shortDesc": "doubles power the slower the user than the target.",
     "id": "heatcrash",
     "name": "Heat Crash",
     "pp": 10,
@@ -8174,7 +8177,7 @@
     "basePower": 0,
     "category": "Physical",
     "desc": "The power of this move depends on (user's weight \/ target's weight), rounded down. Power is equal to 120 if the result is 5 or more, 100 if 4, 80 if 3, 60 if 2, and 40 if 1 or less. Damage doubles and no accuracy check is done if the target has used Minimize while active.",
-    "shortDesc": "More power the heavier the user than the target.",
+    "shortDesc": "doubles power if last.",
     "id": "heavyslam",
     "isViable": true,
     "name": "Heavy Slam",
@@ -8200,7 +8203,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The power of the target's attack this turn is multiplied by 1.5 (this effect is stackable). Fails if there is no ally adjacent to the user or if the ally already moved this turn, but does not fail if the ally is using a two-turn move.",
-    "shortDesc": "One adjacent ally's move power is 1.5x this turn.",
+    "shortDesc": "One adjacent ally's move power is 3x next turn.",
     "id": "helpinghand",
     "name": "Helping Hand",
     "pp": 20,
@@ -8208,13 +8211,11 @@
     "flags": {
       "authentic": 1
     },
-    "volatileStatus": "helpinghand",
-    "effect": {
-      "duration": 1,
-      "onBasePowerPriority": 3
+    "secondary": {
+      "chance": 30,
+      "volatileStatus": "helpinghand"
     },
-    "secondary": null,
-    "target": "adjacentAlly",
+    "target": "self",
     "type": "Normal",
     "zMoveEffect": "clearnegativeboost",
     "contestType": "Clever",
@@ -8246,10 +8247,10 @@
   {
     "num": 237,
     "accuracy": 100,
-    "basePower": 60,
+    "basePower": 100,
     "category": "Special",
     "desc": "This move's type depends on the user's individual values (IVs), and can be any type but Fairy and Normal.",
-    "shortDesc": "Varies in type based on the user's IVs.",
+    "shortDesc": "Varies in type based",
     "id": "hiddenpower",
     "isNonstandard": "Past",
     "name": "Hidden Power",
@@ -8264,363 +8265,6 @@
     "type": "Normal",
     "contestType": "Clever",
     "keyname": "hiddenpower"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Bug",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Bug",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerbug"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Dark",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Dark",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerdark"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Dragon",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Dragon",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerdragon"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "isViable": true,
-    "name": "Hidden Power Electric",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Electric",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerelectric"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "isViable": true,
-    "name": "Hidden Power Fighting",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Fighting",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerfighting"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "isViable": true,
-    "name": "Hidden Power Fire",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Fire",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerfire"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Flying",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Flying",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerflying"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Ghost",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Ghost",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerghost"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "isViable": true,
-    "name": "Hidden Power Grass",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Grass",
-    "contestType": "Clever",
-    "keyname": "hiddenpowergrass"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Ground",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Ground",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerground"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "isViable": true,
-    "name": "Hidden Power Ice",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Ice",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerice"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Poison",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Poison",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerpoison"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Psychic",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Psychic",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerpsychic"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Rock",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Rock",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerrock"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Steel",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Steel",
-    "contestType": "Clever",
-    "keyname": "hiddenpowersteel"
-  },
-  {
-    "num": 237,
-    "accuracy": 100,
-    "basePower": 60,
-    "category": "Special",
-    "desc": "",
-    "shortDesc": "",
-    "id": "hiddenpower",
-    "isNonstandard": "Past",
-    "name": "Hidden Power Water",
-    "pp": 15,
-    "priority": 0,
-    "flags": {
-      "protect": 1,
-      "mirror": 1
-    },
-    "secondary": null,
-    "target": "normal",
-    "type": "Water",
-    "contestType": "Clever",
-    "keyname": "hiddenpowerwater"
   },
   {
     "num": 667,
@@ -8675,7 +8319,7 @@
     "basePower": 40,
     "category": "Physical",
     "desc": "Leaves the target with at least 1 HP.",
-    "shortDesc": "Always leaves the target with at least 1 HP.",
+    "shortDesc": "Always leaves",
     "id": "holdback",
     "name": "Hold Back",
     "pp": 40,
@@ -8698,7 +8342,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "No competitive use. Fails if there is no ally adjacent to the user.",
-    "shortDesc": "No competitive use.",
+    "shortDesc": "Competitive use.",
     "id": "holdhands",
     "name": "Hold Hands",
     "pp": 40,
@@ -8707,9 +8351,9 @@
       "authentic": 1
     },
     "secondary": null,
-    "target": "adjacentAlly",
+    "target": "self",
     "type": "Normal",
-    "zMoveBoost": {
+    "boosts": {
       "atk": 1,
       "def": 1,
       "spa": 1,
@@ -8827,7 +8471,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the Attack of the user and all allies 1 stage.",
-    "shortDesc": "Raises the user's and ally's Attack by 1.",
+    "shortDesc": "Raises the user's Attack by 2.",
     "id": "howl",
     "name": "Howl",
     "pp": 40,
@@ -8836,10 +8480,10 @@
       "snatch": 1
     },
     "boosts": {
-      "atk": 1
+      "atk": 2
     },
     "secondary": null,
-    "target": "allies",
+    "target": "self",
     "type": "Normal",
     "zMoveBoost": {
       "atk": 1
@@ -8879,7 +8523,7 @@
     "basePower": 150,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "Next turn.",
     "id": "hydrocannon",
     "name": "Hydro Cannon",
     "pp": 5,
@@ -8888,9 +8532,6 @@
       "recharge": 1,
       "protect": 1,
       "mirror": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -8922,7 +8563,7 @@
   {
     "num": 642,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "hydrovortex",
@@ -8944,7 +8585,7 @@
     "basePower": 150,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "User  turn.",
     "id": "hyperbeam",
     "name": "Hyper Beam",
     "pp": 5,
@@ -8953,9 +8594,6 @@
       "recharge": 1,
       "protect": 1,
       "mirror": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -9113,6 +8751,7 @@
       "duration": 2,
       "onLockMove": "iceball"
     },
+    "doubled": true,
     "secondary": null,
     "target": "normal",
     "type": "Ice",
@@ -9150,7 +8789,7 @@
     "basePower": 140,
     "category": "Special",
     "desc": "Has a 30% chance to burn the target. This attack charges on the first turn and executes on the second. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Charges turn 1. Hits turn 2. 30% burn.",
+    "shortDesc": "Charges  30% burn.",
     "id": "iceburn",
     "name": "Ice Burn",
     "pp": 5,
@@ -9175,7 +8814,7 @@
     "basePower": 65,
     "category": "Physical",
     "desc": "Has a 10% chance to freeze the target and a 10% chance to flinch it.",
-    "shortDesc": "10% chance to freeze. 10% chance to flinch.",
+    "shortDesc": "30% chance to freeze.",
     "id": "icefang",
     "isViable": true,
     "name": "Ice Fang",
@@ -9187,16 +8826,10 @@
       "protect": 1,
       "mirror": 1
     },
-    "secondaries": [
-      {
-        "chance": 10,
-        "status": "frz"
-      },
-      {
-        "chance": 10,
-        "volatileStatus": "flinch"
-      }
-    ],
+    "secondary": {
+      "chance": 30,
+      "volatileStatus": "frz"
+    },
     "target": "normal",
     "type": "Ice",
     "contestType": "Cool",
@@ -9326,6 +8959,7 @@
       2,
       5
     ],
+    "isZ": "firiumz",
     "secondary": null,
     "target": "normal",
     "type": "Ice",
@@ -9395,8 +9029,8 @@
     "accuracy": 100,
     "basePower": 60,
     "category": "Special",
-    "desc": "The target loses its held item if it is a Berry or a Gem. This move cannot cause Pokemon with the Sticky Hold Ability to lose their held item. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
-    "shortDesc": "Destroys the foe(s) Berry\/Gem.",
+    "desc": "The target loses its held stat if it is a : stat or a Gem. This move cannot cause Pokemon with the Sticky Hold Ability to lose their held stat. stats lost to this move cannot be regained with Recycle or the Harvest Ability.",
+    "shortDesc": "Destroys the foe(s) Shields",
     "id": "incinerate",
     "name": "Incinerate",
     "pp": 15,
@@ -9405,6 +9039,7 @@
       "protect": 1,
       "mirror": 1
     },
+    "breaksProtect": true,
     "secondary": null,
     "target": "allAdjacentFoes",
     "type": "Fire",
@@ -9438,7 +9073,7 @@
   {
     "num": 640,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "infernooverdrive",
@@ -9516,6 +9151,7 @@
     "name": "Instruct",
     "pp": 15,
     "priority": 0,
+    "volatileStatus": "encore",
     "flags": {
       "protect": 1,
       "authentic": 1,
@@ -9651,6 +9287,7 @@
       "protect": 1,
       "mirror": 1
     },
+    "volatileStatus": "partiallytrapped",
     "secondary": null,
     "target": "normal",
     "type": "Dark",
@@ -9662,7 +9299,7 @@
     "basePower": 100,
     "category": "Special",
     "desc": "This move's type depends on the user's held Plate.",
-    "shortDesc": "Type varies based on the held Plate.",
+    "shortDesc": "Type varies",
     "id": "judgment",
     "isNonstandard": "Past",
     "isViable": true,
@@ -9789,8 +9426,8 @@
     "accuracy": 100,
     "basePower": 65,
     "category": "Physical",
-    "desc": "If the target is holding an item that can be removed from it, ignoring the Sticky Hold Ability, this move's power is multiplied by 1.5. If the user has not fainted, the target loses its held item. This move cannot cause Pokemon with the Sticky Hold Ability to lose their held item or cause a Kyogre, a Groudon, a Giratina, an Arceus, a Genesect, a Silvally, a Zacian, or a Zamazenta to lose their Blue Orb, Red Orb, Griseous Orb, Plate, Drive, Memory, Rusted Sword, or Rusted Shield respectively. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
-    "shortDesc": "1.5x damage if foe holds an item. Removes item.",
+    "desc": "If the target is holding an stat that can be removed from it, ignoring the Sticky Hold Ability, this move's power is multiplied by 1.5. If the user has not fainted, the target loses its held stat. This move cannot cause Pokemon with the Sticky Hold Ability to lose their held stat or cause a Kyogre, a Groudon, a Giratina, an Arceus, a Genesect, a Silvally, a Zacian, or a Zamazenta to lose their Blue Orb, Red Orb, Griseous Orb, Plate, Drive, Memory, Rusted Sword, or Rusted Shield respectively. stats lost to this move cannot be regained with Recycle or the Harvest Ability.",
+    "shortDesc": "1.5x damage if has status",
     "id": "knockoff",
     "isViable": true,
     "name": "Knock Off",
@@ -9864,7 +9501,7 @@
     "basePower": 140,
     "category": "Physical",
     "desc": "This move fails unless the user knows this move and at least one other move, and has used all the other moves it knows at least once each since it became active or Transformed.",
-    "shortDesc": "Fails unless each known move has been used.",
+    "shortDesc": "OP",
     "id": "lastresort",
     "name": "Last Resort",
     "pp": 5,
@@ -9900,7 +9537,7 @@
       "chance": 30,
       "status": "brn"
     },
-    "target": "allAdjacent",
+    "target": "normal",
     "type": "Fire",
     "contestType": "Tough",
     "keyname": "lavaplume"
@@ -9942,7 +9579,7 @@
       "protect": 1,
       "mirror": 1
     },
-    "critRatio": 2,
+    "critRatio": 3,
     "secondary": null,
     "target": "normal",
     "type": "Grass",
@@ -10280,6 +9917,7 @@
       "protect": 1,
       "mirror": 1
     },
+    "sideCondition": "nomiss",
     "effect": {
       "noCopy": true,
       "duration": 2,
@@ -10324,10 +9962,10 @@
   {
     "num": 67,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 100,
     "category": "Physical",
     "desc": "This move's power is 20 if the target weighs less than 10 kg, 40 if less than 25 kg, 60 if less than 50 kg, 80 if less than 100 kg, 100 if less than 200 kg, and 120 if greater than or equal to 200 kg.",
-    "shortDesc": "More power the heavier the target.",
+    "shortDesc": "Power",
     "id": "lowkick",
     "isViable": true,
     "name": "Low Kick",
@@ -10409,7 +10047,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user faints and the Pokemon brought out to replace it has its HP and PP fully restored along with having any major status condition cured. The new Pokemon is sent out at the end of the turn, and the healing happens before hazards take effect. Fails if the user is the last unfainted Pokemon in its party.",
-    "shortDesc": "User faints. Replacement is fully healed, with PP.",
+    "shortDesc": "User faints. heal netx.",
     "id": "lunardance",
     "isNonstandard": "Past",
     "name": "Lunar Dance",
@@ -10564,7 +10202,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target to become a Psychic type. Fails if the target is an Arceus or a Silvally, or if the target is already purely Psychic type.",
-    "shortDesc": "Changes the target's type to Psychic.",
+    "shortDesc": "Reverse the target's stats",
     "id": "magicpowder",
     "name": "Magic Powder",
     "pp": 20,
@@ -10586,8 +10224,8 @@
     "accuracy": true,
     "basePower": 0,
     "category": "Status",
-    "desc": "For 5 turns, the held items of all active Pokemon have no effect. An item's effect of causing forme changes is unaffected, but any other effects from such items are negated. During the effect, Fling and Natural Gift are prevented from being used by all active Pokemon. If this move is used during the effect, the effect ends.",
-    "shortDesc": "For 5 turns, all held items have no effect.",
+    "desc": "For 5 turns, the held stats of all active Pokemon have no effect. An stat's effect of causing forme changes is unaffected, but any other effects from such stats are negated. During the effect, Fling and Natural Gift are prevented from being used by all active Pokemon. If this move is used during the effect, the effect ends.",
+    "shortDesc": "For 5 turns, all held stats have no effect.",
     "id": "magicroom",
     "name": "Magic Room",
     "pp": 10,
@@ -10615,7 +10253,7 @@
     "basePower": 120,
     "category": "Physical",
     "desc": "Has a 100% chance to confuse the target and lower its Defense and Special Attack by 1 stage. The user recovers 1\/2 the HP lost by the target, rounded half up. If Big Root is held by the user, the HP recovered is 1.3x normal, rounded half down. The user steals the foe's boosts. If this move is successful, the weather changes to rain unless it is already in effect, and the user gains the effects of Aqua Ring and Magic Coat.",
-    "shortDesc": "Does many things turn 1. Can't move turn 2.",
+    "shortDesc": "Does many things",
     "id": "magikarpsrevenge",
     "isNonstandard": "Custom",
     "name": "Magikarp's Revenge",
@@ -10633,9 +10271,6 @@
       1,
       2
     ],
-    "self": {
-      "volatileStatus": "mustrecharge"
-    },
     "secondary": {
       "chance": 100,
       "volatileStatus": "confusion",
@@ -10702,7 +10337,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the Defense and Special Defense of Pokemon on the user's side with the Plus or Minus Abilities by 1 stage.",
-    "shortDesc": "Raises Def, Sp. Def of allies with Plus\/Minus by 1.",
+    "shortDesc": "Raises Def, Sp. Def",
     "id": "magneticflux",
     "name": "Magnetic Flux",
     "pp": 20,
@@ -10715,8 +10350,9 @@
     "secondary": null,
     "target": "allySide",
     "type": "Electric",
-    "zMoveBoost": {
-      "spd": 1
+    "boosts": {
+      "spd": 1,
+      "def": 1
     },
     "contestType": "Clever",
     "keyname": "magneticflux"
@@ -10753,10 +10389,10 @@
   {
     "num": 222,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 100,
     "category": "Physical",
     "desc": "The power of this move varies; 5% chances for 10 and 150 power, 10% chances for 30 and 110 power, 20% chances for 50 and 90 power, and 30% chance for 70 power. Damage doubles if the target is using Dig.",
-    "shortDesc": "Hits adjacent Pokemon. Power varies; 2x on Dig.",
+    "shortDesc": "Hits adjacent Pokemon. Power varies",
     "id": "magnitude",
     "isNonstandard": "Past",
     "name": "Magnitude",
@@ -10781,7 +10417,7 @@
     "basePower": 180,
     "category": "Physical",
     "desc": "Damage doubles and no accuracy check is done if the target has used Minimize while active.",
-    "shortDesc": "Damage doubles if the target used Minimize.",
+    "shortDesc": "Damage",
     "id": "maliciousmoonsault",
     "isNonstandard": "Past",
     "isViable": true,
@@ -10804,7 +10440,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user and its party members are protected from damaging attacks made by other Pokemon, including allies, during this turn. Fails unless it is the user's first turn on the field, if the user moves last this turn, or if this move is already in effect for the user's side.",
-    "shortDesc": "Protects allies from damaging attacks. Turn 1 only.",
+    "shortDesc": "Protects allies from damaging attacks.  only.",
     "id": "matblock",
     "name": "Mat Block",
     "pp": 10,
@@ -10831,10 +10467,10 @@
   {
     "num": 766,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 80,
     "category": "Physical",
     "desc": "Boosts the user and its allies' Speed by 1 stage. BP scales with the base move's BP.",
-    "shortDesc": "User\/allies: +1 Spe. BP scales w\/ base move.",
+    "shortDesc": "Base move.",
     "id": "maxairstream",
     "name": "Max Airstream",
     "pp": 5,
@@ -10850,10 +10486,10 @@
   {
     "num": 772,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 80,
     "category": "Physical",
     "desc": "Lowers all the opposing Pokemon's Special Defense by 1 stage. BP scales with the base move's BP.",
-    "shortDesc": "Foes: -1 Sp.Def. BP scales with base move's BP.",
+    "shortDesc": "Base move.",
     "id": "maxdarkness",
     "name": "Max Darkness",
     "pp": 5,
@@ -10872,13 +10508,14 @@
     "basePower": 100,
     "category": "Physical",
     "desc": "Summons Sunny Day. BP scales with the base move's BP.",
-    "shortDesc": "Sets Sun. BP scales with base move's BP.",
+    "shortDesc": "Base Move",
     "id": "maxflare",
     "isViable": true,
     "name": "Max Flare",
     "pp": 5,
     "priority": 0,
     "flags": {},
+    "weather": "sunnyday",
     "isMax": true,
     "self": {},
     "target": "adjacentFoe",
@@ -10892,7 +10529,7 @@
     "basePower": 10,
     "category": "Physical",
     "desc": "Lowers all the opposing Pokemon's Special Attack by 1 stage. BP scales with the base move's BP.",
-    "shortDesc": "Foes: -1 Sp.Atk. BP scales with base move's BP.",
+    "shortDesc": "Base Move",
     "id": "maxflutterby",
     "name": "Max Flutterby",
     "pp": 5,
@@ -10911,7 +10548,7 @@
     "basePower": 10,
     "category": "Physical",
     "desc": "Summons Rain Dance. BP scales with the base move's BP.",
-    "shortDesc": "Sets Rain. BP scales with base move's BP.",
+    "shortDesc": "Base Move.",
     "id": "maxgeyser",
     "name": "Max Geyser",
     "pp": 5,
@@ -10953,7 +10590,7 @@
   {
     "num": 763,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 80,
     "category": "Physical",
     "desc": "Summons Hail. BP scales with the base move's BP.",
     "shortDesc": "Sets Hail. BP scales with base move's BP.",
@@ -10961,6 +10598,7 @@
     "name": "Max Hailstorm",
     "pp": 5,
     "priority": 0,
+    "weather": "hail",
     "flags": {},
     "isMax": true,
     "self": {},
@@ -10972,15 +10610,16 @@
   {
     "num": 761,
     "accuracy": true,
-    "basePower": 10,
+    "basePower": 120,
     "category": "Physical",
     "desc": "Boosts the user and its allies' Attack by 1 stage. BP scales with the base move's BP.",
-    "shortDesc": "User\/allies: +1 Atk. BP scales w\/ base move.",
+    "shortDesc": "Use it no protect",
     "id": "maxknuckle",
     "name": "Max Knuckle",
     "pp": 5,
     "priority": 0,
     "flags": {},
+    "breaksProtect": true,
     "isMax": true,
     "self": {},
     "target": "adjacentFoe",
@@ -10994,11 +10633,12 @@
     "basePower": 10,
     "category": "Physical",
     "desc": "Summons Electric Terrain. BP scales with the base move's BP.",
-    "shortDesc": "Sets Electric Terrain. BP scales with base move's BP.",
+    "shortDesc": "Sets Electric Terrain",
     "id": "maxlightning",
     "name": "Max Lightning",
     "pp": 5,
     "priority": 0,
+    "pseudoWeather": "electricterrain",
     "flags": {},
     "isMax": true,
     "self": {},
@@ -11018,6 +10658,7 @@
     "name": "Max Mindstorm",
     "pp": 5,
     "priority": 0,
+    "pseudoWeather": "psychicterrain",
     "flags": {},
     "isMax": true,
     "self": {},
@@ -11032,7 +10673,7 @@
     "basePower": 10,
     "category": "Physical",
     "desc": "Boosts the user and its allies' Special Attack by 1 stage. BP scales with the base move's BP.",
-    "shortDesc": "User\/allies: +1 SpA. BP scales w\/ base move.",
+    "shortDesc": "Tox",
     "id": "maxooze",
     "name": "Max Ooze",
     "pp": 5,
@@ -11040,7 +10681,11 @@
     "flags": {},
     "isMax": true,
     "self": {},
-    "target": "adjacentFoe",
+    "secondary": {
+      "chance": 95,
+      "status": "tox"
+    },
+    "target": "normal",
     "type": "Poison",
     "contestType": "Cool",
     "keyname": "maxooze"
@@ -11057,6 +10702,7 @@
     "pp": 5,
     "priority": 0,
     "flags": {},
+    "pseudoWeather": "grassyterrain",
     "isMax": true,
     "self": {},
     "target": "adjacentFoe",
@@ -11077,6 +10723,13 @@
     "priority": 0,
     "flags": {},
     "isMax": true,
+    "secondary": {
+      "chance": 90,
+      "boosts": {
+        "spd": -5,
+        "def": -5
+      }
+    },
     "self": {},
     "target": "adjacentFoe",
     "type": "Ghost",
@@ -11097,6 +10750,13 @@
     "flags": {},
     "isMax": true,
     "self": {},
+    "secondary": {
+      "chance": 90,
+      "boosts": {
+        "spd": -5,
+        "def": -5
+      }
+    },
     "target": "adjacentFoe",
     "type": "Ground",
     "contestType": "Cool",
@@ -11116,6 +10776,13 @@
     "flags": {},
     "isMax": true,
     "self": {},
+    "secondary": {
+      "chance": 90,
+      "boosts": {
+        "spe": -5,
+        "atk": -5
+      }
+    },
     "target": "adjacentFoe",
     "type": "Rock",
     "contestType": "Cool",
@@ -11135,6 +10802,7 @@
     "flags": {},
     "isMax": true,
     "self": {},
+    "pseudoWeather": "mistyterrain",
     "target": "adjacentFoe",
     "type": "Fairy",
     "contestType": "Cool",
@@ -11154,6 +10822,13 @@
     "flags": {},
     "isMax": true,
     "self": {},
+    "secondary": {
+      "chance": 90,
+      "boosts": {
+        "spd": -5,
+        "def": -5
+      }
+    },
     "target": "adjacentFoe",
     "type": "Steel",
     "contestType": "Cool",
@@ -11173,6 +10848,12 @@
     "flags": {},
     "isMax": true,
     "self": {},
+    "secondary": {
+      "chance": 90,
+      "boosts": {
+        "spd": -8
+      }
+    },
     "target": "adjacentFoe",
     "type": "Normal",
     "contestType": "Cool",
@@ -11251,15 +10932,15 @@
   {
     "num": 382,
     "accuracy": true,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 100,
+    "category": "Special",
     "desc": "The user uses the move the target chose for use this turn against it, if possible, with its power multiplied by 1.5. The move must be a damaging move other than Beak Blast, Chatter, Counter, Covet, Focus Punch, Me First, Metal Burst, Mirror Coat, Shell Trap, Struggle, Thief, or any Z-Move. Fails if the target moves before the user. Ignores the target's substitute for the purpose of copying the move.",
-    "shortDesc": "Copies a foe at 1.5x power. User must be faster.",
+    "shortDesc": "Do Damage",
     "id": "mefirst",
     "isNonstandard": "Past",
     "name": "Me First",
     "pp": 20,
-    "priority": 0,
+    "priority": 4,
     "flags": {
       "protect": 1,
       "authentic": 1
@@ -11511,7 +11192,7 @@
     "basePower": 150,
     "category": "Physical",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "User  turn.",
     "id": "meteorassault",
     "name": "Meteor Assault",
     "pp": 5,
@@ -11520,9 +11201,6 @@
       "protect": 1,
       "recharge": 1,
       "mirror": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -11947,7 +11625,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "For 5 turns, the terrain becomes Misty Terrain. During the effect, the power of Dragon-type attacks used against grounded Pokemon is multiplied by 0.5 and grounded Pokemon cannot be inflicted with a major status condition nor confusion. Camouflage transforms the user into a Fairy type, Nature Power becomes Moonblast, and Secret Power has a 30% chance to lower Special Attack by 1 stage. Fails if the current terrain is Misty Terrain.",
-    "shortDesc": "5 turns. Can't status,-Dragon power vs grounded.",
+    "shortDesc": "5 turns. Can't damage,-Dragon power and grounded.",
     "id": "mistyterrain",
     "name": "Misty Terrain",
     "pp": 10,
@@ -11955,7 +11633,7 @@
     "flags": {
       "nonsky": 1
     },
-    "terrain": "mistyterrain",
+    "pseudoWeather": "mistyterrain",
     "effect": {
       "duration": 5,
       "onResidualOrder": 21,
@@ -12026,7 +11704,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user restores 1\/2 of its maximum HP if Delta Stream or no weather conditions are in effect or if the user is holding Utility Umbrella, 2\/3 of its maximum HP if the weather is Desolate Land or Sunny Day, and 1\/4 of its maximum HP if the weather is Hail, Primordial Sea, Rain Dance, or Sandstorm, all rounded half down.",
-    "shortDesc": "Heals the user by a weather-dependent amount.",
+    "shortDesc": "Heals the user",
     "id": "moonlight",
     "isViable": true,
     "name": "Moonlight",
@@ -12036,6 +11714,10 @@
       "snatch": 1,
       "heal": 1
     },
+    "heal": [
+      1,
+      3
+    ],
     "secondary": null,
     "target": "self",
     "type": "Fairy",
@@ -12049,7 +11731,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user restores 1\/2 of its maximum HP if Delta Stream or no weather conditions are in effect or if the user is holding Utility Umbrella, 2\/3 of its maximum HP if the weather is Desolate Land or Sunny Day, and 1\/4 of its maximum HP if the weather is Hail, Primordial Sea, Rain Dance, or Sandstorm, all rounded half down.",
-    "shortDesc": "Heals the user by a weather-dependent amount.",
+    "shortDesc": "Heals the user",
     "id": "morningsun",
     "isViable": true,
     "name": "Morning Sun",
@@ -12059,6 +11741,10 @@
       "snatch": 1,
       "heal": 1
     },
+    "heal": [
+      1,
+      3
+    ],
     "secondary": null,
     "target": "self",
     "type": "Normal",
@@ -12209,7 +11895,7 @@
     "basePower": 120,
     "category": "Physical",
     "desc": "This move's type depends on the user's held Memory.",
-    "shortDesc": "Type varies based on the held Memory.",
+    "shortDesc": "Type varies.",
     "id": "multiattack",
     "isViable": true,
     "name": "Multi-Attack",
@@ -12259,7 +11945,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the user's Special Attack by 2 stages.",
-    "shortDesc": "Raises the user's Sp. Atk by 2.",
+    "shortDesc": "Raises the user's Sp. Atk by 3.",
     "id": "nastyplot",
     "isViable": true,
     "name": "Nasty Plot",
@@ -12269,7 +11955,7 @@
       "snatch": 1
     },
     "boosts": {
-      "spa": 2
+      "spa": 3
     },
     "secondary": null,
     "target": "self",
@@ -12281,10 +11967,10 @@
   {
     "num": 363,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 80,
     "category": "Physical",
-    "desc": "The type and power of this move depend on the user's held Berry, and the Berry is lost. Fails if the user is not holding a Berry, if the user has the Klutz Ability, or if Embargo or Magic Room is in effect for the user.",
-    "shortDesc": "Power and type depends on the user's Berry.",
+    "desc": "The type and power of this move depend on the user's held : stat, and the : stat is lost. Fails if the user is not holding a : stat, if the user has the Klutz Ability, or if Embargo or Magic Room is in effect for the user.",
+    "shortDesc": "Power.",
     "id": "naturalgift",
     "isNonstandard": "Past",
     "name": "Natural Gift",
@@ -12305,10 +11991,10 @@
   {
     "num": 267,
     "accuracy": true,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 80,
+    "category": "Special",
     "desc": "This move calls another move for use based on the battle terrain. Tri Attack on the regular Wi-Fi terrain, Thunderbolt during Electric Terrain, Moonblast during Misty Terrain, Energy Ball during Grassy Terrain, and Psychic during Psychic Terrain.",
-    "shortDesc": "Attack depends on terrain (default Tri Attack).",
+    "shortDesc": "Change Types",
     "id": "naturepower",
     "isViable": true,
     "name": "Nature Power",
@@ -12372,7 +12058,7 @@
   {
     "num": 636,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "neverendingnightmare",
@@ -12447,11 +12133,11 @@
   {
     "num": 101,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 100,
     "damage": "level",
     "category": "Special",
     "desc": "Deals damage to the target equal to the user's level.",
-    "shortDesc": "Does damage equal to the user's level.",
+    "shortDesc": "Does damage",
     "id": "nightshade",
     "isViable": true,
     "name": "Night Shade",
@@ -12509,6 +12195,7 @@
       "sound": 1,
       "authentic": 1
     },
+    "forceSwitch": true,
     "boosts": {
       "atk": -1,
       "spa": -1
@@ -12516,6 +12203,7 @@
     "secondary": null,
     "target": "normal",
     "type": "Normal",
+    "sound": true,
     "zMoveBoost": {
       "def": 1
     },
@@ -12537,7 +12225,6 @@
     "flags": {
       "snatch": 1
     },
-    "volatileStatus": "noretreat",
     "effect": {},
     "boosts": {
       "atk": 1,
@@ -12792,7 +12479,7 @@
     "basePower": 120,
     "category": "Physical",
     "desc": "The user spends two or three turns locked into this move and becomes confused immediately after its move on the last turn of the effect if it is not already. This move targets an opposing Pokemon at random on each turn. If the user is prevented from moving, is asleep at the beginning of a turn, or the attack is not successful against the target on the first turn of the effect or the second turn of a three-turn effect, the effect ends without causing confusion. If this move is called by Sleep Talk and the user is asleep, the move is used for one turn and does not confuse the user.",
-    "shortDesc": "Lasts 2-3 turns. Confuses the user afterwards.",
+    "shortDesc": "Lasts",
     "id": "outrage",
     "isViable": true,
     "name": "Outrage",
@@ -12803,11 +12490,8 @@
       "protect": 1,
       "mirror": 1
     },
-    "self": {
-      "volatileStatus": "lockedmove"
-    },
     "secondary": null,
-    "target": "randomNormal",
+    "target": "normal",
     "type": "Dragon",
     "contestType": "Cool",
     "keyname": "outrage"
@@ -12838,7 +12522,7 @@
   {
     "num": 315,
     "accuracy": 90,
-    "basePower": 130,
+    "basePower": 160,
     "category": "Special",
     "desc": "Lowers the user's Special Attack by 2 stages.",
     "shortDesc": "Lowers the user's Sp. Atk by 2.",
@@ -13094,7 +12778,7 @@
     "basePower": 120,
     "category": "Special",
     "desc": "The user spends two or three turns locked into this move and becomes confused immediately after its move on the last turn of the effect if it is not already. This move targets an opposing Pokemon at random on each turn. If the user is prevented from moving, is asleep at the beginning of a turn, or the attack is not successful against the target on the first turn of the effect or the second turn of a three-turn effect, the effect ends without causing confusion. If this move is called by Sleep Talk and the user is asleep, the move is used for one turn and does not confuse the user.",
-    "shortDesc": "Lasts 2-3 turns. Confuses the user afterwards.",
+    "shortDesc": "OP",
     "id": "petaldance",
     "name": "Petal Dance",
     "pp": 10,
@@ -13104,9 +12788,6 @@
       "protect": 1,
       "mirror": 1,
       "dance": 1
-    },
-    "self": {
-      "volatileStatus": "lockedmove"
     },
     "secondary": null,
     "target": "randomNormal",
@@ -13120,7 +12801,7 @@
     "basePower": 90,
     "category": "Physical",
     "desc": "If this move is successful, it breaks through the target's Baneful Bunker, Detect, King's Shield, Protect, or Spiky Shield for this turn, allowing other Pokemon to attack the target normally. If the target's side is protected by Crafty Shield, Mat Block, Quick Guard, or Wide Guard, that protection is also broken for this turn and other Pokemon may attack the target's side normally. This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Disappears turn 1. Hits turn 2. Breaks protection.",
+    "shortDesc": "Disappears",
     "id": "phantomforce",
     "name": "Phantom Force",
     "pp": 10,
@@ -13167,10 +12848,10 @@
   {
     "num": 732,
     "accuracy": true,
-    "basePower": 0,
+    "basePower": 102,
     "category": "Special",
     "desc": "Power is equal to the greater of (user's Happiness * 2\/5), rounded down, or 1.",
-    "shortDesc": "Max happiness: 102 power. Can't miss.",
+    "shortDesc": "Can't miss.",
     "id": "pikapapow",
     "isNonstandard": "LGPE",
     "isViable": true,
@@ -13299,8 +12980,8 @@
     "accuracy": 100,
     "basePower": 60,
     "category": "Physical",
-    "desc": "If this move is successful and the user has not fainted, it steals the target's held Berry if it is holding one and eats it immediately, gaining its effects even if the user's item is being ignored. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
-    "shortDesc": "User steals and eats the target's Berry.",
+    "desc": "If this move is successful and the user has not fainted, it steals the target's held : stat if it is holding one and eats it immediately, gaining its effects even if the user's stat is being ignored. stats lost to this move cannot be regained with Recycle or the Harvest Ability.",
+    "shortDesc": "User steals stats",
     "id": "pluck",
     "name": "Pluck",
     "pp": 20,
@@ -13361,7 +13042,7 @@
     },
     "status": "psn",
     "secondary": null,
-    "target": "allAdjacentFoes",
+    "target": "normal",
     "type": "Poison",
     "zMoveBoost": {
       "def": 1
@@ -13671,7 +13352,7 @@
   {
     "num": 681,
     "accuracy": 100,
-    "basePower": 20,
+    "basePower": 40,
     "category": "Physical",
     "desc": "Power is equal to 20+(X*20), where X is the user's total stat stage changes that are greater than 0.",
     "shortDesc": " + 20 power for each of the user's stat boosts.",
@@ -13795,7 +13476,7 @@
     "basePower": 160,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "OP",
     "id": "prismaticlaser",
     "name": "Prismatic Laser",
     "pp": 10,
@@ -13804,9 +13485,6 @@
       "recharge": 1,
       "protect": 1,
       "mirror": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -13934,6 +13612,7 @@
     "secondary": null,
     "target": "normal",
     "type": "Psychic",
+    "breaksProtect": true,
     "contestType": "Clever",
     "keyname": "psychicfangs"
   },
@@ -13943,7 +13622,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "For 5 turns, the terrain becomes Psychic Terrain. During the effect, the power of Psychic-type attacks made by grounded Pokemon is multiplied by 1.3 and grounded Pokemon cannot be hit by moves with priority greater than 0, unless the target is an ally. Camouflage transforms the user into a Psychic type, Nature Power becomes Psychic, and Secret Power has a 30% chance to lower the target's Speed by 1 stage. Fails if the current terrain is Psychic Terrain.",
-    "shortDesc": "5 turns. Grounded: +Psychic power, priority-safe.",
+    "shortDesc": "5 turns. Grounded: +Psychic power",
     "id": "psychicterrain",
     "name": "Psychic Terrain",
     "pp": 10,
@@ -13951,7 +13630,7 @@
     "flags": {
       "nonsky": 1
     },
-    "terrain": "psychicterrain",
+    "pseudoWeather": "psychicterrain",
     "effect": {
       "duration": 5,
       "onTryHitPriority": 4,
@@ -13959,7 +13638,7 @@
       "onResidualSubOrder": 2
     },
     "secondary": null,
-    "target": "all",
+    "target": "self",
     "type": "Psychic",
     "zMoveBoost": {
       "spa": 1
@@ -14095,7 +13774,7 @@
     "basePower": 0,
     "category": "Special",
     "desc": "Deals damage to the target equal to (user's level) * (X + 50) \/ 100, where X is a random number from 0 to 100, rounded down, but not less than 1 HP.",
-    "shortDesc": "Random damage equal to 0.5x-1.5x user's level.",
+    "shortDesc": "Random damage",
     "id": "psywave",
     "isNonstandard": "Past",
     "name": "Psywave",
@@ -14136,7 +13815,7 @@
   {
     "num": 386,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 60,
     "category": "Physical",
     "desc": "Power is equal to 60+(X*20), where X is the target's total stat stage changes that are greater than 0, but not more than 200 power.",
     "shortDesc": "60 power +20 for each of the target's stat boosts.",
@@ -14193,7 +13872,7 @@
     "basePower": 40,
     "category": "Physical",
     "desc": "If an opposing Pokemon switches out this turn, this move hits that Pokemon before it leaves the field, even if it was not the original target. If the user moves after an opponent using Parting Shot, U-turn, or Volt Switch, but not Baton Pass, it will hit that opponent before it leaves the field. Power doubles and no accuracy check is done if the user hits an opponent switching out, and the user's turn is over; if an opponent faints from this, the replacement Pokemon does not become active until the end of the turn.",
-    "shortDesc": "Power doubles if a foe is switching out.",
+    "shortDesc": "Power doubles if last",
     "id": "pursuit",
     "isNonstandard": "Past",
     "isViable": true,
@@ -14250,7 +13929,7 @@
     "id": "quash",
     "name": "Quash",
     "pp": 15,
-    "priority": 0,
+    "priority": 4,
     "flags": {
       "protect": 1,
       "mirror": 1
@@ -14293,7 +13972,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user and its party members are protected from attacks with original or altered priority greater than 0 made by other Pokemon, including allies, during this turn. This move modifies the same 1\/X chance of being successful used by other protection moves, where X starts at 1 and triples each time this move is successfully used, but does not use the chance to check for failure. X resets to 1 if this move fails, if the user's last move used is not Baneful Bunker, Detect, Endure, King's Shield, Obstruct, Protect, Quick Guard, Spiky Shield, or Wide Guard, or if it was one of those moves and the user's protection was broken. Fails if the user moves last this turn or if this move is already in effect for the user's side.",
-    "shortDesc": "Protects allies from priority attacks this turn.",
+    "shortDesc": "Protects allies.",
     "id": "quickguard",
     "name": "Quick Guard",
     "pp": 15,
@@ -14375,16 +14054,17 @@
   {
     "num": 476,
     "accuracy": true,
-    "basePower": 0,
+    "basePower": 70,
     "category": "Status",
     "desc": "Until the end of the turn, all single-target attacks from the opposing side are redirected to the user. Such attacks are redirected to the user before they can be reflected by Magic Coat or the Magic Bounce Ability, or drawn in by the Lightning Rod or Storm Drain Abilities. Fails if it is not a Double Battle or Battle Royal. This effect is ignored while the user is under the effect of Sky Drop.",
-    "shortDesc": "The foes' moves target the user on the turn used.",
+    "shortDesc": "doubles Bug Vegan.",
     "id": "ragepowder",
     "name": "Rage Powder",
     "pp": 20,
     "priority": 2,
     "flags": {
-      "powder": 1
+      "powder": 1,
+      "mirror": 1
     },
     "volatileStatus": "ragepowder",
     "effect": {
@@ -14506,7 +14186,7 @@
     "basePower": 80,
     "category": "Special",
     "desc": "Has a higher chance for a critical hit. This attack charges on the first turn and executes on the second. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Charges, then hits foe(s) turn 2. High crit ratio.",
+    "shortDesc": "High crit ratio.",
     "id": "razorwind",
     "isNonstandard": "Past",
     "name": "Razor Wind",
@@ -14554,10 +14234,10 @@
   {
     "num": 278,
     "accuracy": true,
-    "basePower": 0,
-    "category": "Status",
-    "desc": "The user regains the item it last used. Fails if the user is holding an item, if the user has not held an item, if the item was a popped Air Balloon, if the item was picked up by a Pokemon with the Pickup Ability, or if the item was lost to Bug Bite, Covet, Incinerate, Knock Off, Pluck, or Thief. Items thrown with Fling can be regained.",
-    "shortDesc": "Restores the item the user last used.",
+    "basePower": 70,
+    "category": "Special",
+    "desc": "The user regains the stat it last used. Fails if the user is holding an stat, if the user has not held an stat, if the stat was a popped Air Balloon, if the stat was picked up by a Pokemon with the Pickup Ability, or if the stat was lost to Bug Bite, Covet, Incinerate, Knock Off, Pluck, or Thief. stats thrown with Fling can be regained.",
+    "shortDesc": "Hit sure",
     "id": "recycle",
     "name": "Recycle",
     "pp": 10,
@@ -14707,7 +14387,7 @@
     "basePower": 70,
     "category": "Physical",
     "desc": "Power doubles if one of the user's party members fainted last turn.",
-    "shortDesc": "Power doubles if an ally fainted last turn.",
+    "shortDesc": "Power doubles if last.",
     "id": "retaliate",
     "name": "Retaliate",
     "pp": 5,
@@ -14726,10 +14406,10 @@
   {
     "num": 216,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 102,
     "category": "Physical",
     "desc": "Power is equal to the greater of (user's Happiness * 2\/5), rounded down, or 1.",
-    "shortDesc": "Max 102 power at maximum Happiness.",
+    "shortDesc": "Max power",
     "id": "return",
     "isNonstandard": "Past",
     "isViable": true,
@@ -14755,7 +14435,7 @@
     "basePower": 90,
     "category": "Special",
     "desc": "This move's type depends on the user's primary type. If the user's primary type is typeless, this move's type is the user's secondary type if it has one, otherwise the added type from Forest's Curse or Trick-or-Treat. This move is typeless if the user's type is typeless alone.",
-    "shortDesc": "Type varies based on the user's primary type.",
+    "shortDesc": "Type varies based",
     "id": "revelationdance",
     "isNonstandard": "Past",
     "isViable": true,
@@ -14779,7 +14459,7 @@
     "basePower": 60,
     "category": "Physical",
     "desc": "Power doubles if the user was hit by the target this turn.",
-    "shortDesc": "Power doubles if user is damaged by the target.",
+    "shortDesc": "Power doubles if user is last",
     "id": "revenge",
     "name": "Revenge",
     "pp": 10,
@@ -14853,7 +14533,7 @@
     "basePower": 150,
     "category": "Special",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "OP.",
     "id": "roaroftime",
     "isNonstandard": "Past",
     "name": "Roar of Time",
@@ -14863,9 +14543,6 @@
       "recharge": 1,
       "protect": 1,
       "mirror": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -15057,7 +14734,7 @@
     "basePower": 150,
     "category": "Physical",
     "desc": "If this move is successful, the user must recharge on the following turn and cannot select a move.",
-    "shortDesc": "User cannot move next turn.",
+    "shortDesc": "OP",
     "id": "rockwrecker",
     "name": "Rock Wrecker",
     "pp": 5,
@@ -15067,9 +14744,6 @@
       "recharge": 1,
       "protect": 1,
       "mirror": 1
-    },
-    "self": {
-      "volatileStatus": "mustrecharge"
     },
     "secondary": null,
     "target": "normal",
@@ -15083,7 +14757,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user's Ability changes to match the target's Ability. Fails if the user's Ability is Battle Bond, Comatose, Disguise, Multitype, Power Construct, RKS System, Schooling, Shields Down, Stance Change, or already matches the target, or if the target's Ability is Battle Bond, Comatose, Disguise, Flower Gift, Forecast, Illusion, Imposter, Multitype, Power Construct, Power of Alchemy, Receiver, RKS System, Schooling, Shields Down, Stance Change, Trace, Wonder Guard, or Zen Mode.",
-    "shortDesc": "User replaces its Ability with the target's.",
+    "shortDesc": "User replaces stats.",
     "id": "roleplay",
     "name": "Role Play",
     "pp": 10,
@@ -15159,7 +14833,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user restores 1\/2 of its maximum HP, rounded half up. Until the end of the turn, Flying-type users lose their Flying type and pure Flying-type users become Normal type. Does nothing if the user's HP is full.",
-    "shortDesc": "Heals 50% HP. Flying-type removed 'til turn ends.",
+    "shortDesc": "Heals 50% HP.",
     "id": "roost",
     "isViable": true,
     "name": "Roost",
@@ -15194,7 +14868,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the Attack and Special Attack of all grounded Grass-type Pokemon on the field by 1 stage.",
-    "shortDesc": "Raises Atk\/Sp. Atk of grounded Grass types by 1.",
+    "shortDesc": "Raises Atk\/Sp. Atk of groundeds by 2.",
     "id": "rototiller",
     "isNonstandard": "Past",
     "name": "Rototiller",
@@ -15205,10 +14879,11 @@
       "nonsky": 1
     },
     "secondary": null,
-    "target": "all",
+    "target": "self",
     "type": "Ground",
-    "zMoveBoost": {
-      "atk": 1
+    "boosts": {
+      "atk": 2,
+      "spa": 2
     },
     "contestType": "Tough",
     "keyname": "rototiller"
@@ -15219,7 +14894,7 @@
     "basePower": 60,
     "category": "Special",
     "desc": "If there are other active Pokemon that chose this move for use this turn, those Pokemon take their turn immediately after the user, in Speed order, and this move's power is 120 for each other user.",
-    "shortDesc": "Power doubles if others used Round this turn.",
+    "shortDesc": "Power doubles if last",
     "id": "round",
     "name": "Round",
     "pp": 15,
@@ -15373,7 +15048,7 @@
     "basePower": 35,
     "category": "Physical",
     "desc": "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1\/8 of its maximum HP (1\/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, U-turn, or Volt Switch. The effect ends if either the user or the target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move.",
-    "shortDesc": "Traps and damages the target for 4-5 turns.",
+    "shortDesc": "Traps and damages the target ",
     "id": "sandtomb",
     "name": "Sand Tomb",
     "pp": 15,
@@ -15406,6 +15081,7 @@
       "protect": 1,
       "reflectable": 1
     },
+    "volatileStatus": "leechseed",
     "secondary": null,
     "target": "normal",
     "type": "Grass",
@@ -15415,7 +15091,7 @@
   {
     "num": 634,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "savagespinout",
@@ -15596,7 +15272,7 @@
     "basePower": 70,
     "category": "Physical",
     "desc": "Has a 30% chance to cause a secondary effect on the target based on the battle terrain. Causes paralysis on the regular Wi-Fi terrain, causes paralysis during Electric Terrain, lowers Special Attack by 1 stage during Misty Terrain, causes sleep during Grassy Terrain and lowers Speed by 1 stage during Psychic Terrain.",
-    "shortDesc": "Effect varies with terrain. (30% paralysis chance)",
+    "shortDesc": "Effect varies types",
     "id": "secretpower",
     "isNonstandard": "Past",
     "name": "Secret Power",
@@ -15716,7 +15392,7 @@
   {
     "num": 120,
     "accuracy": 100,
-    "basePower": 200,
+    "basePower": 1200,
     "category": "Physical",
     "desc": "The user faints after using this move, even if this move fails for having no target. This move is prevented from executing if any active Pokemon has the Damp Ability.",
     "shortDesc": "Hits adjacent Pokemon. The user faints.",
@@ -15821,7 +15497,7 @@
     "basePower": 120,
     "category": "Physical",
     "desc": "If this move is successful, it breaks through the target's Baneful Bunker, Detect, King's Shield, Protect, or Spiky Shield for this turn, allowing other Pokemon to attack the target normally. If the target's side is protected by Crafty Shield, Mat Block, Quick Guard, or Wide Guard, that protection is also broken for this turn and other Pokemon may attack the target's side normally. This attack charges on the first turn and executes on the second. On the first turn, the user avoids all attacks. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Disappears turn 1. Hits turn 2. Breaks protection.",
+    "shortDesc": "Breaks protection.",
     "id": "shadowforce",
     "isNonstandard": "Past",
     "isViable": true,
@@ -15949,7 +15625,7 @@
   {
     "num": 648,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "shatteredpsyche",
@@ -15971,7 +15647,7 @@
     "basePower": 0,
     "category": "Special",
     "desc": "Deals damage to the target equal to the target's maximum HP. Ignores accuracy and evasiveness modifiers. This attack's accuracy is equal to (user's level - target's level + X)%, where X is 30 if the user is an Ice type and 20 otherwise, and fails if the target is at a higher level. Ice-type Pokemon and Pokemon with the Sturdy Ability are immune.",
-    "shortDesc": "OHKOs non-Ice targets. Fails if user's lower level.",
+    "shortDesc": "OHKOs targets. Fails if user's lower level.",
     "id": "sheercold",
     "name": "Sheer Cold",
     "pp": 5,
@@ -15981,7 +15657,7 @@
       "mirror": 1
     },
     "secondary": null,
-    "ohko": "Ice",
+    "ohko": true,
     "target": "normal",
     "type": "Ice",
     "zMovePower": 180,
@@ -16024,7 +15700,7 @@
     "basePower": 150,
     "category": "Special",
     "desc": "Fails unless the user is hit by a physical attack from an opponent this turn before it can execute the move. If the user was hit and has not fainted, it attacks immediately after being hit, and the effect ends. If the opponent's physical attack had a secondary effect removed by the Sheer Force Ability, it does not count for the purposes of this effect.",
-    "shortDesc": "User must take physical damage before moving.",
+    "shortDesc": "User  moving.",
     "id": "shelltrap",
     "name": "Shell Trap",
     "pp": 5,
@@ -16172,10 +15848,10 @@
   {
     "num": 493,
     "accuracy": 100,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 100,
+    "category": "Special",
     "desc": "Causes the target's Ability to become Simple. Fails if the target's Ability is Battle Bond, Comatose, Disguise, Multitype, Power Construct, RKS System, Schooling, Shields Down, Simple, Stance Change, Truant, or Zen Mode.",
-    "shortDesc": "The target's Ability becomes Simple.",
+    "shortDesc": "The target's suffer.",
     "id": "simplebeam",
     "name": "Simple Beam",
     "pp": 15,
@@ -16216,6 +15892,7 @@
     "secondary": null,
     "target": "normal",
     "type": "Normal",
+    "sound": true,
     "zMoveBoost": {
       "spe": 1
     },
@@ -16305,7 +15982,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user swaps its Ability with the target's Ability. Fails if either the user or the target's Ability is Battle Bond, Comatose, Disguise, Gulp Missile, Hunger Switch, Ice Face, Illusion, Multitype, Power Construct, RKS System, Schooling, Shields Down, Stance Change, Wonder Guard, or Zen Mode.",
-    "shortDesc": "The user and the target trade Abilities.",
+    "shortDesc": "The user and the target trade stats.",
     "id": "skillswap",
     "name": "Skill Swap",
     "pp": 10,
@@ -16331,7 +16008,7 @@
     "basePower": 130,
     "category": "Physical",
     "desc": "This attack charges on the first turn and executes on the second. Raises the user's Defense by 1 stage on the first turn. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Raises user's Defense by 1 on turn 1. Hits turn 2.",
+    "shortDesc": "Raises user's Defense by 1 on . Hits .",
     "id": "skullbash",
     "name": "Skull Bash",
     "pp": 10,
@@ -16354,7 +16031,7 @@
     "basePower": 140,
     "category": "Physical",
     "desc": "Has a 30% chance to flinch the target and a higher chance for a critical hit. This attack charges on the first turn and executes on the second. If the user is holding a Power Herb, the move completes in one turn.",
-    "shortDesc": "Charges, then hits turn 2. 30% flinch. High crit.",
+    "shortDesc": "Charges, then hits . 30% flinch. High crit.",
     "id": "skyattack",
     "name": "Sky Attack",
     "pp": 5,
@@ -16381,7 +16058,7 @@
     "basePower": 60,
     "category": "Physical",
     "desc": "This attack takes the target into the air with the user on the first turn and executes on the second. Pokemon weighing 200 kg or more cannot be lifted. On the first turn, the user and the target avoid all attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thousand Arrows, Thunder, and Twister. The user and the target cannot make a move between turns, but the target can select a move to use. This move cannot damage Flying-type Pokemon. Fails on the first turn if the target is an ally, if the target has a substitute, or if the target is using Bounce, Dig, Dive, Fly, Phantom Force, Shadow Force, or Sky Drop.",
-    "shortDesc": "User and foe fly up turn 1. Damages on turn 2.",
+    "shortDesc": "User and Damages on turn.",
     "id": "skydrop",
     "isNonstandard": "Past",
     "name": "Sky Drop",
@@ -16413,7 +16090,7 @@
     "basePower": 85,
     "category": "Physical",
     "desc": "This move can hit a target using Bounce, Fly, or Sky Drop, or is under the effect of Sky Drop.",
-    "shortDesc": "Can hit Pokemon using Bounce, Fly, or Sky Drop.",
+    "shortDesc": "Can hit Pokemon",
     "id": "skyuppercut",
     "isNonstandard": "Past",
     "name": "Sky Uppercut",
@@ -16801,10 +16478,10 @@
   {
     "num": 289,
     "accuracy": true,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 100,
+    "category": "Special",
     "desc": "If another Pokemon uses certain non-damaging moves this turn, the user steals that move to use itself. If multiple Pokemon use one of those moves this turn, the applicable moves are all stolen by the first Pokemon in turn order that used this move this turn. This effect is ignored while the user is under the effect of Sky Drop.",
-    "shortDesc": "User steals certain support moves to use itself.",
+    "shortDesc": "Damage plain and first",
     "id": "snatch",
     "isNonstandard": "Past",
     "name": "Snatch",
@@ -16882,7 +16559,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target to become a Water type. Fails if the target is an Arceus or a Silvally, or if the target is already purely Water type.",
-    "shortDesc": "Changes the target's type to Water.",
+    "shortDesc": "Changes the target's vulnerabilities type to Water.",
     "id": "soak",
     "name": "Soak",
     "pp": 20,
@@ -16893,6 +16570,7 @@
       "mirror": 1,
       "mystery": 1
     },
+    "volatileStatus": "Am_Water",
     "secondary": null,
     "target": "normal",
     "type": "Water",
@@ -16935,7 +16613,7 @@
     "basePower": 120,
     "category": "Special",
     "desc": "This attack charges on the first turn and executes on the second. Power is halved if the weather is Hail, Primordial Sea, Rain Dance, or Sandstorm and the user is not holding Utility Umbrella. If the user is holding a Power Herb or the weather is Desolate Land or Sunny Day, the move completes in one turn. If the user is holding Utility Umbrella and the weather is Desolate Land or Sunny Day, the move still requires a turn to charge.",
-    "shortDesc": "Charges turn 1. Hits turn 2. No charge in sunlight.",
+    "shortDesc": "Wow in sunlight.",
     "id": "solarbeam",
     "name": "Solar Beam",
     "pp": 10,
@@ -16957,7 +16635,7 @@
     "basePower": 125,
     "category": "Physical",
     "desc": "This attack charges on the first turn and executes on the second. Power is halved if the weather is Hail, Primordial Sea, Rain Dance, or Sandstorm and the user is not holding Utility Umbrella. If the user is holding a Power Herb or the weather is Desolate Land or Sunny Day, the move completes in one turn. If the user is holding Utility Umbrella and the weather is Desolate Land or Sunny Day, the move still requires a turn to charge.",
-    "shortDesc": "Charges turn 1. Hits turn 2. No charge in sunlight.",
+    "shortDesc": "Wow  in sunlight.",
     "id": "solarblade",
     "name": "Solar Blade",
     "pp": 10,
@@ -16981,7 +16659,7 @@
     "damage": 20,
     "category": "Special",
     "desc": "Deals 20 HP of damage to the target.",
-    "shortDesc": "Always does 20 HP of damage.",
+    "shortDesc": "Does 20 HP of damage.",
     "id": "sonicboom",
     "isNonstandard": "Past",
     "name": "Sonic Boom",
@@ -17091,6 +16769,7 @@
     },
     "target": "allAdjacent",
     "type": "Water",
+    "cure": "brn",
     "contestType": "Tough",
     "keyname": "sparklingaria"
   },
@@ -17113,6 +16792,7 @@
     "self": {},
     "secondary": null,
     "target": "normal",
+    "cure": "all",
     "type": "Fairy",
     "contestType": "Clever",
     "keyname": "sparklyswirl"
@@ -17185,6 +16865,7 @@
       "reflectable": 1,
       "mirror": 1
     },
+    "volatileStatus": "partiallytrapped",
     "secondary": null,
     "target": "normal",
     "type": "Bug",
@@ -17318,9 +16999,7 @@
       "protect": 1,
       "mirror": 1
     },
-    "secondary": {
-      "chance": 100
-    },
+    "volatileStatus": "partiallytrapped",
     "target": "normal",
     "type": "Ghost",
     "contestType": "Tough",
@@ -17329,7 +17008,7 @@
   {
     "num": 255,
     "accuracy": 100,
-    "basePower": 0,
+    "basePower": 50,
     "category": "Special",
     "desc": "Power is equal to 100 times the user's Stockpile count. Fails if the user's Stockpile count is 0. Whether or not this move is successful, the user's Defense and Special Defense decrease by as many stages as Stockpile had increased them, and the user's Stockpile count resets to 0.",
     "shortDesc": "More power with more uses of Stockpile.",
@@ -17337,6 +17016,7 @@
     "name": "Spit Up",
     "pp": 10,
     "priority": 0,
+    "doubled": true,
     "flags": {
       "protect": 1
     },
@@ -17349,10 +17029,10 @@
   {
     "num": 180,
     "accuracy": 100,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 80,
+    "category": "Special",
     "desc": "Causes the target's last move used to lose 4 PP. Fails if the target has not made a move, if the move has 0 PP, or if it no longer knows the move.",
-    "shortDesc": "Lowers the PP of the target's last move by 4.",
+    "shortDesc": "Damage",
     "id": "spite",
     "name": "Spite",
     "pp": 10,
@@ -17390,6 +17070,7 @@
       "atk": 3
     },
     "contestType": "Cute",
+    "pseudoWeather": "gravity",
     "keyname": "splash"
   },
   {
@@ -17398,7 +17079,7 @@
     "basePower": 190,
     "category": "Physical",
     "desc": "Ends the effects of Electric Terrain, Grassy Terrain, Misty Terrain, and Psychic Terrain.",
-    "shortDesc": "Ends the effects of Terrain.",
+    "shortDesc": "Ends the world",
     "id": "splinteredstormshards",
     "isNonstandard": "Past",
     "isViable": true,
@@ -17440,7 +17121,7 @@
   },
   {
     "num": 147,
-    "accuracy": 100,
+    "accuracy": 50,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -17466,10 +17147,10 @@
   {
     "num": 671,
     "accuracy": true,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 80,
+    "category": "Special",
     "desc": "Until the end of the turn, all single-target attacks from opponents of the target are redirected to the target. Such attacks are redirected to the target before they can be reflected by Magic Coat or the Magic Bounce Ability, or drawn in by the Lightning Rod or Storm Drain Abilities. Fails if it is not a Double Battle or Battle Royal.",
-    "shortDesc": "Target's foes' moves are redirected to it this turn.",
+    "shortDesc": "Damage",
     "id": "spotlight",
     "name": "Spotlight",
     "pp": 15,
@@ -17479,7 +17160,6 @@
       "reflectable": 1,
       "mystery": 1
     },
-    "volatileStatus": "spotlight",
     "effect": {
       "duration": 1,
       "onFoeRedirectTargetPriority": 2
@@ -17656,7 +17336,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Raises the user's Defense and Special Defense by 1 stage. The user's Stockpile count increases by 1. Fails if the user's Stockpile count is 3. The user's Stockpile count is reset to 0 when it is no longer active.",
-    "shortDesc": "Raises user's Defense, Sp. Def by 1. Max 3 uses.",
+    "shortDesc": "Raises user's Defense, Sp. Def by 1.",
     "id": "stockpile",
     "name": "Stockpile",
     "pp": 20,
@@ -17664,11 +17344,18 @@
     "flags": {
       "snatch": 1
     },
-    "volatileStatus": "stockpile",
     "effect": {
       "noCopy": true
     },
-    "secondary": null,
+    "secondary": {
+      "chance": 100,
+      "self": {
+        "boosts": {
+          "def": 1,
+          "spd": 1
+        }
+      }
+    },
     "target": "self",
     "type": "Normal",
     "zMoveEffect": "heal",
@@ -17731,7 +17418,7 @@
     "basePower": 75,
     "category": "Physical",
     "desc": "Power doubles if the user's last move on the previous turn, including moves called by other moves or those used through Instruct, Magic Coat, Snatch, or the Dancer or Magic Bounce Abilities, failed to do any of its normal effects, not including damage from an unsuccessful High Jump Kick, Jump Kick, or Mind Blown, or if the user was prevented from moving by any effect other than recharging or Sky Drop. A move that was blocked by Baneful Bunker, Detect, King's Shield, Protect, Spiky Shield, Crafty Shield, Mat Block, Quick Guard, or Wide Guard will not double this move's power, nor will Bounce or Fly ending early due to the effect of Gravity, Smack Down, or Thousand Arrows.",
-    "shortDesc": "Power doubles if the user's last move failed.",
+    "shortDesc": "Power doubles if last",
     "id": "stompingtantrum",
     "name": "Stomping Tantrum",
     "pp": 10,
@@ -17877,8 +17564,7 @@
     "flags": {
       "protect": 1,
       "reflectable": 1,
-      "mirror": 1,
-      "heal": 1
+      "mirror": 1
     },
     "secondary": null,
     "target": "normal",
@@ -17936,7 +17622,7 @@
     "noSketch": true,
     "struggleRecoil": true,
     "secondary": null,
-    "target": "randomNormal",
+    "target": "normal",
     "type": "Normal",
     "zMovePower": 1,
     "contestType": "Tough",
@@ -17973,14 +17659,17 @@
     "accuracy": true,
     "basePower": 0,
     "category": "Status",
-    "desc": "Consumes berry and raises the user's Defense by 2 stages.",
-    "shortDesc": "Consumes berry and raises the user's Def. by 2.",
+    "desc": "Consumes : stat and raises the user's Defense by 2 stages.",
+    "shortDesc": "Raises the user's Def. by 2.",
     "id": "stuffcheeks",
     "name": "Stuff Cheeks",
     "pp": 10,
     "priority": 0,
     "flags": {
       "snatch": 1
+    },
+    "boosts": {
+      "def": 2
     },
     "secondary": null,
     "target": "self",
@@ -18070,7 +17759,7 @@
   {
     "num": 650,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "subzeroslammer",
@@ -18092,7 +17781,7 @@
     "basePower": 70,
     "category": "Physical",
     "desc": "Fails if the target did not select a physical attack, special attack, or Me First for use this turn, or if the target moves before the user.",
-    "shortDesc": "Usually goes first. Fails if target is not attacking.",
+    "shortDesc": "Usually goes first..",
     "id": "suckerpunch",
     "isViable": true,
     "name": "Sucker Punch",
@@ -18236,7 +17925,7 @@
   {
     "num": 626,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "supersonicskystrike",
@@ -18258,7 +17947,7 @@
     "basePower": 90,
     "category": "Special",
     "desc": "Damage doubles if the target is using Dive.",
-    "shortDesc": "Hits adjacent Pokemon. Double damage on Dive.",
+    "shortDesc": "Hits adjacent Pokemon.",
     "id": "surf",
     "isViable": true,
     "name": "Surf",
@@ -18309,7 +17998,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user restores its HP based on its Stockpile count. Restores 1\/4 of its maximum HP if it's 1, 1\/2 of its maximum HP if it's 2, both rounded half down, and all of its HP if it's 3. Fails if the user's Stockpile count is 0. The user's Defense and Special Defense decrease by as many stages as Stockpile had increased them, and the user's Stockpile count resets to 0.",
-    "shortDesc": "Heals the user based on uses of Stockpile.",
+    "shortDesc": "Heals the user",
     "id": "swallow",
     "name": "Swallow",
     "pp": 10,
@@ -18318,6 +18007,10 @@
       "snatch": 1,
       "heal": 1
     },
+    "heal": [
+      1,
+      4
+    ],
     "secondary": null,
     "target": "self",
     "type": "Normal",
@@ -18397,16 +18090,15 @@
     "target": "allAdjacentFoes",
     "type": "Normal",
     "contestType": "Cool",
-    "keyname": "swift",
-    "animation": "self:side:Starts,self:self:Starts"
+    "keyname": "swift"
   },
   {
     "num": 415,
     "accuracy": 100,
     "basePower": 0,
     "category": "Status",
-    "desc": "The user swaps its held item with the target's held item. Fails if either the user or the target is holding a Mail or Z-Crystal, if neither is holding an item, if the user is trying to give or take a Mega Stone to or from the species that can Mega Evolve with it, or if the user is trying to give or take a Blue Orb, a Red Orb, a Griseous Orb, a Plate, a Drive, or a Memory to or from a Kyogre, a Groudon, a Giratina, an Arceus, a Genesect, or a Silvally, respectively. The target is immune to this move if it has the Sticky Hold Ability.",
-    "shortDesc": "User switches its held item with the target's.",
+    "desc": "The user swaps its held stat with the target's held stat. Fails if either the user or the target is holding a Mail or Z-Crystal, if neither is holding an stat, if the user is trying to give or take a Mega Stone to or from the species that can Mega Evolve with it, or if the user is trying to give or take a Blue Orb, a Red Orb, a Griseous Orb, a Plate, a Drive, or a Memory to or from a Kyogre, a Groudon, a Giratina, an Arceus, a Genesect, or a Silvally, respectively. The target is immune to this move if it has the Sticky Hold Ability.",
+    "shortDesc": "User switches stats",
     "id": "switcheroo",
     "isViable": true,
     "name": "Switcheroo",
@@ -18458,7 +18150,7 @@
     "basePower": 120,
     "category": "Special",
     "desc": "The target is immune if it does not share a type with the user.",
-    "shortDesc": "Hits adjacent Pokemon sharing the user's type.",
+    "shortDesc": "Hits adjacent Pokemon.",
     "id": "synchronoise",
     "isNonstandard": "Past",
     "name": "Synchronoise",
@@ -18490,6 +18182,10 @@
       "snatch": 1,
       "heal": 1
     },
+    "heal": [
+      1,
+      2
+    ],
     "secondary": null,
     "target": "self",
     "type": "Grass",
@@ -18657,7 +18353,7 @@
   },
   {
     "num": 749,
-    "accuracy": 100,
+    "accuracy": 70,
     "basePower": 0,
     "category": "Status",
     "desc": "Lowers the target's Speed by 1 stage. Until the target switches out, its effectiveness against Fire type moves is changed.",
@@ -18671,7 +18367,7 @@
       "reflectable": 1,
       "mirror": 1
     },
-    "volatileStatus": "tarshot",
+    "volatileStatus": "Am_Fire",
     "effect": {},
     "boosts": {
       "spe": -1
@@ -18748,7 +18444,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Forces all active Pokemon to consume their held berries. This move bypasses Substitutes and Unnerve.",
-    "shortDesc": "All active Pokemon consume held Berries.",
+    "shortDesc": "All active Pokemon remove stats.",
     "id": "teatime",
     "name": "Teatime",
     "pp": 10,
@@ -18767,7 +18463,7 @@
     "basePower": 120,
     "category": "Special",
     "desc": "This move's type depends on the user's held Drive.",
-    "shortDesc": "Type varies based on the held Drive.",
+    "shortDesc": "Type varies",
     "id": "technoblast",
     "isNonstandard": "Past",
     "name": "Techno Blast",
@@ -18786,7 +18482,7 @@
   {
     "num": 630,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "tectonicrage",
@@ -18865,15 +18561,22 @@
   {
     "num": 100,
     "accuracy": true,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 100,
+    "category": "Special",
     "desc": "If this move is successful and the user has not fainted, the user switches out even if it is trapped and is replaced immediately by a selected party member. The user does not switch out if there are no unfainted party members.",
-    "shortDesc": "User switches out.",
+    "shortDesc": "legendary.",
     "id": "teleport",
     "name": "Teleport",
     "pp": 20,
     "priority": -6,
-    "flags": {},
+    "flags": {
+      "heal": 1,
+      "mirror": 1
+    },
+    "heal": [
+      1,
+      5
+    ],
     "selfSwitch": true,
     "onTryHit": true,
     "secondary": null,
@@ -18888,8 +18591,8 @@
     "accuracy": 100,
     "basePower": 60,
     "category": "Physical",
-    "desc": "If this attack was successful and the user has not fainted, it steals the target's held item if the user is not holding one. The target's item is not stolen if it is a Mail or Z-Crystal, or if the target is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, or a Pokemon that can Mega Evolve holding the Mega Stone for its species. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
-    "shortDesc": "If the user has no item, it steals the target's.",
+    "desc": "If this attack was successful and the user has not fainted, it steals the target's held stat if the user is not holding one. The target's stat is not stolen if it is a Mail or Z-Crystal, or if the target is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, or a Pokemon that can Mega Evolve holding the Mega Stone for its species. stats lost to this move cannot be regained with Recycle or the Harvest Ability.",
+    "shortDesc": "Damage.",
     "id": "thief",
     "name": "Thief",
     "pp": 25,
@@ -18947,6 +18650,7 @@
     "name": "Thousand Waves",
     "pp": 10,
     "priority": 0,
+    "volatileStatus": "partiallytrapped",
     "flags": {
       "protect": 1,
       "mirror": 1,
@@ -18964,7 +18668,7 @@
     "basePower": 120,
     "category": "Physical",
     "desc": "The user spends two or three turns locked into this move and becomes confused immediately after its move on the last turn of the effect if it is not already. This move targets an opposing Pokemon at random on each turn. If the user is prevented from moving, is asleep at the beginning of a turn, or the attack is not successful against the target on the first turn of the effect or the second turn of a three-turn effect, the effect ends without causing confusion. If this move is called by Sleep Talk and the user is asleep, the move is used for one turn and does not confuse the user.",
-    "shortDesc": "Lasts 2-3 turns. Confuses the user afterwards.",
+    "shortDesc": "Lasts OP",
     "id": "thrash",
     "name": "Thrash",
     "pp": 10,
@@ -18974,10 +18678,12 @@
       "protect": 1,
       "mirror": 1
     },
-    "self": {
-      "volatileStatus": "lockedmove"
+    "secondary": {
+      "chance": 50,
+      "self": {
+        "volatileStatus": "confusion"
+      }
     },
-    "secondary": null,
     "target": "randomNormal",
     "type": "Normal",
     "contestType": "Tough",
@@ -18989,7 +18695,7 @@
     "basePower": 80,
     "category": "Physical",
     "desc": "For 2 turns, the target cannot use sound-based moves.",
-    "shortDesc": "For 2 turns, the target cannot use sound moves.",
+    "shortDesc": "For Damage.",
     "id": "throatchop",
     "isViable": true,
     "name": "Throat Chop",
@@ -19069,7 +18775,7 @@
     "basePower": 65,
     "category": "Physical",
     "desc": "Has a 10% chance to paralyze the target and a 10% chance to flinch it.",
-    "shortDesc": "10% chance to paralyze. 10% chance to flinch.",
+    "shortDesc": "10% chance to flinch.",
     "id": "thunderfang",
     "name": "Thunder Fang",
     "pp": 15,
@@ -19080,14 +18786,10 @@
       "protect": 1,
       "mirror": 1
     },
-    "secondaries": [
+    "secundary": [
       {
         "chance": 10,
         "status": "par"
-      },
-      {
-        "chance": 10,
-        "volatileStatus": "flinch"
       }
     ],
     "target": "normal",
@@ -19293,7 +18995,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Sets up a hazard on the opposing side of the field, poisoning each opposing Pokemon that switches in, unless it is a Flying-type Pokemon or has the Levitate Ability. Can be used up to two times before failing. Opposing Pokemon become poisoned with one layer and badly poisoned with two layers. Can be removed from the opposing side if any opposing Pokemon uses Rapid Spin or Defog successfully, is hit by Defog, or a grounded Poison-type Pokemon switches in. Safeguard prevents the opposing party from being poisoned on switch-in, but a substitute does not.",
-    "shortDesc": "Poisons grounded foes on switch-in. Max 2 layers.",
+    "shortDesc": "Poisons grounded foes on switch-in",
     "id": "toxicspikes",
     "isViable": true,
     "name": "Toxic Spikes",
@@ -19382,7 +19084,8 @@
       "mirror": 1
     },
     "secondary": {
-      "chance": 20
+      "chance": 20,
+      "status": "par"
     },
     "target": "normal",
     "type": "Normal",
@@ -19394,8 +19097,8 @@
     "accuracy": 100,
     "basePower": 0,
     "category": "Status",
-    "desc": "The user swaps its held item with the target's held item. Fails if either the user or the target is holding a Mail or Z-Crystal, if neither is holding an item, if the user is trying to give or take a Mega Stone to or from the species that can Mega Evolve with it, or if the user is trying to give or take a Blue Orb, a Red Orb, a Griseous Orb, a Plate, a Drive, or a Memory to or from a Kyogre, a Groudon, a Giratina, an Arceus, a Genesect, or a Silvally, respectively. The target is immune to this move if it has the Sticky Hold Ability.",
-    "shortDesc": "User switches its held item with the target's.",
+    "desc": "The user swaps its held stat with the target's held stat. Fails if either the user or the target is holding a Mail or Z-Crystal, if neither is holding an stat, if the user is trying to give or take a Mega Stone to or from the species that can Mega Evolve with it, or if the user is trying to give or take a Blue Orb, a Red Orb, a Griseous Orb, a Plate, a Drive, or a Memory to or from a Kyogre, a Groudon, a Giratina, an Arceus, a Genesect, or a Silvally, respectively. The target is immune to this move if it has the Sticky Hold Ability.",
+    "shortDesc": "User switches its status target's.",
     "id": "trick",
     "isViable": true,
     "name": "Trick",
@@ -19434,6 +19137,7 @@
     },
     "secondary": null,
     "target": "normal",
+    "volatileStatus": "Am_Ghost",
     "type": "Ghost",
     "zMoveBoost": {
       "atk": 1,
@@ -19476,10 +19180,10 @@
   {
     "num": 167,
     "accuracy": 90,
-    "basePower": 10,
+    "basePower": 40,
     "category": "Physical",
     "desc": "Hits three times. Power increases to 20 for the second hit and 30 for the third. This move checks accuracy for each hit, and the attack ends if the target avoids a hit. If one of the hits breaks the target's substitute, it will take damage for the remaining hits. If the user has the Skill Link Ability, this move will always hit three times.",
-    "shortDesc": "Hits 3 times. Each hit can miss, but power rises.",
+    "shortDesc": "Hits 3 times.",
     "id": "triplekick",
     "name": "Triple Kick",
     "pp": 10,
@@ -19529,10 +19233,10 @@
   {
     "num": 376,
     "accuracy": true,
-    "basePower": 0,
+    "basePower": 80,
     "category": "Special",
     "desc": "The power of this move is based on the amount of PP remaining after normal PP reduction and the Pressure Ability resolve. 200 power for 0 PP, 80 power for 1 PP, 60 power for 2 PP, 50 power for 3 PP, and 40 power for 4 or more PP.",
-    "shortDesc": "More power the fewer PP this move has left.",
+    "shortDesc": "More power.",
     "id": "trumpcard",
     "isNonstandard": "Past",
     "name": "Trump Card",
@@ -19558,7 +19262,7 @@
     "basePower": 25,
     "category": "Physical",
     "desc": "Hits twice, with each hit having a 20% chance to poison the target. If the first hit breaks the target's substitute, it will take damage for the second hit.",
-    "shortDesc": "Hits 2 times. Each hit has 20% chance to poison.",
+    "shortDesc": "Hits has 40% chance to poison.",
     "id": "twineedle",
     "isNonstandard": "Past",
     "name": "Twineedle",
@@ -19570,7 +19274,7 @@
     },
     "multihit": 2,
     "secondary": {
-      "chance": 20,
+      "chance": 40,
       "status": "psn"
     },
     "target": "normal",
@@ -19582,7 +19286,7 @@
   {
     "num": 656,
     "accuracy": true,
-    "basePower": 1,
+    "basePower": 180,
     "category": "Physical",
     "shortDesc": "Power is equal to the base move's Z-Power.",
     "id": "twinkletackle",
@@ -19628,7 +19332,7 @@
     "basePower": 70,
     "category": "Physical",
     "desc": "If this move is successful and the user has not fainted, the user switches out even if it is trapped and is replaced immediately by a selected party member. The user does not switch out if there are no unfainted party members, or if the target switched out using an Eject Button or through the effect of the Emergency Exit or Wimp Out Abilities.",
-    "shortDesc": "User switches out after damaging the target.",
+    "shortDesc": "User switches out transfer stats",
     "id": "uturn",
     "isViable": true,
     "name": "U-turn",
@@ -19703,7 +19407,7 @@
     "basePower": 180,
     "category": "Physical",
     "desc": "Lowers the user's Speed, Defense, and Special Defense by 1 stage.",
-    "shortDesc": "Lowers the user's Defense, Sp. Def, Speed by 1.",
+    "shortDesc": "Lowers the user's Defense, Sp. Def, Speed by 2.",
     "id": "vcreate",
     "isViable": true,
     "name": "V-create",
@@ -19716,9 +19420,9 @@
     },
     "self": {
       "boosts": {
-        "spe": -1,
-        "def": -1,
-        "spd": -1
+        "spe": -2,
+        "def": -2,
+        "spd": -2
       }
     },
     "secondary": null,
@@ -19731,10 +19435,10 @@
   {
     "num": 741,
     "accuracy": true,
-    "basePower": 0,
+    "basePower": 102,
     "category": "Physical",
     "desc": "Power is equal to the greater of (user's Happiness * 2\/5), rounded down, or 1.",
-    "shortDesc": "Max happiness: 102 power. Can't miss.",
+    "shortDesc": "102 power. Can't miss.",
     "id": "veeveevolley",
     "isNonstandard": "LGPE",
     "isViable": true,
@@ -19757,7 +19461,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "Lowers the target's Attack, Special Attack, and Speed by 1 stage if the target is poisoned. Fails if the target is not poisoned.",
-    "shortDesc": "Lowers Atk\/Sp. Atk\/Speed of poisoned foes by 1.",
+    "shortDesc": "Lowers Atk\/Sp. Atk\/Speed of foes by 1.",
     "id": "venomdrench",
     "name": "Venom Drench",
     "pp": 20,
@@ -19768,10 +19472,11 @@
       "mirror": 1
     },
     "secondary": null,
-    "target": "allAdjacentFoes",
+    "target": "normal",
     "type": "Poison",
-    "zMoveBoost": {
-      "def": 1
+    "boosts": {
+      "atk": 1,
+      "spe": 1
     },
     "contestType": "Clever",
     "keyname": "venomdrench"
@@ -19989,7 +19694,7 @@
     "basePower": 80,
     "category": "Special",
     "desc": "If one of the user's allies chose to use Fire Pledge or Grass Pledge this turn and has not moved yet, it takes its turn immediately after the user and the user's move does nothing. If combined with Fire Pledge, the ally uses Water Pledge with 150 power and a rainbow appears on the user's side for 4 turns, which doubles secondary effect chances but does not stack with the Serene Grace Ability. If combined with Grass Pledge, the ally uses Grass Pledge with 150 power and a swamp appears on the target's side for 4 turns, which quarters the Speed of each Pokemon on that side. When used as a combined move, this move gains STAB no matter what the user's type is. This move does not consume the user's Water Gem, and cannot be redirected by the Storm Drain Ability.",
-    "shortDesc": "Use with Grass or Fire Pledge for added effect.",
+    "shortDesc": "Use it",
     "id": "waterpledge",
     "name": "Water Pledge",
     "pp": 10,
@@ -20118,7 +19823,7 @@
     "basePower": 50,
     "category": "Special",
     "desc": "Power doubles if a weather condition other than Delta Stream is active, and this move's type changes to match. Ice type during Hail, Water type during Primordial Sea or Rain Dance, Rock type during Sandstorm, and Fire type during Desolate Land or Sunny Day. If the user is holding Utility Umbrella and uses Weather Ball during Primordial Sea, Rain Dance, Desolate Land, or Sunny Day, the move is still Normal-type and does not have a base power boost.",
-    "shortDesc": "Power doubles and type varies in each weather.",
+    "shortDesc": "Power doubles if last",
     "id": "weatherball",
     "name": "Weather Ball",
     "pp": 10,
@@ -20142,7 +19847,7 @@
     "basePower": 35,
     "category": "Special",
     "desc": "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1\/8 of its maximum HP (1\/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, U-turn, or Volt Switch. The effect ends if either the user or the target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move.",
-    "shortDesc": "Traps and damages the target for 4-5 turns.",
+    "shortDesc": "Traps",
     "id": "whirlpool",
     "name": "Whirlpool",
     "pp": 15,
@@ -20192,7 +19897,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The user and its party members are protected from moves made by other Pokemon, including allies, during this turn that target all adjacent foes or all adjacent Pokemon. This move modifies the same 1\/X chance of being successful used by other protection moves, where X starts at 1 and triples each time this move is successfully used, but does not use the chance to check for failure. X resets to 1 if this move fails, if the user's last move used is not Baneful Bunker, Detect, Endure, King's Shield, Obstruct, Protect, Quick Guard, Spiky Shield, or Wide Guard, or if it was one of those moves and the user's protection was broken. Fails if the user moves last this turn or if this move is already in effect for the user's side.",
-    "shortDesc": "Protects allies from multi-target moves this turn.",
+    "shortDesc": "Protects allies from multi-target moves.",
     "id": "wideguard",
     "name": "Wide Guard",
     "pp": 10,
@@ -20431,10 +20136,10 @@
   {
     "num": 388,
     "accuracy": 100,
-    "basePower": 0,
-    "category": "Status",
+    "basePower": 100,
+    "category": "Special",
     "desc": "Causes the target's Ability to become Insomnia. Fails if the target's Ability is Battle Bond, Comatose, Disguise, Insomnia, Multitype, Power Construct, RKS System, Schooling, Shields Down, Stance Change, Truant, or Zen Mode.",
-    "shortDesc": "The target's Ability becomes Insomnia.",
+    "shortDesc": "The target's hurts",
     "id": "worryseed",
     "name": "Worry Seed",
     "pp": 10,
@@ -20460,7 +20165,7 @@
     "basePower": 15,
     "category": "Physical",
     "desc": "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1\/8 of its maximum HP (1\/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, U-turn, or Volt Switch. The effect ends if either the user or the target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move.",
-    "shortDesc": "Traps and damages the target for 4-5 turns.",
+    "shortDesc": "Traps and damages",
     "id": "wrap",
     "name": "Wrap",
     "pp": 20,
@@ -20526,11 +20231,11 @@
   },
   {
     "num": 281,
-    "accuracy": true,
+    "accuracy": 70,
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target to fall asleep at the end of the next turn. Fails when used if the target cannot fall asleep or if it already has a major status condition. At the end of the next turn, if the target is still active, does not have a major status condition, and can fall asleep, it falls asleep. If the target becomes affected, this effect cannot be prevented by Safeguard or a substitute, or by falling asleep and waking up during the effect.",
-    "shortDesc": "Puts the target to sleep after 1 turn.",
+    "shortDesc": "Puts the target to sleep",
     "id": "yawn",
     "name": "Yawn",
     "pp": 10,
@@ -20540,7 +20245,7 @@
       "reflectable": 1,
       "mirror": 1
     },
-    "volatileStatus": "yawn",
+    "volatileStatus": "slp",
     "effect": {
       "noCopy": true,
       "duration": 2,

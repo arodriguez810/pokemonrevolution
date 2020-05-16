@@ -3,7 +3,7 @@
         <center>
             <div class="navbar-header" style="text-align: center">
 
-                <a class="navbar-brand" href="index.php">POKEMON - REVOLUTION</a>
+                <a class="navbar-brand" href="index">POKEMON - REVOLUTION</a>
 
             </div>
         </center>

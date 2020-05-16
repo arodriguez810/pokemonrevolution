@@ -136,18 +136,18 @@
             <tr class="bg-blue-grey" style="border: #fff0ff 1px solid">
                 <td ng-repeat="(key,medal) in medals1" style="text-align: center">
                     <img ng-if="!session['medal_'+medal.type]" width="48" height="48"
-                         src="../resources/poekemon/medals/{{medal.name}}_shadow.png">
+                         src="{{DOMAINRESOURCE}}resources/poekemon/medals/{{medal.name}}_shadow.png">
                     <img ng-if="session['medal_'+medal.type]" width="48" height="48"
-                         src="../resources/poekemon/medals/{{medal.name}}_{{session['medal_'+medal.type]}}.png">
+                         src="{{DOMAINRESOURCE}}resources/poekemon/medals/{{medal.name}}_{{session['medal_'+medal.type]}}.png">
                     <br>
                 </td>
             </tr>
             <tr class="bg-blue-grey" style="border: #fff0ff 1px solid">
                 <td ng-repeat="(key,medal) in medals2" style="text-align: center">
                     <img ng-if="!session['medal_'+medal.type]" width="48" height="48"
-                         src="../resources/poekemon/medals/{{medal.name}}_shadow.png">
+                         src="{{DOMAINRESOURCE}}resources/poekemon/medals/{{medal.name}}_shadow.png">
                     <img ng-if="session['medal_'+medal.type]" width="48" height="48"
-                         src="../resources/poekemon/medals/{{medal.name}}_{{session['medal_'+medal.type]}}.png">
+                         src="{{DOMAINRESOURCE}}resources/poekemon/medals/{{medal.name}}_{{session['medal_'+medal.type]}}.png">
                     <br>
                 </td>
             </tr>
@@ -164,7 +164,7 @@
             <i class="material-icons">reply</i>
         </button>
 
-        <button type="button" onclick="location.href='face.php'"
+        <button type="button" onclick="location.href='face'"
                 style="margin: 10px 10px 10px 10px"
                 class="btn bg-pink  btn-circle-lg waves-effect waves-circle waves-float">
             <i class="material-icons">face</i>
@@ -184,7 +184,7 @@
                 }, function () {
                     var auth2 = gapi.auth2.getAuthInstance();
                     auth2.signOut().then(function () {
-                        location.href = "index.php";
+                        location.href = "index.html";
                     });
                 });
             }
@@ -214,7 +214,7 @@
 
                                     <img style="margin-left: 5px;text-align: left"
                                          ng-repeat="(tkey, type) in selectedPokemonClick().types"
-                                         src="../resources/poekemon/types/{{type}}.png">
+                                         src="{{DOMAINRESOURCE}}resources/poekemon/types/{{type}}.png">
                                     <img src="../resources/icons/{{selectedPokemonClick().gender}}.png">
                                 </btn>
 
@@ -251,10 +251,10 @@
                                         ng-click="desc('Movimiento',move.name,move.shortDesc)"
                                         style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
                                         class="btn ">
-                                    <img src="../resources/poekemon/types/{{move.type}}.png"
+                                    <img src="{{DOMAINRESOURCE}}resources/poekemon/types/{{move.type}}.png"
                                          style="margin-left: 5px">
                                     <b> {{move.name}}</b>
-                                    <img src="../resources/poekemon/category/{{move.category}}.png"
+                                    <img src="{{DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                                          style="margin-left: 5px">
 
                                 </btn>
@@ -334,7 +334,7 @@
 
                                     <img style="margin-left: 5px;text-align: left"
                                          ng-repeat="(tkey, type) in selectedBobedaClick().types"
-                                         src="../resources/poekemon/types/{{type}}.png">
+                                         src="{{DOMAINRESOURCE}}resources/poekemon/types/{{type}}.png">
                                     <img src="../resources/icons/{{selectedBobedaClick().gender}}.png">
                                 </btn>
 
@@ -364,9 +364,9 @@
                                         ng-click="desc('Movimiento',move.name,move.shortDesc)"
                                         style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
                                         class="btn ">
-                                    <img src="../resources/poekemon/types/{{move.type}}.png"
+                                    <img src="{{DOMAINRESOURCE}}resources/poekemon/types/{{move.type}}.png"
                                          style="margin-left: 5px"> <b> {{move.name}}</b>
-                                    <img src="../resources/poekemon/category/{{move.category}}.png"
+                                    <img src="{{DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                                          style="margin-left: 5px">
                                 </btn>
                             </div>
@@ -508,7 +508,7 @@
         <i class="material-icons myicon">volume_up</i>
     </button>
 
-    <button ng-if="PKM.mainMenu && PKM.friend().battle.status!=='partiallytrapped'"
+    <button ng-if="PKM.mainMenu && (PKM.friend().battle.status!=='partiallytrapped' && PKM.target().battle.status !== 'ingrain')"
             style="width: 20%;    font-size: 18px;" type="button" ng-click="PKM.menu_open();"
             class="btn bg-orange">
         Cambiar<i class="material-icons">swap_vertical_circle</i>
@@ -559,7 +559,7 @@
 
                             <img style="margin-left: 5px;text-align: left"
                                  ng-repeat="(tkey, type) in selectedPokemonClick().types"
-                                 src="../resources/poekemon/types/{{type}}.png">
+                                 src="{{DOMAINRESOURCE}}resources/poekemon/types/{{type}}.png">
                             <img src="../resources/icons/{{selectedPokemonClick().gender}}.png">
                         </btn>
 
@@ -584,10 +584,10 @@
                                 ng-click="desc('Movimiento',move.name,move.shortDesc)"
                                 style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
                                 class="btn ">
-                            <img src="../resources/poekemon/types/{{move.type}}.png"
+                            <img src="{{DOMAINRESOURCE}}resources/poekemon/types/{{move.type}}.png"
                                  style="margin-left: 5px">
                             <b> {{move.name}}</b>
-                            <img src="../resources/poekemon/category/{{move.category}}.png"
+                            <img src="{{DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                                  style="margin-left: 5px">
 
                         </btn>
@@ -670,14 +670,14 @@
 
 
     <btn ng-show="PKM.hp(PKM.friend())>0 && move.num!==(BATTLEOBJS.disableMove||1).num"
-         ng-repeat="(mkey,move) in  PKM.friend().moves"
+         ng-repeat="(mkey,move) in  PKM.friend().battle.moves || PKM.friend().moves"
          ng-click="PKM.attack(move)"
 
          style="float: left;min-width: 20%;background-color: {{typeColor[move.type]}};text-align: left;{{PKM.gigamaxAttack(move)}}"
          class="btn ">
-        <img src="../resources/poekemon/types/{{move.type}}.png"
+        <img src="{{DOMAINRESOURCE}}resources/poekemon/types/{{move.type}}.png"
              style="margin-left: 5px"><b> {{move.name}}</b><img
-                src="../resources/poekemon/category/{{move.category}}.png"
+                src="{{DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                 style="margin-left: 5px">
     </btn>
 

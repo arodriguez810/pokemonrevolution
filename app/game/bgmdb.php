@@ -1,11 +1,13 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/audio/BackGround";
+$root = "{$GLOBALS['resourcesFolder']}audio/BackGround";
 $response = array();
+
+
 
 function getDirContents($dir, &$results = array())
 {
-    $root = "../resources/audio/BackGround";
+    $root = "{$GLOBALS['resourcesFolder']}audio/BackGround";
     $fileType = "ogg";
     $files = scandir($dir);
     $numbers = array();
@@ -15,7 +17,7 @@ function getDirContents($dir, &$results = array())
             $url = explode("audio\BackGround", $path);
             $url = str_replace("\\", "/", $url[1]);
             array_push($numbers, str_replace("." . $fileType, "", $value));
-            $url = "$root$url";
+            $url = "{$GLOBALS['DOMAINRESOURCE']}audio/BackGround/$url";
             array_push($results, $url);
         }
     }

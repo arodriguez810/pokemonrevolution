@@ -1,1 +1,1 @@
-{"name":"atkup","category":"Status","file":"..\/resources\/animations\/Status\/Strength Boost.png","frames":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],"sound":"..\/resources\/audio\/Sound\/Sword1.ogg","rows":"4","columns":"5","framerate":30}
+{"name":"atkup","category":"Status","file":"..\/resources\/animations\/Status\/StateUp1.png","frames":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],"sound":"..\/resources\/audio\/Sound\/Up1.ogg","rows":"4","columns":"5","framerate":30}

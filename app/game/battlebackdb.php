@@ -1,11 +1,11 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/battlebacks/UP";
+$root = "{$GLOBALS['resourcesFolder']}battlebacks/UP";
 $response = array();
 
 function getDirContents($dir, &$results = array())
 {
-    $root = "../resources/battlebacks/UP";
+    $root = "{$GLOBALS['resourcesFolder']}battlebacks/UP";
     $fileType = "png";
     $files = scandir($dir);
     $numbers = array();

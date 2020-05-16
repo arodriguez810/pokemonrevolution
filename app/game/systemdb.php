@@ -1,11 +1,11 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/audio/system";
+$root = "{$GLOBALS['resourcesFolder']}audio/system";
 $response = array();
 
 function getDirContents($dir, &$results = array())
 {
-    $root = "../resources/audio/system";
+    $root = "{$GLOBALS['resourcesFolder']}audio/system";
     $fileType = "ogg";
     $files = scandir($dir);
     $numbers = array();
@@ -15,7 +15,7 @@ function getDirContents($dir, &$results = array())
             $url = explode("audio\system", $path);
             $url = str_replace("\\", "/", $url[1]);
             array_push($numbers, str_replace("." . $fileType, "", $value));
-            $url = "$root$url";
+            $url = "{$GLOBALS['DOMAINRESOURCE']}audio/system/$url";
             array_push($results, $url);
         }
     }

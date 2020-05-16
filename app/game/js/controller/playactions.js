@@ -1,5 +1,7 @@
 function playactions($scope) {
     //Actions
+    $scope.DOMAIN = DOMAIN;
+    $scope.DOMAINRESOURCE = DOMAINRESOURCE;
     $scope.menuOpen = false;
     $scope.subMenuOpen = "perfil";
     $scope.menu = false;
@@ -126,10 +128,10 @@ function playactions($scope) {
                 } else if (h >= 4 && h <= 6) {
                     color = "#00003f";
                     alpha = 0.5;
-                } else if (h >= 7 && h <= 17) {
+                } else if (h >= 7 && h <= 16) {
                     color = "#fff";
                     alpha = 0.001;
-                } else if (h >= 18 && h <= 18) {
+                } else if (h >= 17 && h <= 18) {
                     color = "#ff6700";
                     alpha = 0.2;
                 } else if (h >= 19 && h <= 23) {
@@ -160,10 +162,10 @@ function playactions($scope) {
                     } else if (h >= 4 && h <= 6) {
                         $scope.modificationTime = 7;
                         color = "rgb(250,246,82)";
-                    } else if (h >= 7 && h <= 17) {
-                        $scope.modificationTime = 18;
+                    } else if (h >= 7 && h <= 16) {
+                        $scope.modificationTime = 17;
                         color = "rgb(250,158,47)";
-                    } else if (h >= 18 && h <= 18) {
+                    } else if (h >= 17 && h <= 18) {
                         $scope.modificationTime = 19;
                         color = "rgb(27,51,250)";
 
@@ -198,9 +200,9 @@ function playactions($scope) {
                     return "Madrugada";
                 } else if (h >= 4 && h <= 6) {
                     return "Amanecer";
-                } else if (h >= 7 && h <= 17) {
+                } else if (h >= 7 && h <= 16) {
                     return "Día";
-                } else if (h >= 18 && h <= 18) {
+                } else if (h >= 17 && h <= 18) {
                     return "Atardecer";
                 } else if (h >= 19 && h <= 23) {
                     return "Noche";
@@ -253,23 +255,27 @@ function playactions($scope) {
                     $scope.$digest();
             },
             PLAY: async function () {
-                $scope.session = await HOME_.PLAYERPROFILE(PROFILE.getId());
-                if (!$scope.session.tier) {
-                    await HOME_.PLAYERPROFILE(PROFILE.getId(),
-                        {
-                            tier: POKEMON.categories[0].name,
-                            logros: [],
-                            canJump: false,
-                            canDive: false,
-                            canFly: false,
-                            pokemons: [],
-                            bobeda: [],
-                            items: [],
-                            friends: [],
-                        });
+                if (STORAGED.exist()) {
+                    $scope.session = await HOME_.PLAYERPROFILE(STORAGED.get());
+                    if (!$scope.session.tier) {
+                        $scope.session = await HOME_.PLAYERPROFILE(STORAGED.get(),
+                            {
+                                tier: POKEMON.categories[0].name,
+                                logros: [],
+                                canJump: false,
+                                canDive: false,
+                                canFly: false,
+                                pokemons: [],
+                                bobeda: [],
+                                items: [],
+                                friends: [],
+                            });
+                    }
+                    SESSION = $scope.session;
+                    $scope.init();
+                } else {
+                    location.href = "index.html";
                 }
-                SESSION = $scope.session;
-                $scope.init();
             },
             SESSION: async function (obj) {
                 ACTIONS.GAME.PAUSE();
@@ -1335,28 +1341,28 @@ function playactions($scope) {
                 if (!$scope.transition) {
                     $scope.transition = true;
                     if (ACTIONS.PLAYER.POSITION() === "up") {
-                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("teleport", undefined, function () {
                             ACTIONS.PLAYER.TELEPORT($scope.hero.x, 0);
                             $scope.transition = false;
                         });
                     }
 
                     if (ACTIONS.PLAYER.POSITION() === "down") {
-                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("teleport", undefined, function () {
                             ACTIONS.PLAYER.TELEPORT($scope.hero.x, maps[FIRSTMAP].height - 1);
                             $scope.transition = false;
                         });
                     }
 
                     if (ACTIONS.PLAYER.POSITION() === "left") {
-                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("teleport", undefined, function () {
                             ACTIONS.PLAYER.TELEPORT(0, $scope.hero.y);
                             $scope.transition = false;
                         });
                     }
 
                     if (ACTIONS.PLAYER.POSITION() === "right") {
-                        ACTIONS.ANIMATION.PLAY_PLAYER("Teleport", undefined, function () {
+                        ACTIONS.ANIMATION.PLAY_PLAYER("teleport", undefined, function () {
                             ACTIONS.PLAYER.TELEPORT(maps[FIRSTMAP].width - 1, $scope.hero.y);
                             $scope.transition = false;
                         });
@@ -1681,28 +1687,28 @@ function playactions($scope) {
                     if (!$scope.transition) {
                         $scope.transition = true;
                         if (ACTIONS.NPC.POSITION(name) === "up") {
-                            ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                            ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                                 ACTIONS.NPC.TELEPORT(name, $scope.NPCS[name].x, 0);
                                 $scope.transition = false;
                             });
                         }
 
                         if (ACTIONS.NPC.POSITION(name) === "down") {
-                            ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                            ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                                 ACTIONS.NPC.TELEPORT(name, $scope.NPCS[name].x, maps[FIRSTMAP].height - 1);
                                 $scope.transition = false;
                             });
                         }
 
                         if (ACTIONS.NPC.POSITION(name) === "left") {
-                            ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                            ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                                 ACTIONS.NPC.TELEPORT(name, 0, $scope.NPCS[name].y);
                                 $scope.transition = false;
                             });
                         }
 
                         if (ACTIONS.NPC.POSITION(name) === "right") {
-                            ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                            ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                                 ACTIONS.NPC.TELEPORT(name, maps[FIRSTMAP].width - 1, $scope.NPCS[name].y);
                                 $scope.transition = false;
                             });
@@ -1964,25 +1970,25 @@ function playactions($scope) {
             },
             TELE: function (name) {
                 if (ACTIONS.NPC.POSITION(name) === "up") {
-                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                         ACTIONS.NPC.TELEPORT(name, $scope.NPCS[name].x, 0);
                     });
                 }
 
                 if (ACTIONS.NPC.POSITION(name) === "down") {
-                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                         ACTIONS.NPC.TELEPORT(name, $scope.NPCS[name].x, maps[FIRSTMAP].height - 1);
                     });
                 }
 
                 if (ACTIONS.NPC.POSITION(name) === "left") {
-                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                         ACTIONS.NPC.TELEPORT(name, 0, $scope.NPCS[name].y);
                     });
                 }
 
                 if (ACTIONS.NPC.POSITION(name) === "right") {
-                    ACTIONS.ANIMATION.PLAY_NPC(name, "Teleport", undefined, function () {
+                    ACTIONS.ANIMATION.PLAY_NPC(name, "teleport", undefined, function () {
                         ACTIONS.NPC.TELEPORT(name, maps[FIRSTMAP].width - 1, $scope.NPCS[name].y);
                     });
                 }
@@ -2325,7 +2331,7 @@ function playactions($scope) {
                 if (!nopause)
                     ACTIONS.GAME.PAUSE();
                 var animation = $scope.animations[name];
-                ACTIONS.LOAD.ADD([animation.file, animation.sound], function () {
+                ACTIONS.LOAD.ADD([animation.file, $scope.toDO(animation.sound)], function () {
                     var img = $scope.getResource(animation.file);
                     var format = new createjs.Bitmap(img);
                     var colorR = tinycolor(color || "#000");
@@ -2361,14 +2367,14 @@ function playactions($scope) {
                             ACTIONS.GAME.RESUME();
                     }
                     sprite.gotoAndPlay("run");
-                    $scope.play(animation.sound, SOUNDS.system);
+                    $scope.play($scope.toDO(animation.sound), SOUNDS.system);
                 });
             },
             PLAYNATURAL: function (name, x, y, callback, loop, nopause, light, alpha, color, scale) {
                 if (!nopause)
                     ACTIONS.GAME.PAUSE();
                 var animation = $scope.animations[name];
-                ACTIONS.LOAD.ADD([animation.file, animation.sound], function () {
+                ACTIONS.LOAD.ADD([animation.file, $scope.toDO(animation.sound)], function () {
                     var img = $scope.getResource(animation.file);
                     var format = new createjs.Bitmap(img);
                     var colorR = tinycolor(color || "#000");
@@ -2403,14 +2409,14 @@ function playactions($scope) {
                             ACTIONS.GAME.RESUME();
                     }
                     sprite.gotoAndPlay("run");
-                    $scope.play(animation.sound, SOUNDS.system);
+                    $scope.play($scope.toDO(animation.sound), SOUNDS.system);
                 });
             },
             THROW: function (name, x, y, x2, y2, time, callback, nopause, light, alpha, color, scale) {
                 if (!nopause)
                     ACTIONS.GAME.PAUSE();
                 var animation = $scope.animations[name];
-                ACTIONS.LOAD.ADD([animation.file, animation.sound], function () {
+                ACTIONS.LOAD.ADD([animation.file, $scope.toDO(animation.sound)], function () {
                     var img = $scope.getResource(animation.file);
                     var format = new createjs.Bitmap(img);
                     var colorR = tinycolor(color || "#000");
@@ -2450,14 +2456,14 @@ function playactions($scope) {
                             callback();
                     });
                     sprite.gotoAndPlay("run");
-                    $scope.play(animation.sound, SOUNDS.system);
+                    $scope.play($scope.toDO(animation.sound), SOUNDS.system);
                 });
             },
             THROWNATURAL: function (name, x, y, x2, y2, time, callback, nopause, light, alpha, color, scale) {
                 if (!nopause)
                     ACTIONS.GAME.PAUSE();
                 var animation = $scope.animations[name];
-                ACTIONS.LOAD.ADD([animation.file, animation.sound], function () {
+                ACTIONS.LOAD.ADD([animation.file, $scope.toDO(animation.sound)], function () {
                     var img = $scope.getResource(animation.file);
                     var format = new createjs.Bitmap(img);
                     var colorR = tinycolor(color || "#000");
@@ -2496,7 +2502,7 @@ function playactions($scope) {
                             callback();
                     });
                     sprite.gotoAndPlay("run");
-                    $scope.play(animation.sound, SOUNDS.system);
+                    $scope.play($scope.toDO(animation.sound), SOUNDS.system);
                 });
             },
             THROW_FROM_TO: function (name, objectFrom, ObjectTo, time, callback, nopause, light, alpha, color, scale) {
@@ -2543,7 +2549,7 @@ function playactions($scope) {
                 createjs.Sound.stop();
             },
             system: function (name, callback) {
-                $scope.SoundSystemVar = `../resources/audio/system/${name}.ogg`;
+                $scope.SoundSystemVar = DOMAINRESOURCE + `resources/audio/system/${name}.ogg`;
                 ACTIONS.SOUND.PLAY($scope.SoundSystemVar, SOUNDS.system, callback);
             },
             system_STOP: function () {
@@ -2553,7 +2559,7 @@ function playactions($scope) {
                 }
             },
             Sound: function (name, callback) {
-                $scope.SoundVar = `../resources/audio/Sound/${name}.ogg`;
+                $scope.SoundVar = DOMAINRESOURCE + `resources/audio/Sound/${name}.ogg`;
                 ACTIONS.SOUND.PLAY($scope.SoundVar, SOUNDS.system, callback);
             },
             Sound_STOP: function () {
@@ -2564,7 +2570,7 @@ function playactions($scope) {
             },
             pokemon: function (name, callback) {
                 ACTIONS.SOUND.pokemon_STOP();
-                $scope.pokemonMusic = `../resources/audio/pokemon/${name}.ogg`;
+                $scope.pokemonMusic = DOMAINRESOURCE + `resources/audio/pokemon/${name}.ogg`;
                 ACTIONS.SOUND.PLAY($scope.pokemonMusic, SOUNDS.system, callback);
             },
             pokemon_STOP: function () {
@@ -2575,7 +2581,7 @@ function playactions($scope) {
             },
             Enviroment: function (name, callback) {
                 ACTIONS.SOUND.Enviroment_STOP();
-                $scope.Enviroment = `../resources/audio/Enviroment/${name}.ogg`;
+                $scope.Enviroment = DOMAINRESOURCE + `resources/audio/Enviroment/${name}.ogg`;
                 ACTIONS.SOUND.PLAY($scope.Enviroment, SOUNDS.system, callback);
             },
             Enviroment_STOP: function () {
@@ -2589,7 +2595,7 @@ function playactions($scope) {
                 ACTIONS.SOUND.BGS_STOP();
                 ACTIONS.SOUND.BattleMusic_STOP();
                 if (name) {
-                    $scope.battleMusic = `../resources/audio/BattleMusic/${name}.ogg`;
+                    $scope.battleMusic = DOMAINRESOURCE + `resources/audio/BattleMusic/${name}.ogg`;
                     ACTIONS.SOUND.PLAY($scope.battleMusic, SOUNDS.battle, callback);
                 } else {
                     if (maps[FIRSTMAP].battleback.music) {
@@ -2608,7 +2614,7 @@ function playactions($scope) {
             },
             BGS: function (name, callback) {
                 $scope.stop("bgs" + FIRSTMAP);
-                $scope.chagedBGS = `../resources/audio/BackSound/${name}.ogg`;
+                $scope.chagedBGS = DOMAINRESOURCE + `resources/audio/BackSound/${name}.ogg`;
                 ACTIONS.SOUND.PLAY($scope.chagedBGS, SOUNDS.bgs, callback);
             },
             BGS_STOP: function () {
@@ -2627,7 +2633,7 @@ function playactions($scope) {
             },
             BGM: function (name, callback) {
                 $scope.stop("bgm" + FIRSTMAP);
-                $scope.chagedBGM = `../resources/audio/BackGround/${name}.ogg`;
+                $scope.chagedBGM = DOMAINRESOURCE + `resources/audio/BackGround/${name}.ogg`;
                 ACTIONS.SOUND.PLAY($scope.chagedBGM, SOUNDS.bgm, callback);
             },
             BGM_STOP: function () {
@@ -2665,6 +2671,9 @@ function playactions($scope) {
             TEST: function () {
                 return $scope;
             },
+            RUN: function (code) {
+                return eval(code);
+            },
             NEXT: function () {
                 POKEMONBATTLE.TARGETTEST($scope, GLOBALINDEXTEST);
             },
@@ -2676,16 +2685,52 @@ function playactions($scope) {
             },
             BATTLEOBJS: function () {
                 return $scope.BATTLEOBJS;
+            },
+            TESTMOVE: function () {
+                $scope.PKM.friend().moves =
+                    [
+                        APIS.MOVES[ROTATEMOVE],
+                        APIS.MOVES[ROTATEMOVE + 1],
+                        APIS.MOVES[ROTATEMOVE + 2],
+                        APIS.MOVES[ROTATEMOVE + 3],
+                    ];
+                console.log($scope.PKM.friend().moves);
+                console.log(ROTATEMOVE);
+                ROTATEMOVE += 4;
+            },
+            CURE: function () {
+                POKEMONBATTLE.CLEARSTATS($scope.PKM.friend());
+                $scope.PKM.friend().battle.stats.hp = 0;
+                $scope.PKM.friend().battle.status = undefined;
+                $scope.PKM.friend().battle.statusTurn = 0;
+
+                POKEMONBATTLE.CLEARSTATS($scope.PKM.target());
+                $scope.PKM.target().battle.stats.hp = 0;
+                $scope.PKM.target().battle.status = undefined;
+                $scope.PKM.target().battle.statusTurn = 0;
+            },
+            PONER: function (name) {
+                var prepokemon = POKEMOMFIND.GENERATE(name.toLowerCase());
+                ACTIONS.LOAD.ADD([prepokemon.imageUrl, prepokemon.cryUrl], function () {
+                    $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX] = prepokemon;
+                    $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX].battle = OSO(BATTLEDEFAULT);
+                    POKEMONBATTLE.CHANGETARGET($scope, $scope.BATTLEOBJS.TARGETINDEX);
+                });
+            },
+            VACIARTEAM: function () {
+                $scope.BATTLEOBJS.TARGETS.splice(1, $scope.BATTLEOBJS.TARGETS.length - 1);
             }
         }
     };
     GLOBALINDEXTEST = 0;
+    ROTATEMOVE = 0;
 
 
     // Listeners
     $scope.PKM = {};
     $scope.PKM.hpc = 10;
-    $scope.PKM.statlimit = 8;
+    $scope.PKM.statCalc = 10;
+    $scope.PKM.statlimit = 4;
     $scope.PKM.mainMenu = false;
     $scope.PKM.menu = false;
     $scope.PKM.pokemonDetail = false;
@@ -2709,9 +2754,18 @@ function playactions($scope) {
         $scope.play("Menu", SOUNDS.system);
         $scope.PKM.menu = true;
     };
+    $scope.PKM.ability = function (obj) {
+        if (obj) {
+            if (obj.battle.ability) {
+                return OSO(APIS.ABILITIES.filter(d => d.keyname === obj.battle.ability)[0]);
+            } else
+                return OSO(APIS.ABILITIES.filter(d => d.keyname === obj.ability.keyname)[0]);
+        }
+    };
     $scope.PKM.friend = function (index) {
         if ($scope.session !== undefined)
-            return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
+            if ($scope.session.pokemons)
+                return $scope.session.pokemons[$scope.BATTLEOBJS.FRIENDINDEX];
     };
     $scope.PKM.target = function () {
         return $scope.BATTLEOBJS.TARGETS[$scope.BATTLEOBJS.TARGETINDEX];
@@ -2726,7 +2780,8 @@ function playactions($scope) {
         var base = (obj.stats.hp * $scope.PKM.hpc);
         var real = (obj.stats.hp * $scope.PKM.hpc) - obj.battle.stats.hp;
         real = real <= 0 ? 0 : real;
-        return (real * 100) / base;
+        var real2 = (real * 100) / base;
+        return real2 > 100 ? 100 : real2;
     };
     $scope.PKM.hpno = function (obj) {
         var base = (obj.stats.hp * $scope.PKM.hpc);
@@ -2746,30 +2801,90 @@ function playactions($scope) {
         }
         return "";
     };
+    $scope.PKM.hihgstat = function (obj) {
+        var max = "";
+        var valmax = 0;
+        for (var stat in obj.stats) {
+            if (stat !== 'hp' && stat !== 'accuracy') {
+                if (valmax < obj.stats[stat]) {
+                    max = stat;
+                    valmax = obj.stats[stat];
+                }
+            }
+        }
+        return max;
+    };
     $scope.PKM.stat = function (obj, stat, modifier) {
         if (modifier !== undefined) {
             if (stat !== "hp") {
-                if (obj.battle.stats[stat] < $scope.PKM.statlimit && obj.battle.stats[stat] > ($scope.PKM.statlimit * -1))
-                    obj.battle.stats[stat] += parseInt(modifier);
+
+                var info = {friendAbility: $scope.PKM.ability(obj)};
+                if (info.friendAbility.blocks)
+                    if (info.friendAbility.blocks.indexOf('before_stat') !== -1) {
+                        if (info.friendAbility.code) {
+                            eval(info.friendAbility.code);
+                            console.loggreen(info.friendAbility.shortDesc + ": " + info.friendAbility.code);
+                        }
+                    }
+
+                obj.battle.stats[stat] += parseInt(modifier);
+                var modifico = true;
+                if (obj.battle.stats[stat] > $scope.PKM.statlimit) {
+                    obj.battle.stats[stat] = $scope.PKM.statlimit;
+                    modifico = false;
+                }
+                if (obj.battle.stats[stat] < ($scope.PKM.statlimit * -1)) {
+                    obj.battle.stats[stat] = ($scope.PKM.statlimit * -1);
+                    modifico = false;
+                }
+                if (modifico) {
+                    if (modifier > 0) {
+                        if (info.friendAbility.blocks)
+                            if (info.friendAbility.blocks.indexOf('up_stat') !== -1) {
+                                if (info.friendAbility.code) {
+                                    eval(info.friendAbility.code);
+                                    console.loggreen(info.friendAbility.shortDesc + ": " + info.friendAbility.code);
+                                }
+                            }
+                    } else {
+                        if (info.friendAbility.blocks)
+                            if (info.friendAbility.blocks.indexOf('down_stat') !== -1) {
+                                if (info.friendAbility.code) {
+                                    eval(info.friendAbility.code);
+                                    console.loggreen(info.friendAbility.shortDesc + ": " + info.friendAbility.code);
+                                }
+                            }
+                    }
+                }
+                if (obj.battle.stats[stat] > $scope.PKM.statlimit) {
+                    obj.battle.stats[stat] = $scope.PKM.statlimit;
+                }
+                if (obj.battle.stats[stat] < ($scope.PKM.statlimit * -1)) {
+                    obj.battle.stats[stat] = ($scope.PKM.statlimit * -1);
+                }
             } else {
                 obj.battle.stats[stat] += parseInt(modifier);
+                if (obj.battle.stats[stat] < 0)
+                    obj.battle.stats[stat] = 0;
             }
         }
         if (stat !== "hp") {
-            return (obj.stats[stat]) - obj.battle.stats[stat];
+            return (obj.stats[stat]) + ((obj.battle.stats[stat] * $scope.PKM.statCalc) * -1);
         }
     };
     $scope.PKM.moves = function (obj) {
         return obj.battle.moves || obj.moves;
     };
     $scope.PKM.hpcolor = function (hp) {
-        if (hp >= 50)
+        if (hp > 100)
+            return "bg-blue";
+        if (hp >= 50 && hp <= 100)
             return "bg-light-green";
         else if (hp <= 49 && hp >= 25)
             return "bg-amber";
         else if (hp >= 1)
             return "bg-red";
         else
-            return "bg-lala";
+            return "bg-black";
     };
 };

@@ -1,6 +1,6 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/tilesets";
+$root = "{$GLOBALS['resourcesFolder']}tilesets";
 $response = array();
 
 function getDirContents($dir, &$results = array())
@@ -14,7 +14,7 @@ function getDirContents($dir, &$results = array())
                 $data = explode("_", $data);
                 $url = explode("tilesets", $path);
                 $url = str_replace("\\", "/", $url[1]);
-                $url = "../resources/tilesets$url";
+                $url = "{$GLOBALS['resourcesFolder']}tilesets$url";
                 //var_dump($data);
                 $prop = array(
                     "url" => $url,

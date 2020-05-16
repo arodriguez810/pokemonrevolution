@@ -1,6 +1,6 @@
 <?php
 include_once 'dataheader.php';
-$root = "../resources/animations";
+$root = "{$GLOBALS['resourcesFolder']}animations";
 $response = array();
 
 function getDirContents($dir, &$results = array())
@@ -14,7 +14,7 @@ function getDirContents($dir, &$results = array())
                 $url = explode("animations", $path);
                 $directory = explode("\\", $path)[count(explode("\\", $path)) - 2];
                 $url = str_replace("\\", "/", $url[1]);
-                $url = "../resources/animations$url";
+                $url = "{$GLOBALS['resourcesFolder']}animations$url";
                 $prop = array(
                     "url" => $url,
                     "file" => str_replace('.png', '', $value)
