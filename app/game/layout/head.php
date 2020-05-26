@@ -1,6 +1,6 @@
 <?php
 
-$version = "1.0.0.32";
+$version = "1.0.0.90";
 
 function TitleImg()
 {
@@ -28,6 +28,7 @@ function TitleImg()
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
     <link href="css/game.css" rel="stylesheet">
+    <link href="css/codemirror.css" rel="stylesheet">
     <!-- Animation Css -->
     <link href="plugins/animate-css/animate.css" rel="stylesheet"/>
     <!-- Morris Chart Css-->

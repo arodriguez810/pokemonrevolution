@@ -164,7 +164,7 @@
             <i class="material-icons">reply</i>
         </button>
 
-        <button type="button" onclick="location.href='face'"
+        <button type="button" onclick="location.href='face.html'"
                 style="margin: 10px 10px 10px 10px"
                 class="btn bg-pink  btn-circle-lg waves-effect waves-circle waves-float">
             <i class="material-icons">face</i>
@@ -177,8 +177,8 @@
                     title: `Estas seguro que desea cerrar esta sessón?`,
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Si",
-                    cancelButtonText: "NO",
+                    confirmButtonText: LAN.t("Yes"),
+                    cancelButtonText: LAN.t("No"),
                     closeOnConfirm: false,
                     showLoaderOnConfirm: false,
                 }, function () {

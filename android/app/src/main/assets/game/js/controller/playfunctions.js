@@ -15,9 +15,14 @@ function playfunctions($scope) {
         STAGE.update();
     };
     $scope.drawMap = function (name) {
+        if (maps[FIRSTMAP].maper) {
+            var positens = maps[FIRSTMAP].maper.split(',');
+            if (positens.length === 2) {
+                $scope.mapperIconReorder(positens);
+            }
+        }
         FIRSTMAP = name;
         for (var L = 1; L <= 9; L++) {
-
             var Sprite = new createjs.SpriteSheet({
                 framerate: $scope.spriteFrames,
                 "images": [
@@ -109,7 +114,9 @@ function playfunctions($scope) {
                 }
             }
         }, 500);
+        $scope.fristRouteTick = true;
         setInterval(function () {
+            $scope.fristRouteTick = false;
             if (!$scope.pause) {
                 if (!$scope.runningEvent) {
                     for (var i in $scope.NPCS) {
@@ -137,7 +144,7 @@ function playfunctions($scope) {
             }
             ACTIONS.AMBIENT.RUN();
             $scope.transition = false;
-        }, $scope.routesTick * 1000);
+        }, $scope.fristRouteTick ? 0 : ($scope.routesTick * 1000));
 
     };
     $scope.drawObject = function (hero, name, x, y, L) {
@@ -161,26 +168,30 @@ function playfunctions($scope) {
         hero.body.name = `object_` + name;
         if (hero.event.object.canBreak === "1") {
             if ($scope.hero.canBreak) {
-                hero.body.on("click", function (evt) {
-                    if ($scope.hero.staticing) {
-                        return;
-                    }
-                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
-                        return;
-                    if ($scope.hero.flying)
-                        return;
-                    if (!$scope.breaking) {
-                        $scope.breaking = true;
-                        ACTIONS.PLAYER.SHAKE(50, 24, 5, function () {
-                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Break", undefined, function () {
 
+
+                hero.body.on("click", function (evt) {
+                    if (ACTIONS.UNIT.TEST().session.logros.indexOf("Destruir") !== -1) {
+                        if ($scope.hero.staticing) {
+                            return;
+                        }
+                        if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                            return;
+                        if ($scope.hero.flying)
+                            return;
+                        if (!$scope.breaking) {
+                            $scope.breaking = true;
+                            ACTIONS.PLAYER.SHAKE(50, 24, 5, function () {
+                                ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Break", undefined, function () {
+
+                                });
+                                ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
+                                    eval(`layer${L}.removeChild(hero.body);`);
+                                    delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
+                                    $scope.breaking = false;
+                                });
                             });
-                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
-                                eval(`layer${L}.removeChild(hero.body);`);
-                                delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
-                                $scope.breaking = false;
-                            });
-                        });
+                        }
                     }
                 });
             }
@@ -189,39 +200,41 @@ function playfunctions($scope) {
 
             if ($scope.hero.canMove) {
                 hero.body.on("click", function (evt) {
-                    if ($scope.hero.staticing) {
-                        return;
-                    }
-                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
-                        return;
-                    if ($scope.hero.flying)
-                        return;
-                    if (!$scope.breaking) {
-                        $scope.breaking = true;
-                        ACTIONS.GAME.BLOCK();
-                        ACTIONS.PLAYER.SHAKE(10, 12, 2, function () {
-                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Move", undefined, function () {
-                                var moveer = true;
-                                if (ACTIONS.PLAYER.POSITION() === "up")
-                                    if ($scope.collision(hero, hero.x, hero.y - 1))
-                                        moveer = false;
-                                if (ACTIONS.PLAYER.POSITION() === "down")
-                                    if ($scope.collision(hero, hero.x, hero.y + 1))
-                                        moveer = false;
-                                if (ACTIONS.PLAYER.POSITION() === "left")
-                                    if ($scope.collision(hero, hero.x - 1, hero.y))
-                                        moveer = false;
-                                if (ACTIONS.PLAYER.POSITION() === "right")
-                                    if ($scope.collision(hero, hero.x + 1, hero.y))
-                                        moveer = false;
+                    if (ACTIONS.UNIT.TEST().session.logros.indexOf("Mover") !== -1) {
+                        if ($scope.hero.staticing) {
+                            return;
+                        }
+                        if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                            return;
+                        if ($scope.hero.flying)
+                            return;
+                        if (!$scope.breaking) {
+                            $scope.breaking = true;
+                            ACTIONS.GAME.BLOCK();
+                            ACTIONS.PLAYER.SHAKE(10, 12, 2, function () {
+                                ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Move", undefined, function () {
+                                    var moveer = true;
+                                    if (ACTIONS.PLAYER.POSITION() === "up")
+                                        if ($scope.collision(hero, hero.x, hero.y - 1))
+                                            moveer = false;
+                                    if (ACTIONS.PLAYER.POSITION() === "down")
+                                        if ($scope.collision(hero, hero.x, hero.y + 1))
+                                            moveer = false;
+                                    if (ACTIONS.PLAYER.POSITION() === "left")
+                                        if ($scope.collision(hero, hero.x - 1, hero.y))
+                                            moveer = false;
+                                    if (ACTIONS.PLAYER.POSITION() === "right")
+                                        if ($scope.collision(hero, hero.x + 1, hero.y))
+                                            moveer = false;
 
-                                if (moveer) {
-                                    eval(`ACTIONS.OBJECT.MOVE_${ACTIONS.PLAYER.POSITION().toUpperCase().replace("W", "").replace("DON", "DOWN")}(hero.body.name.replace('object_', ''));`)
-                                }
-                                $scope.breaking = false;
-                                ACTIONS.GAME.UNBLOCK();
+                                    if (moveer) {
+                                        eval(`ACTIONS.OBJECT.MOVE_${ACTIONS.PLAYER.POSITION().toUpperCase().replace("W", "").replace("DON", "DOWN")}(hero.body.name.replace('object_', ''));`)
+                                    }
+                                    $scope.breaking = false;
+                                    ACTIONS.GAME.UNBLOCK();
+                                });
                             });
-                        });
+                        }
                     }
                 });
             }
@@ -236,6 +249,7 @@ function playfunctions($scope) {
                     return;
                 var oldposition = ACTIONS.PLAYER.POSITION();
                 ACTIONS.PLAYER.GET().body.gotoAndPlay("gire");
+                createjs.Tween.get($scope.hero.body).to({scale: 0.7}, 500);
                 setTimeout(function () {
                     var x, y;
                     if (oldposition === "up") {
@@ -350,25 +364,27 @@ function playfunctions($scope) {
         if (hero.event.object.canBreak === "1") {
             if ($scope.hero.canBreak) {
                 hero.body.on("click", function (evt) {
-                    if ($scope.hero.staticing) {
-                        return;
-                    }
-                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
-                        return;
-                    if ($scope.hero.flying)
-                        return;
-                    if (!$scope.breaking) {
-                        $scope.breaking = true;
-                        ACTIONS.PLAYER.SHAKE(50, 24, 5, function () {
-                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Break", undefined, function () {
+                    if (ACTIONS.UNIT.TEST().session.logros.indexOf("Destruir") !== -1) {
+                        if ($scope.hero.staticing) {
+                            return;
+                        }
+                        if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                            return;
+                        if ($scope.hero.flying)
+                            return;
+                        if (!$scope.breaking) {
+                            $scope.breaking = true;
+                            ACTIONS.PLAYER.SHAKE(50, 24, 5, function () {
+                                ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Break", undefined, function () {
 
+                                });
+                                ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
+                                    eval(`layer${L}.removeChild(hero.body);`);
+                                    delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
+                                    $scope.breaking = false;
+                                });
                             });
-                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
-                                eval(`layer${L}.removeChild(hero.body);`);
-                                delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
-                                $scope.breaking = false;
-                            });
-                        });
+                        }
                     }
                 });
             }
@@ -377,39 +393,41 @@ function playfunctions($scope) {
 
             if ($scope.hero.canMove) {
                 hero.body.on("click", function (evt) {
-                    if ($scope.hero.staticing) {
-                        return;
-                    }
-                    if (!ACTIONS.GAME.NEAR($scope.hero, hero))
-                        return;
-                    if ($scope.hero.flying)
-                        return;
-                    if (!$scope.breaking) {
-                        $scope.breaking = true;
-                        ACTIONS.GAME.BLOCK();
-                        ACTIONS.PLAYER.SHAKE(10, 12, 2, function () {
-                            ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Move", undefined, function () {
-                                var moveer = true;
-                                if (ACTIONS.PLAYER.POSITION() === "up")
-                                    if ($scope.collision(hero, hero.x, hero.y - 1))
-                                        moveer = false;
-                                if (ACTIONS.PLAYER.POSITION() === "down")
-                                    if ($scope.collision(hero, hero.x, hero.y + 1))
-                                        moveer = false;
-                                if (ACTIONS.PLAYER.POSITION() === "left")
-                                    if ($scope.collision(hero, hero.x - 1, hero.y))
-                                        moveer = false;
-                                if (ACTIONS.PLAYER.POSITION() === "right")
-                                    if ($scope.collision(hero, hero.x + 1, hero.y))
-                                        moveer = false;
+                    if (ACTIONS.UNIT.TEST().session.logros.indexOf("Mover") !== -1) {
+                        if ($scope.hero.staticing) {
+                            return;
+                        }
+                        if (!ACTIONS.GAME.NEAR($scope.hero, hero))
+                            return;
+                        if ($scope.hero.flying)
+                            return;
+                        if (!$scope.breaking) {
+                            $scope.breaking = true;
+                            ACTIONS.GAME.BLOCK();
+                            ACTIONS.PLAYER.SHAKE(10, 12, 2, function () {
+                                ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "Move", undefined, function () {
+                                    var moveer = true;
+                                    if (ACTIONS.PLAYER.POSITION() === "up")
+                                        if ($scope.collision(hero, hero.x, hero.y - 1))
+                                            moveer = false;
+                                    if (ACTIONS.PLAYER.POSITION() === "down")
+                                        if ($scope.collision(hero, hero.x, hero.y + 1))
+                                            moveer = false;
+                                    if (ACTIONS.PLAYER.POSITION() === "left")
+                                        if ($scope.collision(hero, hero.x - 1, hero.y))
+                                            moveer = false;
+                                    if (ACTIONS.PLAYER.POSITION() === "right")
+                                        if ($scope.collision(hero, hero.x + 1, hero.y))
+                                            moveer = false;
 
-                                if (moveer) {
-                                    eval(`ACTIONS.OBJECT.MOVE_${ACTIONS.PLAYER.POSITION().toUpperCase().replace("W", "").replace("DON", "DOWN")}(hero.body.name.replace('object_', ''));`)
-                                }
-                                $scope.breaking = false;
-                                ACTIONS.GAME.UNBLOCK();
+                                    if (moveer) {
+                                        eval(`ACTIONS.OBJECT.MOVE_${ACTIONS.PLAYER.POSITION().toUpperCase().replace("W", "").replace("DON", "DOWN")}(hero.body.name.replace('object_', ''));`)
+                                    }
+                                    $scope.breaking = false;
+                                    ACTIONS.GAME.UNBLOCK();
+                                });
                             });
-                        });
+                        }
                     }
                 });
             }
@@ -422,8 +440,10 @@ function playfunctions($scope) {
                     return;
                 if ($scope.hero.deeping)
                     return;
+
                 var oldposition = ACTIONS.PLAYER.POSITION();
                 ACTIONS.PLAYER.GET().body.gotoAndPlay("gire");
+                createjs.Tween.get($scope.hero.body).to({scale: 0.7}, 500);
                 setTimeout(function () {
                     var x, y;
                     if (oldposition === "up") {
@@ -696,7 +716,12 @@ function playfunctions($scope) {
     $scope.runScript = async (c) => new Promise(async (resolve, reject) => {
         if (c.script.indexOf('@next') === -1)
             c.script += " @next";
-        eval(`if (${c.CC}) { a = async function(){ ${$scope.runShortCuts(c.script)} return; }();  }`);
+        if (eval(c.CC)) {
+            eval(`a = async function(){ ${$scope.runShortCuts(c.script)} return; }();  `);
+        } else {
+            resolve(false);
+        }
+
     });
     $scope.runShortCuts = function (script) {
         var newscript = script;
@@ -711,7 +736,7 @@ function playfunctions($scope) {
             for (var i in $scope.NPCS) {
                 var NPC = $scope.NPCS[i];
                 if (NPC)
-                    if (NPC.body.visible)
+                    if (NPC.body.visible || NPC.event.trigger === E_trigger.collision) {
                         if (NPC.x === cx && NPC.y === cy)
                             if (NPC.l === hero.l || NPC.l === (hero.l + 1)) {
                                 if (NPC.event.trigger === trigger) {
@@ -734,14 +759,14 @@ function playfunctions($scope) {
                                     resolve(true);
                                 }
                             }
+                    }
             }
             for (var i in $scope.OBJECTS) {
                 var NPC = $scope.OBJECTS[i];
                 if (NPC)
-                    if (NPC.body.visible) {
+                    if (NPC.body.visible || NPC.event.trigger === E_trigger.collision) {
                         if (NPC.x === cx && NPC.y === cy) {
                             if (NPC.l === hero.l || NPC.l === (hero.l + 1)) {
-
                                 if (NPC.event.trigger === trigger) {
                                     var xrange = {
                                         min: NPC.x - NPC.event.trigger_step,
@@ -811,13 +836,14 @@ function playfunctions($scope) {
         $scope.loadingPage.visible = false;
     };
     $scope.toDO = function (url) {
-        if (url) {
-            var parts = url.split('../resources');
-            if (parts.length > 1)
-                return DOMAINRESOURCE + 'resources/' + parts[1];
-            return url;
-        } else
-            return url;
+        return url;
+        // if (url) {
+        //     var parts = url.split('../resources');
+        //     if (parts.length > 1)
+        //         return DOMAINRESOURCE + 'resources/' + parts[1];
+        //     return url;
+        // } else
+        //     return url;
     };
     $scope.loadMap = (name) => new Promise(async (resolve, reject) => {
         if (!mapQueues[name]) {
@@ -825,7 +851,7 @@ function playfunctions($scope) {
             mapQueues[name].installPlugin(createjs.Sound);
 
             maps[name] = await GAME.GETMAP(name);
-            $scope.playLoading("Cargando " + name);
+            $scope.playLoading(LANGUAGE.t("Loading"));
             var loadJson = [];
             loadJson.push({id: "BG", src: DOMAIN + `data/maps_file/${name}/bg.png?v=${maps[name].version}`});
             for (var A = 65; A <= 67; A++) {
@@ -868,11 +894,11 @@ function playfunctions($scope) {
                 var e = maps[name].event[event];
                 if (e.isActor == "1") {
                     await $scope.loadNPC(e.hero.name);
-                    $scope.playLoading("Cargando " + name);
+                    $scope.playLoading(LANGUAGE.t("Loading"));
 
                 } else {
                     await $scope.loadObject(e);
-                    $scope.playLoading("Dibujando " + name);
+                    $scope.playLoading(LANGUAGE.t("Loading"));
                 }
             }
             mapQueues[name].loadManifest(loadJson);
@@ -881,7 +907,7 @@ function playfunctions($scope) {
                     if (maps[name].vecinos.length > 0) {
                         for (var vecino of maps[name].vecinos) {
                             await $scope.loadMap(vecino);
-                            $scope.playLoading("Dibujando " + name);
+                            $scope.playLoading(LANGUAGE.t("Loading"));
                         }
                     }
                 resolve(true);
@@ -969,7 +995,7 @@ function playfunctions($scope) {
     });
     $scope.loadSystem = () => new Promise(async (resolve, reject) => {
         if (!mapQueues["resources_system"]) {
-            $scope.loadingPage = new createjs.Text("Cargando", "40px monospaced", _colorsReal[getRandomInt(_colorsReal.length - 1)]);
+            $scope.loadingPage = new createjs.Text(LANGUAGE.t("Loading"), "40px monospaced", _colorsReal[getRandomInt(_colorsReal.length - 1)]);
             $scope.loadingPage.set({
                 textAlign: "center",
                 textBaseline: "middle",
@@ -1035,21 +1061,140 @@ function playfunctions($scope) {
     });
     $scope.loadingPage = null;
     $scope.padder = false;
+    $scope.mapperIconReorder = function (positens) {
+        if (positens.length === 2) {
+            $scope.mapperIcon = `margin-left:${POKEMONBATTLE.X(0)};margin-top:${POKEMONBATTLE.Y(0)};top: ${positens[1]}px;left: ${positens[0]}px;`;
+        }
+    };
     $scope.init = async function () {
+        LAN = await LANGUAGE_.ALL();
+        $scope.LAN = LANGUAGE;
         var position = await GAME.PLAYERPOSITION();
+        $scope.gposition = position;
         FIRSTMAP = position.map;
         await $scope.loadSystem();
-        $scope.playLoading("Cargando 20%");
-        LAN = await LANGUAGE_.ALL();
-        $scope.playLoading("Cargando 40%");
-        $scope.LAN = LANGUAGE;
-        $scope.playLoading("Cargando 50%");
+        $scope.playLoading(LANGUAGE.t("Loading"));
+        $scope.playLoading(LANGUAGE.t("Loading"));
+        $scope.interface = [
+            {name: 'perfil', icon: 'face', color: 'blue', text: LANGUAGE.t("Profile")},
+            {name: 'pokemons', icon: 'adb', color: 'green', text: LANGUAGE.t("Pokemons")},
+            {name: 'logros', icon: 'grade', color: 'orange', text: LANGUAGE.t("Skills")},
+            {name: 'bobeda', icon: 'desktop_windows', color: 'teal', text: LANGUAGE.t("Vault")},
+            {name: 'friends', icon: 'child_care', color: 'pink', text: LANGUAGE.t("Friends")},
+        ];
+        LOGROS = {
+            Saltarin: {
+                "name": LANGUAGE.t("Jumping"),
+                "key": "Saltarin",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you will be able to jump the structures, you can do it by clicking on your character"),
+                "icon": 141
+            },
+            Bucear: {
+                "name": LANGUAGE.t("Dive"),
+                "key": "Dive",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you will be able to jump the waters to dive, you must be Jump as a requirement"),
+                "icon": 12
+            },
+            Destello: {
+                "name": LANGUAGE.t("Flash"),
+                "key": "Flash",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you will be able to light up the caves for a while"),
+                "icon": 71,
+                "script": "ACTIONS.PLAYER.LIGH (30)"
+            },
+            Vuelo: {
+                "name": LANGUAGE.t("Flight"),
+                "key": "Flight",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you can fly if you want!"),
+                "icon": 226,
+                "script": "ACTIONS.PLAYER.FLY ()"
+            },
+            Destruir: {
+                "name": LANGUAGE.t("Destroy"),
+                "key": "Destroy",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you can remove some objects by touching them"),
+                "icon": 79
+            },
+            Mover: {
+                "name": LANGUAGE.t("Move"),
+                "key": "Move",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you will be able to move some objects by touching them"),
+                "icon": 78
+            },
+            Invisibilidad: {
+                "name": LANGUAGE.t("Invisibility"),
+                "key": "Invisibility",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you will be able to hide from coaches and pokemon"),
+                "icon": 20,
+                "script": "ACTIONS.PLAYER.HIDE ()"
+            },
+            Teletransportacion: {
+                "name": LANGUAGE.t("Teleportation"),
+                "key": "Teleportation",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you will be able to teleport to the limit of your gaze, it may contain hidden powers"),
+                "icon": 307,
+                "script": "ACTIONS.PLAYER.TELE ()"
+            },
+            SoyAgua: {
+                "name": LANGUAGE.t("I am Water"),
+                "key": "SoyAgua",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you unite with the water to be able to climb waterfalls and swim faster, it may contain hidden powers"),
+                "icon": 68,
+                "script": "ACTIONS.PLAYER.WATERELEMENTAL ()"
+            },
+            SoyFuego: {
+                "name": LANGUAGE.t("I am Fire"),
+                "key": "SoyFuego",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you turn into fire to be driven like a cannon, it may contain hidden powers"),
+                "icon": 65,
+                "script": "ACTIONS.PLAYER.FIREELEMENTAL ()"
+            },
+            SoyTierra: {
+                "name": LANGUAGE.t("I am Earth"),
+                "key": "SoyTierra",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you can create rocks that will serve as bridges and springs, it can contain hidden powers"),
+                "icon": 69,
+                "script": "ACTIONS.PLAYER.EARTHELEMENTAL ()"
+            },
+            SoyTrueno: {
+                "name": LANGUAGE.t("I am Thunder"),
+                "key": "SoyTrueno",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you can be one with thunder, increasing your physical and magical possibilities with unexpected powers"),
+                "icon": 67,
+                "script": "ACTIONS.PLAYER.Thunder ()"
+            },
+            Tiempo: {
+                "name": LANGUAGE.t("Time Control"),
+                "key": "Time",
+                "term": LANGUAGE.t("Skill"),
+                "desc": LANGUAGE.t("With this technique you can change the current time"),
+                "icon": 221,
+                "script": "ACTIONS.AMBIENT.CHANGETIME ()"
+            }
+
+        };
+        $scope.playLoading(LANGUAGE.t("Loading"));
         await $scope.loadMap(FIRSTMAP);
-        $scope.playLoading("Cargando 80%");
+        $scope.mapperIconReorder([0, 0]);
+
+        $scope.playLoading(LANGUAGE.t("Loading"));
         await $scope.loadPlayer();
-        $scope.playLoading("Dibujando Tu Aventura");
+        $scope.playLoading(LANGUAGE.t("Loading"));
         $scope.drawMap(FIRSTMAP);
         $scope.drawPlayer($scope.hero, $scope.session.id, parseInt(position.x), parseInt(position.y), parseInt(position.l));
+        ACTIONS.CAMERA.PLAYER();
         $scope.stopLoading();
         $scope.menu = true;
         ACTIONS.AMBIENT.RUN();
@@ -1059,8 +1204,22 @@ function playfunctions($scope) {
         APIS.TYPES = await POKEMONAPI.TYPES();
         APIS.LEARNS = await POKEMONAPI.LEARNS();
         APIS.POKEDEX = await POKEMONAPI.ALL();
+        for (var termino in $scope.personalities) {
+            for (var category in $scope.personalities[termino]) {
+                for (var text in $scope.personalities[termino][category]) {
+                    $scope.personalities[termino][category][text] = LANGUAGE.t($scope.personalities[termino][category][text]);
+                }
+            }
+        }
+        // for (var termino of APIS.ABILITIES) {
+        //     termino.name = LANGUAGE.t(termino.name);
+        //     termino.shortDesc = LANGUAGE.t(termino.shortDesc);
+        // }
+        // for (var termino in APIS.TYPES) LANGUAGE.t(termino);
         //APIS.POKEDEX = APIS.POKEDEX.sort((a, b) => (a.keyname > b.keyname) ? 1 : -1);
-
+        if (maps[FIRSTMAP].enviroment === "cave") {
+            $scope.ambient = "darkcave";
+        }
         if (!$scope.$$phase)
             $scope.$digest();
         LASTMOVEMENT = undefined;

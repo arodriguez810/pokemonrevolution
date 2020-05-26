@@ -126,7 +126,7 @@
     "blocks": [
       "target_begin"
     ],
-    "code": "if ([\"attract\", \"disable\", \"encore\", \"healblock\", \"taunt\", \"torment\"].indexOf(info.move.keyname) !== -1) {\n            if (callback)\n                callback({critical: false, miss: true, damage: 0});\n            return;\n        }",
+    "code": "if ([\"attract\", \"disable\", \"encore\", \"healblock\", \"taunt\", \"torment\"].indexOf(info.move.keyname) !== -1) {\n            if (callback)\n                callback({critical: false, miss: true, damage: 0});\n             willreturn='empty'; \n        }",
     "keyname": "aromaveil"
   },
   {
@@ -306,7 +306,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
+    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "clearbody"
   },
   {
@@ -501,7 +501,7 @@
     "blocks": [
       "before_speed"
     ],
-    "code": "  if (yosoy === \"friend\") if(friendAction.move.priority>0) friendAction.move.priority= 0;\n                    if (yosoy === \"target\") if(enemyAction.move.priority>0) enemyAction.move.priority= 0;",
+    "code": "if (yosoy === \"friend\") \n\t if(enemyAction.move.priority>0) enemyAction.move.priority= 0;\n if (yosoy === \"target\") \n\t if(friendAction.move.priority>0) friendAction.move.priority= 0;",
     "keyname": "dazzling"
   },
   {
@@ -594,9 +594,9 @@
     "rating": 4.5,
     "num": 2,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.clima = \"RainDance\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "drizzle"
   },
   {
@@ -606,9 +606,9 @@
     "rating": 4.5,
     "num": 70,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.clima = \"sunnyday\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "drought"
   },
   {
@@ -620,9 +620,9 @@
     "rating": 3,
     "num": 87,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": " if ($scope.BATTLEOBJS.clima === \"RainDance\")\n                $scope.PKM.stat(info.pokemonTarget, \"hp\", ($scope.PKM.basehp(info.pokemonTarget) * (1 / 8)) * -1);\n            if (info.move.type === \"Water\") {\n                ACTIONS.ANIMATION.PLAYNATURAL(\"Heal\",\n                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        $scope.PKM.stat(info.pokemonTarget, \"hp\", ($scope.PKM.basehp(info.pokemonTarget) * (1 / 4)) * -1);\n                    }, undefined, undefined, undefined, undefined, undefined);\n                willreturn -1;\n            }\n            if (info.move.type === \"Fire\") {\n                fata *= 1.25;\n                ACTIONS.ANIMATION.PLAYNATURAL(\"critico\",\n                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                    }, undefined, undefined, undefined, undefined, undefined);\n            }",
     "keyname": "dryskin"
   },
   {
@@ -632,9 +632,9 @@
     "rating": 1.5,
     "num": 48,
     "blocks": [
-      "begin"
+      "status_slp"
     ],
-    "code": "",
+    "code": "pregunta=30;",
     "keyname": "earlybird"
   },
   {
@@ -645,9 +645,9 @@
     "rating": 2,
     "num": 27,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags)\n                if (info.move.flags.contact)\n                    if (getRandomInt(100) >= 70) {\n                        info.pokemonFriend.battle.statusTurn = 0;\n                        info.pokemonFriend.battle.status = randomArray([\"brn\", \"par\", \"tox\"]);\n                    }",
     "keyname": "effectspore"
   },
   {
@@ -657,9 +657,9 @@
     "rating": 4,
     "num": 226,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.terrain = \"electricterrain\";$scope.BATTLEOBJS.terrainTurn = 0;",
     "keyname": "electricsurge"
   },
   {
@@ -670,9 +670,9 @@
     "rating": 1,
     "num": 194,
     "blocks": [
-      "begin"
+      "target_downhp"
     ],
-    "code": "",
+    "code": " if ($scope.PKM.hp(info.pokemonTarget) <= 50) {\n                                    var lives = [];\n                                    if (info.isEnemy)\n                                        for (var pok in $scope.session.pokemons) {\n                                            if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)\n                                                if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)\n                                                    lives.push(pok);\n                                        }\n                                    if (!info.isEnemy)\n                                        for (var pok in $scope.BATTLEOBJS.TARGETS) {\n                                            if (pok !== $scope.BATTLEOBJS.TARGETINDEX)\n                                                if ($scope.PKM.hp($scope.BATTLEOBJS.TARGETS[pok]) > 0)\n                                                    lives.push(pok);\n                                        }\n                                    if (lives.length > 0) {\n                                        if (!info.isEnemy) {\n                                            $scope.BATTLEOBJS.TARGETINDEX = randomArray(lives);\n                                            $scope.BATTLEOBJS.TARGET = POKEMONBATTLE.TARGET($scope);\n                                        } else {\n                                            $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);\n                                            $scope.BATTLEOBJS.FRIEND = POKEMONBATTLE.FRIEND($scope);\n                                        }\n\n                                        ACTIONS.ANIMATION.PLAYNATURAL(\"Hide\",\n                                            POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                                            POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                                            function () {\n                                                if (!info.isEnemy) {\n                                                    ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);\n                                                    ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl, SOUNDS.system);\n                                                } else {\n                                                    ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);\n                                                    ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl, SOUNDS.system);\n                                                }\n                                            }, undefined, undefined, undefined, undefined, undefined);\n\n                                    }\n                                }",
     "keyname": "emergencyexit"
   },
   {
@@ -684,9 +684,10 @@
     "rating": 3.5,
     "num": 187,
     "blocks": [
-      "begin"
+      "calcstats",
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if (info.move.type === \"Fairy\") fata *= 1.3;",
     "keyname": "fairyaura"
   },
   {
@@ -696,9 +697,9 @@
     "rating": 3,
     "num": 111,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if ([\"*2\", \"*4\"].indexOf(multiplier) !== -1) fata *= (3 / 4);",
     "keyname": "filter"
   },
   {
@@ -708,9 +709,9 @@
     "rating": 2,
     "num": 49,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags)\n                if (info.move.flags.contact)\n                    if (getRandomInt(100) >= 70) {\n                        info.pokemonFriend.battle.statusTurn = 0;\n                        info.pokemonFriend.battle.status = randomArray([\"brn\"]);\n                    }",
     "keyname": "flamebody"
   },
   {
@@ -722,14 +723,14 @@
     "rating": 2,
     "num": 138,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if (info.pokemonFriend.battle.status === \"brn\") fata *= 1.5;",
     "keyname": "flareboost"
   },
   {
     "desc": "This Pokemon is immune to Fire-type moves. The first time it is hit by a Fire-type move, its attacking stat is multiplied by 1.5 while using a Fire-type attack as long as it remains active and has this Ability. If this Pokemon is frozen, it cannot be defrosted by Fire-type attacks.",
-    "shortDesc": "This Pokemon's Fire attacks do 1.5x damage if hit by one Fire move; Fire immunity.",
+    "shortDesc": "This Pokemon's Fire attacks do 1.5x damage, Fire immunity.",
     "effect": {
       "noCopy": true,
       "onModifyAtkPriority": 5,
@@ -740,14 +741,14 @@
     "rating": 3.5,
     "num": 18,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": " if (info.move.type === \"Fire\") fata *= 1.5;",
     "keyname": "flashfire"
   },
   {
     "desc": "If this Pokemon is a Cherrim and Sunny Day is active, it changes to Sunshine Form and the Attack and Special Defense of it and its allies are multiplied by 1.5. If this Pokemon is a Cherrim and it is holding Utility Umbrella, it remains in its regular form and the Attack and Special Defense stats of it and its allies are not boosted. If this Pokemon is a Cherrim in its Sunshine form and is given Utility Umbrella, it will immediately switch back to its regular form. If this Pokemon is a Cherrim holding Utility Umbrella and its item is removed while Sunny Day is active, it will transform into its Sunshine Form. If an ally is holding Utility Umbrella while Cherrim is in its Sunshine Form, they will not receive the Attack and Special Defense boosts.",
-    "shortDesc": "If user is Cherrim and Sunny Day is active, it and allies' Attack and Sp. Def are 1.5x.",
+    "shortDesc": "Sunny Day is active, Attack and Sp. Def are 1.5x.",
     "onAllyModifyAtkPriority": 3,
     "onModifySpDPriority": 4,
     "id": "flowergift",
@@ -755,14 +756,14 @@
     "rating": 1,
     "num": 122,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.clima === \"sunnyday\") if (ata === \"atk\") fata *= 1.5;",
     "keyname": "flowergift"
   },
   {
     "desc": "Grass-type Pokemon on this Pokemon's side cannot have their stat stages lowered by other Pokemon or have a major status condition inflicted on them by other Pokemon.",
-    "shortDesc": "This side's Grass types can't have stats lowered or status inflicted by other Pokemon.",
+    "shortDesc": "This pokemon can't have stats lowered or status inflicted by other Pokemon.",
     "id": "flowerveil",
     "name": "Flower Veil",
     "rating": 0,
@@ -770,7 +771,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "for (var stat of STATGLOBAL)  if (info.pokemonFriend.battle.stats[stat] > 0)  info.pokemonFriend.battle.stats[stat] = 0;",
     "keyname": "flowerveil"
   },
   {
@@ -781,14 +782,14 @@
     "rating": 3,
     "num": 218,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if (info.move.flags) if (info.move.flags.contact) fata *= (1 / 2);\n            if (info.move.type === \"Fire\") fata *= 2;",
     "keyname": "fluffy"
   },
   {
     "desc": "If this Pokemon is a Castform, its type changes to the current weather condition's type, except Sandstorm. If this Pokemon is holding Utility Umbrella and the weather condition is Sunny Day, Desolate Land, Rain Dance, or Primordial Sea, it will not change types.",
-    "shortDesc": "Castform's type changes to the current weather condition's type, except Sandstorm.",
+    "shortDesc": "Type changes to the current weather condition's type",
     "id": "forecast",
     "name": "Forecast",
     "rating": 2,
@@ -796,7 +797,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.clima===\"hail\")\n            info.pokemonFriend.battle.status = \"Am_Ice\";\n        if($scope.BATTLEOBJS.clima===\"RainDance\")\n            info.pokemonFriend.battle.status = \"Am_Water\";\n        if($scope.BATTLEOBJS.clima===\"Sandstorm\")\n            info.pokemonFriend.battle.status = \"Am_Ground\";\n        if($scope.BATTLEOBJS.clima===\"strongwinds\")\n            info.pokemonFriend.battle.status = \"Am_Flying\";\n        if($scope.BATTLEOBJS.clima===\"sunlight\")\n            info.pokemonFriend.battle.status = \"Am_Grass\";\n        if($scope.BATTLEOBJS.clima===\"sunnyday\")\n            info.pokemonFriend.battle.status = \"Am_Fire\";",
     "keyname": "forecast"
   },
   {
@@ -807,33 +808,33 @@
     "rating": 0.5,
     "num": 108,
     "blocks": [
-      "begin"
+      "switch_friend"
     ],
-    "code": "",
+    "code": "var masfuerte = 0;\n                                var masfuertecount = 0;\n                                for (var mov of $scope.PKM.target().moves) {\n                                    if (mov.basePower > masfuertecount) {\n                                        masfuertecount = mov.basePower;\n                                        masfuerte = mov.name;\n                                    }\n                                }\n                                swal(\"Ataque mas fuerte: \" + masfuerte);",
     "keyname": "forewarn"
   },
   {
-    "shortDesc": "This Pokemon's allies receive 3\/4 damage from other Pokemon's attacks.",
+    "shortDesc": "This Pokemon's receive 3\/4 damage from other Pokemon's attacks.",
     "id": "friendguard",
     "name": "Friend Guard",
     "rating": 0,
     "num": 132,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "fata *= (3/4)",
     "keyname": "friendguard"
   },
   {
-    "shortDesc": "On switch-in, this Pokemon identifies the held items of all opposing Pokemon.",
+    "shortDesc": "On switch-in, this Pokemon identifies all status moves of opposing Pokemon.",
     "id": "frisk",
     "name": "Frisk",
     "rating": 1.5,
     "num": 119,
     "blocks": [
-      "begin"
+      "switch_friend"
     ],
-    "code": "",
+    "code": "var movesAlert = [];\n                                for (var mov of $scope.PKM.target().moves)\n                                    if (mov.category === \"Status\")\n                                        movesAlert.push(mov.name);\n                                swal(\"Status Attacks \" + movesAlert.join(\", \"));",
     "keyname": "frisk"
   },
   {
@@ -847,7 +848,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "fullmetalbody"
   },
   {
@@ -858,9 +859,9 @@
     "rating": 4,
     "num": 169,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(def===\"def\")  tdef*=2;",
     "keyname": "furcoat"
   },
   {
@@ -870,9 +871,9 @@
     "rating": 3,
     "num": 177,
     "blocks": [
-      "begin"
+      "before_speed"
     ],
-    "code": "",
+    "code": "if (yosoy === \"friend\") if ($scope.PKM.hp($scope.PKM.friend()) >= 100) if (friendAction.move.type === \"Flying\") friendAction.move.priority += 1;\n                    if (yosoy === \"target\") if ($scope.PKM.hp($scope.PKM.target()) >= 100) if (enemyAction.move.type === \"Flying\") enemyAction.move.priority += 1;",
     "keyname": "galewings"
   },
   {
@@ -885,13 +886,13 @@
     "rating": 4,
     "num": 206,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if (info.move.type === \"Normal\" || info.move.type === \"Electric\") {\n                info.move.type = \"Electric\";\n                fata *= 1.2;\n            }",
     "keyname": "galvanize"
   },
   {
-    "shortDesc": "When this Pokemon has 1\/2 or less of its maximum HP, it uses certain Berries early.",
+    "shortDesc": "When this Pokemon has 1\/2 or less of its maximum HP, cure 1/12 hp.",
     "id": "gluttony",
     "name": "Gluttony",
     "rating": 1.5,
@@ -899,7 +900,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.PKM.hp(info.pokemonFriend) <= 50)\n            $scope.PKM.stat(info.pokemonFriend, \"hp\", ($scope.PKM.basehp(info.pokemonFriend) * (1 / 12)) * -1);",
     "keyname": "gluttony"
   },
   {
@@ -909,22 +910,22 @@
     "rating": 2,
     "num": 183,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags) if (info.move.flags.contact) $scope.PKM.stat(info.pokemonFriend,\"spe\",1);",
     "keyname": "gooey"
   },
   {
-    "shortDesc": "This Pokemon's Attack is 1.5x, but it can only select the first move it executes.",
+    "shortDesc": "This Pokemon's Attack is 1.5x",
     "onModifyAtkPriority": 1,
     "id": "gorillatactics",
     "name": "Gorilla Tactics",
     "rating": 4.5,
     "num": 255,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(ata===\"atk\") fata *= 1.5",
     "keyname": "gorillatactics"
   },
   {
@@ -935,9 +936,9 @@
     "rating": 0.5,
     "num": 179,
     "blocks": [
-      "begin"
+      "target_terrain"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.terrain === \"grassyterrain\") if(def===\"def\")  tdef*=1.5;",
     "keyname": "grasspelt"
   },
   {
@@ -947,9 +948,9 @@
     "rating": 4,
     "num": 229,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.terrain = \"grassyterrain\";$scope.BATTLEOBJS.terrainTurn = 0;",
     "keyname": "grassysurge"
   },
   {
@@ -960,28 +961,28 @@
     "rating": 1.5,
     "num": 241,
     "blocks": [
-      "begin"
+      "finaldamage"
     ],
-    "code": "",
+    "code": "if ([\"surf\", \"dive\"].indexOf(info.move.keyname) !== -1) {\n                $scope.PKM.stat(info.pokemonTarget, \"hp\", $scope.PKM.basehp(info.pokemonTarget) * (1 / 4));\n                if (getRandomInt(100) > 50)\n                    $scope.PKM.stat(info.pokemonTarget, \"def\", 1);\n                else {\n                    info.pokemonTarget.battle.status = \"par\";\n                    info.pokemonTarget.battle.statusTurn = 0;\n                }\n            }",
     "keyname": "gulpmissile"
   },
   {
     "desc": "If this Pokemon has a major status condition, its Attack is multiplied by 1.5; burn's physical damage halving is ignored.",
-    "shortDesc": "If this Pokemon is statused, its Attack is 1.5x; ignores burn halving physical damage.",
+    "shortDesc": "If this Pokemon is statused, its Attack is 1.5x.",
     "onModifyAtkPriority": 5,
     "id": "guts",
     "name": "Guts",
     "rating": 3,
     "num": 62,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if (info.pokemonFriend.battle.status) if(ata==='atk') fata *= 1.5;",
     "keyname": "guts"
   },
   {
     "desc": "If the last item this Pokemon used is a Berry, there is a 50% chance it gets restored at the end of each turn. If Sunny Day is active, this chance is 100%.",
-    "shortDesc": "If last item used is a Berry, 50% chance to restore it each end of turn. 100% in Sun.",
+    "shortDesc": "50% chance to restore 1/8 hp each end of turn. 100% in Sun.",
     "id": "harvest",
     "name": "Harvest",
     "onResidualOrder": 26,
@@ -991,12 +992,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.clima === \"sunnyday\")\n            $scope.PKM.stat(info.pokemonFriend, \"hp\", $scope.PKM.basehp(info.pokemonFriend) * (1 / 8));\n        else if (getRandomInt(100) > 50) {\n            $scope.PKM.stat(info.pokemonFriend, \"hp\", $scope.PKM.basehp(info.pokemonFriend) * (1 / 8));",
     "keyname": "harvest"
   },
   {
     "desc": "There is a 30% chance of curing an adjacent ally's major status condition at the end of each turn.",
-    "shortDesc": "30% chance of curing an adjacent ally's status at the end of each turn.",
+    "shortDesc": "30% chance of curing an status at the end of each turn.",
     "id": "healer",
     "name": "Healer",
     "onResidualOrder": 5,
@@ -1006,34 +1007,34 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if (getRandomInt(100) > 70) {\n            info.pokemonFriend.battle.status = undefined;\n            info.pokemonFriend.battle.statusTurn = 0;\n        }",
     "keyname": "healer"
   },
   {
     "desc": "The power of Fire-type attacks against this Pokemon is halved, and burn damage taken is halved.",
-    "shortDesc": "The power of Fire-type attacks against this Pokemon is halved; burn damage halved.",
+    "shortDesc": "The power of Fire-type attacks against this Pokemon is halved;",
     "onSourceBasePowerPriority": 7,
     "id": "heatproof",
     "name": "Heatproof",
     "rating": 2,
     "num": 85,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if (info.move.type === \"Fire\") fata /= 2;",
     "keyname": "heatproof"
   },
   {
-    "shortDesc": "This Pokemon's weight is doubled.",
+    "shortDesc": "This Pokemon's defense is plus 2.5.",
     "onModifyWeightPriority": 1,
     "id": "heavymetal",
     "name": "Heavy Metal",
     "rating": 0,
     "num": 134,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(def===\"def\")  tdef*=2.5;",
     "keyname": "heavymetal"
   },
   {
@@ -1045,7 +1046,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "nocompetitive=1",
     "keyname": "honeygather"
   },
   {
@@ -1056,13 +1057,13 @@
     "rating": 5,
     "num": 37,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(ata===\"atk\")  fata*=2;",
     "keyname": "hugepower"
   },
   {
-    "shortDesc": "If Morpeko, it changes between Full Belly and Hangry Mode at the end of each turn.",
+    "shortDesc": "it icrease his attack or defense at the begin of each turn.",
     "id": "hungerswitch",
     "name": "Hunger Switch",
     "rating": 1,
@@ -1070,12 +1071,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(getRandomInt(100)>50)\n\t$scope.PKM.stat(info.pokemonFriend,\"atk\",-1);\nelse\n\t$scope.PKM.stat(info.pokemonFriend,\"def\",-1);",
     "keyname": "hungerswitch"
   },
   {
     "desc": "This Pokemon's Attack is multiplied by 1.5 and the accuracy of its physical attacks is multiplied by 0.8.",
-    "shortDesc": "This Pokemon's Attack is 1.5x and accuracy of its physical attacks is 0.8x.",
+    "shortDesc": "This Pokemon's Attack is 1.5x and increase accuracy if physical attacks",
     "onModifyAtkPriority": 5,
     "onModifyMovePriority": -1,
     "id": "hustle",
@@ -1083,14 +1084,14 @@
     "rating": 3.5,
     "num": 55,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(ata===\"atk\") fata *=\t1.5;\nif(info.move.category===\"Physical\") $scope.PKM.stat(info.pokemonFriend,\"accuracy\",-1);",
     "keyname": "hustle"
   },
   {
     "desc": "This Pokemon has its major status condition cured at the end of each turn if Rain Dance is active. If this Pokemon is holding Utility Umbrella, its major status condition will not be cured.",
-    "shortDesc": "This Pokemon has its status cured at the end of each turn if Rain Dance is active.",
+    "shortDesc": "This Pokemon has its status cured at the begin of each turn if Rain Dance is active.",
     "onResidualOrder": 5,
     "onResidualSubOrder": 1,
     "id": "hydration",
@@ -1100,7 +1101,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.clima === \"RainDance\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "hydration"
   },
   {
@@ -1112,12 +1113,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.stats.atk>0) info.pokemonFriend.battle.stats.atk=0;",
     "keyname": "hypercutter"
   },
   {
     "desc": "If Hail is active, this Pokemon restores 1\/16 of its maximum HP, rounded down, at the end of each turn. This Pokemon takes no damage from Hail.",
-    "shortDesc": "If Hail is active, this Pokemon heals 1\/16 of its max HP each turn; immunity to Hail.",
+    "shortDesc": "If Hail is active, this Pokemon heals 1\/16 of its max HP each turn;",
     "id": "icebody",
     "name": "Ice Body",
     "rating": 1,
@@ -1125,21 +1126,21 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.clima === \"hail\")\n$scope.PKM.stat(info.pokemonFriend,\"hp\",$scope.PKM.basehp(info.pokemonFriend)*(1/12));",
     "keyname": "icebody"
   },
   {
     "desc": "If this Pokemon is an Eiscue, the first physical hit it takes in battle deals 0 neutral damage. Its ice face is then broken and it changes forme to Noice Face. Eiscue regains its Ice Face forme when Hail begins or when Eiscue switches in while Hail is active. Confusion damage also breaks the ice face.",
-    "shortDesc": "If Eiscue, the first physical hit it takes deals 0 damage. This effect is restored in Hail.",
+    "shortDesc": "The physical hit it takes deals 3/4 damage. This effect is 1/2 in Hail.",
     "onDamagePriority": 1,
     "id": "iceface",
     "name": "Ice Face",
     "rating": 3.5,
     "num": 248,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(info.move.category===\"Physical\"){\n\tif ($scope.BATTLEOBJS.clima === \"hail\"){\n\t\tif(def==='def') fata *= (1/2);\n\t}\t\n\telse\n\t\tif(def==='def') fata *= (3/4);\n}",
     "keyname": "iceface"
   },
   {
@@ -1149,9 +1150,9 @@
     "rating": 3.5,
     "num": 246,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(info.move.category===\"Special\") if(def==='spd') fata *= (1/2);",
     "keyname": "icescales"
   },
   {
@@ -1163,21 +1164,21 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "noncompetitive=0;",
     "keyname": "illuminate"
   },
   {
     "desc": "When this Pokemon switches in, it appears as the last unfainted Pokemon in its party until it takes direct damage from another Pokemon's attack. This Pokemon's actual level and HP are displayed instead of those of the mimicked Pokemon.",
-    "shortDesc": "This Pokemon appears as the last Pokemon in the party until it takes direct damage.",
+    "shortDesc": "This Pokemon appears 30% to remove Physical damage",
     "isUnbreakable": true,
     "id": "illusion",
     "name": "Illusion",
     "rating": 4.5,
     "num": 149,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(info.move.category===\"Physical\") if(getRandomInt(100)>70) if(def==='def') fata = 0;",
     "keyname": "illusion"
   },
   {
@@ -1189,7 +1190,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if (info.pokemonFriend.battle.status===\"tox\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "immunity"
   },
   {
@@ -1200,22 +1201,22 @@
     "rating": 5,
     "num": 150,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "setTimeout(function(){\nif(yosoy===\"friend\")\nPOKEMONBATTLE.CALCS.TRANSFORMDIRECT($scope,$scope.BATTLEOBJS.FRIEND,$scope.PKM.friend(),false);\nif(yosoy===\"target\")\nPOKEMONBATTLE.CALCS.TRANSFORMDIRECT($scope,$scope.BATTLEOBJS.TARGET,$scope.PKM.target(),true);\t\t\n},3000);",
     "keyname": "imposter"
   },
   {
     "desc": "This Pokemon's moves ignore substitutes and the opposing side's Reflect, Light Screen, Safeguard, Mist and Aurora Veil.",
-    "shortDesc": "Moves ignore substitutes and foe's Reflect\/Light Screen\/Safeguard\/Mist\/Aurora Veil.",
+    "shortDesc": "Moves break Reflect\/Light Screen\/Safeguard\/Mist\/Aurora Veil.",
     "id": "infiltrator",
     "name": "Infiltrator",
     "rating": 2.5,
     "num": 151,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "info.move.breaksProtect = true;",
     "keyname": "infiltrator"
   },
   {
@@ -1227,9 +1228,9 @@
     "rating": 3.5,
     "num": 215,
     "blocks": [
-      "begin"
+      "ohkotarget"
     ],
-    "code": "",
+    "code": "$scope.PKM.stat(info.pokemonFriend,\"hp\",$scope.PKM.hpno(info.pokemonTarget));",
     "keyname": "innardsout"
   },
   {
@@ -1241,7 +1242,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status = \"flinch\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "innerfocus"
   },
   {
@@ -1253,7 +1254,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status = \"slp\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "insomnia"
   },
   {
@@ -1264,9 +1265,9 @@
     "rating": 3.5,
     "num": 22,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "if(yosoy===\"friend\"){\n\tif ($scope.PKM.target().ability.keyname !== \"innerfocus\" && $scope.PKM.target().ability.keyname !== \"oblivious\") \n\t$scope.PKM.stat($scope.PKM.target(),\"atk\",1);\t\n}\nif(yosoy===\"target\"){\n\tif ($scope.PKM.target().ability.keyname !== \"innerfocus\" && $scope.PKM.target().ability.keyname !== \"oblivious\") \n\t$scope.PKM.stat($scope.PKM.friend(),\"atk\",1);\t\n}",
     "keyname": "intimidate"
   },
   {
@@ -1276,9 +1277,9 @@
     "rating": 4,
     "num": 234,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": " if (yosoy === \"friend\") {\n                                    $scope.PKM.stat($scope.PKM.friend(), \"atk\", -1);\n                             }\n                                if (yosoy === \"target\") {\n                                    $scope.PKM.stat($scope.PKM.target(), \"atk\", -1);\n                                               }",
     "keyname": "intrepidsword"
   },
   {
@@ -1290,23 +1291,23 @@
     "rating": 2.5,
     "num": 160,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags)\n    if(info.move.flags.contact)\n\t\t$scope.PKM.stat(info.pokemonFriend,\"hp\",$scope.PKM.basehp(info.pokemonFriend)*(1/8));",
     "keyname": "ironbarbs"
   },
   {
     "desc": "This Pokemon's punch-based attacks have their power multiplied by 1.2.",
-    "shortDesc": "This Pokemon's punch-based attacks have 1.2x power. Sucker Punch is not boosted.",
+    "shortDesc": "This Pokemon's punch-based attacks have 1.2x power",
     "onBasePowerPriority": 8,
     "id": "ironfist",
     "name": "Iron Fist",
     "rating": 3,
     "num": 89,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.punch) fata *= 1.2;",
     "keyname": "ironfist"
   },
   {
@@ -1316,9 +1317,9 @@
     "rating": 2.5,
     "num": 154,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Dark\") $scope.PKM.stat(info.pokemonTarget,\"atk\",-1);",
     "keyname": "justified"
   },
   {
@@ -1331,12 +1332,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.stats.accuracy>0) info.pokemonFriend.battle.stats.accuracy=0;\nif(info.pokemonTarget.battle.stats.evasion<0) info.pokemonTarget.battle.stats.evasion=0;",
     "keyname": "keeneye"
   },
   {
     "desc": "This Pokemon's held item has no effect. This Pokemon cannot use Fling successfully. Macho Brace, Power Anklet, Power Band, Power Belt, Power Bracer, Power Lens, and Power Weight still have their effects.",
-    "shortDesc": "This Pokemon's held item has no effect, except Macho Brace. Fling cannot be used.",
+    "shortDesc": "This Pokemon's stats has no effect.",
     "id": "klutz",
     "name": "Klutz",
     "rating": -1,
@@ -1344,12 +1345,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "klutz"
   },
   {
     "desc": "If Sunny Day is active and this Pokemon is not holding Utility Umbrella, this Pokemon cannot gain a major status condition and Rest will fail for it.",
-    "shortDesc": "If Sunny Day is active, this Pokemon cannot be statused and Rest will fail for it.",
+    "shortDesc": "If Sunny Day is active, this Pokemon cannot be statused and except sleep",
     "id": "leafguard",
     "name": "Leaf Guard",
     "rating": 0.5,
@@ -1357,7 +1358,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.clima === \"sunnyday\")\n\tif(info.pokemonFriend.battle.status !== \"slp\"){\n\t\tinfo.pokemonFriend.battle.status = undefined;\n\t\tinfo.pokemonFriend.battle.statusTurn = 0;\n\t}",
     "keyname": "leafguard"
   },
   {
@@ -1368,9 +1369,9 @@
     "rating": 3.5,
     "num": 26,
     "blocks": [
-      "begin"
+      "before_target_multiplier"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Ground\") multiplier = \"=-1\";",
     "keyname": "levitate"
   },
   {
@@ -1383,32 +1384,32 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonFriend.battle.status =  \"Am_\"+info.move.type;info.pokemonFriend.battle.statusTurn = 0;",
     "keyname": "libero"
   },
   {
-    "shortDesc": "This Pokemon's weight is halved.",
+    "shortDesc": "This Pokemon's defense is plus 1.5x.",
     "id": "lightmetal",
     "name": "Light Metal",
     "rating": 1,
     "num": 135,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(def===\"def\")  tdef*=1.5;",
     "keyname": "lightmetal"
   },
   {
     "desc": "This Pokemon is immune to Electric-type moves and raises its Special Attack by 1 stage when hit by an Electric-type move. If this Pokemon is not the target of a single-target Electric-type move used by another Pokemon, this Pokemon redirects that move to itself if it is within the range of that move.",
-    "shortDesc": "This Pokemon draws Electric moves to itself to raise Sp. Atk by 1; Electric immunity.",
+    "shortDesc": "This Pokemon recieve Electric moves to raise Sp. Atk by 1; Electric immunity.",
     "id": "lightningrod",
     "name": "Lightning Rod",
     "rating": 3,
     "num": 32,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Electric\"){\n\t$scope.PKM.stat(info.pokemonTarget,\"spa\",-1);\n\tdamage = -1;\n}",
     "keyname": "lightningrod"
   },
   {
@@ -1420,7 +1421,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status = \"par\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "limber"
   },
   {
@@ -1430,9 +1431,9 @@
     "rating": 1.5,
     "num": 64,
     "blocks": [
-      "begin"
+      "target_drain"
     ],
-    "code": "",
+    "code": "$scope.PKM.stat(info.pokemonFriend, \"hp\", (healme*2));",
     "keyname": "liquidooze"
   },
   {
@@ -1444,9 +1445,9 @@
     "rating": 1.5,
     "num": 204,
     "blocks": [
-      "begin"
+      "changeType"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.sound) info.move.type=\"Water\";",
     "keyname": "liquidvoice"
   },
   {
@@ -1456,14 +1457,14 @@
     "rating": 1,
     "num": 203,
     "blocks": [
-      "begin"
+      "changeType"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.contact) delete info.move.flags.contact;",
     "keyname": "longreach"
   },
   {
     "desc": "This Pokemon blocks certain status moves and instead uses the move against the original user.",
-    "shortDesc": "This Pokemon blocks certain status moves and bounces them back to the user.",
+    "shortDesc": "This Pokemon blocks status moves",
     "id": "magicbounce",
     "name": "Magic Bounce",
     "onTryHitPriority": 1,
@@ -1473,9 +1474,9 @@
     "rating": 4,
     "num": 156,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "if(info.move.category===\"Status\") { if (callback)  callback({critical: false, miss: true, damage: 0});  willreturn='empty'; }",
     "keyname": "magicbounce"
   },
   {
@@ -1486,14 +1487,14 @@
     "rating": 4,
     "num": 98,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "if(info.move.category===\"Status\") { if (callback)  callback({critical: false, miss: true, damage: 0});  willreturn='empty'; }",
     "keyname": "magicguard"
   },
   {
     "desc": "If this Pokemon has no item, it steals the item off a Pokemon it hits with an attack. Does not affect Doom Desire and Future Sight.",
-    "shortDesc": "If this Pokemon has no item, it steals the item off a Pokemon it hits with an attack.",
+    "shortDesc": "This Pokemon icrease Sp. Attack each turn.",
     "id": "magician",
     "name": "Magician",
     "rating": 1.5,
@@ -1501,7 +1502,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "$scope.PKM.stat(info.pokemonFriend,\"spa\",-1);",
     "keyname": "magician"
   },
   {
@@ -1513,7 +1514,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status = \"frz\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "magmaarmor"
   },
   {
@@ -1526,7 +1527,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonTarget.types.indexOf(\"Steel\")!==-1) \n{\n\tinfo.pokemonTarget.battle.status = \"partiallytrapped\";\n\tinfo.pokemonTarget.battle.statusTurn = 0;\n\tinfo.pokemonTarget.battle.statusType = \"Normal\";\n}",
     "keyname": "magnetpull"
   },
   {
@@ -1538,9 +1539,9 @@
     "rating": 2.5,
     "num": 63,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(info.pokemonTarget.battle.status){\n                if (def === \"def\") tdef *= 1.5;\n            }",
     "keyname": "marvelscale"
   },
   {
@@ -1554,7 +1555,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.flags) \n\tif(info.move.flags.pulse) {\n\t\tinfo.move.basePower *= 1.5;\n\t\tinfo.move.flags.heal = 1;\n\t\tinfo.move.heal: [3,4];\n\t}",
     "keyname": "megalauncher"
   },
   {
@@ -1564,9 +1565,9 @@
     "rating": 2,
     "num": 196,
     "blocks": [
-      "begin"
+      "after_critical"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status === \"tox\") critical = true;",
     "keyname": "merciless"
   },
   {
@@ -1579,26 +1580,26 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.terrain===\"electricterrain\")\n\tinfo.pokemonFriend.battle.status = \"Am_Electric\";\nif($scope.BATTLEOBJS.terrain===\"grassyterrain\")\n\tinfo.pokemonFriend.battle.status = \"Am_Grass\";\nif($scope.BATTLEOBJS.terrain===\"gravity\")\n\tinfo.pokemonFriend.battle.status = \"Am_Rock\";\nif($scope.BATTLEOBJS.terrain===\"iondeluge\")\n\tinfo.pokemonFriend.battle.status = \"Am_Normal\";\nif($scope.BATTLEOBJS.terrain===\"magicroom\")\n\tinfo.pokemonFriend.battle.status = \"Am_Fairy\";\nif($scope.BATTLEOBJS.terrain===\"mistyterrain\")\n\tinfo.pokemonFriend.battle.status = \"Am_Ice\";\nif($scope.BATTLEOBJS.terrain===\"mudsport\")\n\tinfo.pokemonFriend.battle.status = \"Am_Ground\";\nif($scope.BATTLEOBJS.terrain===\"psychicterrain\")\n\tinfo.pokemonFriend.battle.status = \"Am_Psychic\";\nif($scope.BATTLEOBJS.terrain===\"trickroom\")\n\tinfo.pokemonFriend.battle.status = \"Am_Dark\";\nif($scope.BATTLEOBJS.terrain===\"watersport\")\n\tinfo.pokemonFriend.battle.status = \"Am_Water\";\nif($scope.BATTLEOBJS.terrain===\"wonderroom\")\n\tinfo.pokemonFriend.battle.status = \"Am_Steel\";",
     "keyname": "mimicry"
   },
   {
     "desc": "If an active ally has this Ability or the Plus Ability, this Pokemon's Special Attack is multiplied by 1.5.",
-    "shortDesc": "If an active ally has this Ability or the Plus Ability, this Pokemon's Sp. Atk is 1.5x.",
+    "shortDesc": "This Pokemon's Sp. Atk is 1.5x.",
     "onModifySpAPriority": 5,
     "id": "minus",
     "name": "Minus",
     "rating": 0,
     "num": 58,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(ata===\"spa\") fata *= 1.5;",
     "keyname": "minus"
   },
   {
     "desc": "When one of this Pokemon's stat stages would be lowered by another Pokemon, that Pokemon's stat stage is lowered instead. This effect does not happen if this Pokemon's stat stage was already -6.",
-    "shortDesc": "If this Pokemon's stat stages would be lowered, the attacker's are lowered instead.",
+    "shortDesc": "If this Pokemon's stat stages would be lowered, the attacker's are will have same.",
     "id": "mirrorarmor",
     "name": "Mirror Armor",
     "rating": 2,
@@ -1606,7 +1607,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": " for (var stat of STATGLOBAL)\n            if (info.pokemonFriend.battle.stats[stat] > 0)\n                info.pokemonTarget.battle.stats[stat] = info.pokemonFriend.battle.stats[stat];",
     "keyname": "mirrorarmor"
   },
   {
@@ -1616,26 +1617,26 @@
     "rating": 4,
     "num": 228,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.terrain = \"mistyterrain\";$scope.BATTLEOBJS.terrainTurn = 0;",
     "keyname": "mistysurge"
   },
   {
-    "shortDesc": "This Pokemon's moves and their effects ignore the Abilities of other Pokemon.",
+    "shortDesc": "This Pokemon's moves break protects.",
     "id": "moldbreaker",
     "name": "Mold Breaker",
     "rating": 3.5,
     "num": 104,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "info.move.breaksProtect = true;",
     "keyname": "moldbreaker"
   },
   {
     "desc": "This Pokemon has a random stat other than accuracy or evasion raised by 2 stages and another stat lowered by 1 stage at the end of each turn.",
-    "shortDesc": "Boosts a random stat (except accuracy\/evasion) +2 and another stat -1 every turn.",
+    "shortDesc": "Boosts a random stat +2 and another stat -1 every turn.",
     "onResidualOrder": 26,
     "onResidualSubOrder": 1,
     "id": "moody",
@@ -1645,7 +1646,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": " var upstat = randomArray(stats);\n        var downstat = randomArray(stats);\n        $scope.PKM.stat(info.pokemonFriend,upstat,-2);\n        $scope.PKM.stat(info.pokemonFriend,downstat,1);",
     "keyname": "moody"
   },
   {
@@ -1656,9 +1657,9 @@
     "rating": 3,
     "num": 78,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Electric\"){\n\t$scope.PKM.stat(info.pokemonTarget,\"spe\",-1);\n\tdamage = -1;\n}",
     "keyname": "motordrive"
   },
   {
@@ -1669,9 +1670,9 @@
     "rating": 3.5,
     "num": 153,
     "blocks": [
-      "begin"
+      "target_downhp"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonTarget)<=0){\n\t$scope.PKM.stat(info.pokemonFriend,\"atk\",1);\n}",
     "keyname": "moxie"
   },
   {
@@ -1681,21 +1682,21 @@
     "rating": 3.5,
     "num": 136,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonTarget)>=100){\n\tfata /=2;\n}",
     "keyname": "multiscale"
   },
   {
-    "shortDesc": "If this Pokemon is an Arceus, its type changes to match its held Plate or Z-Crystal.",
+    "shortDesc": "If this Pokemon is a GOD, all stat will max",
     "id": "multitype",
-    "name": "Multitype",
+    "name": "MultiGod",
     "rating": 4,
     "num": 121,
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "for (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat(info.pokemonFriend,stat,-4);",
     "keyname": "multitype"
   },
   {
@@ -1706,9 +1707,9 @@
     "rating": 2.5,
     "num": 152,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.contact) info.pokemonFriend.battle.ability = \"mummy\";",
     "keyname": "mummy"
   },
   {
@@ -1718,9 +1719,9 @@
     "rating": 3,
     "num": 30,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "if(yosoy===\"friend\")\n\tPOKEMONBATTLE.CLEARBADSTATS($scope.PKM.friend());\nif(yosoy===\"target\")\n\tPOKEMONBATTLE.CLEARBADSTATS($scope.PKM.target());",
     "keyname": "naturalcure"
   },
   {
@@ -1730,9 +1731,9 @@
     "rating": 2.5,
     "num": 233,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if ([\"*2\", \"*4\"].indexOf(multiplier) !== -1) fata *= 1.25;",
     "keyname": "neuroforce"
   },
   {
@@ -1745,11 +1746,11 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonTarget.battle.ability = \"noability\";",
     "keyname": "neutralizinggas"
   },
   {
-    "shortDesc": "Every move used by or against this Pokemon will always hit.",
+    "shortDesc": "Every move that use this Pokemon will always hit.",
     "onAnyInvulnerabilityPriority": 1,
     "id": "noguard",
     "name": "No Guard",
@@ -1758,7 +1759,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.move.accuracy=true;",
     "keyname": "noguard"
   },
   {
@@ -1773,12 +1774,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.move.type='Normal';info.move.basePower*=1.2",
     "keyname": "normalize"
   },
   {
     "desc": "This Pokemon cannot be infatuated or taunted. Gaining this Ability while affected cures it. Immune to Intimidate.",
-    "shortDesc": "This Pokemon cannot be infatuated or taunted. Immune to Intimidate.",
+    "shortDesc": "This Pokemon cannot be infatuated or confusion. Immune to Intimidate.",
     "id": "oblivious",
     "name": "Oblivious",
     "rating": 1.5,
@@ -1786,20 +1787,20 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"attract\",\"confusion\"].indexOf(info.pokemonFriend.battle.status)!==-1){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "oblivious"
   },
   {
-    "shortDesc": "This Pokemon is immune to powder moves and damage from Sandstorm or Hail.",
+    "shortDesc": "This Pokemon is immune to powder moves",
     "onTryHitPriority": 1,
     "id": "overcoat",
     "name": "Overcoat",
     "rating": 2,
     "num": 142,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.powder) damage = -1;\t",
     "keyname": "overcoat"
   },
   {
@@ -1812,14 +1813,14 @@
     "rating": 2,
     "num": 65,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=33)\n\tif(info.move.type===\"Grass\")\n\t\tfata *= 1.5;",
     "keyname": "overgrow"
   },
   {
     "desc": "This Pokemon cannot be confused. Gaining this Ability while confused cures it. Immune to Intimidate.",
-    "shortDesc": "This Pokemon cannot be confused. Immune to Intimidate.",
+    "shortDesc": "This Pokemon cannot be confused",
     "id": "owntempo",
     "name": "Own Tempo",
     "rating": 1.5,
@@ -1827,7 +1828,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"confusion\"].indexOf(info.pokemonFriend.battle.status)!==-1){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "owntempo"
   },
   {
@@ -1841,7 +1842,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.category!==\"Status\"){\n\tinfo.move.basePower *= (1/4);\n\tinfo.move.basePower /=2;\n\tinfo.move.multihit =  2;\n}",
     "keyname": "parentalbond"
   },
   {
@@ -1853,7 +1854,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "customability=1;",
     "keyname": "pastelveil"
   },
   {
@@ -1866,24 +1867,24 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.flags)\n\tif(info.move.flags.concat) \t\n\t\tif(!$scope.PKM.perishsong)\n\t\t\t$scope.PKM.perishsong = 1;",
     "keyname": "perishbody"
   },
   {
     "desc": "If this Pokemon has no item and is hit by a contact move, it steals the attacker's item. This effect applies after all hits from a multi-hit move; Sheer Force prevents it from activating if the move has a secondary effect.",
-    "shortDesc": "If this Pokemon has no item and is hit by a contact move, it steals the attacker's item.",
+    "shortDesc": "If hit by a contact move, it steals the attacker's stats.",
     "id": "pickpocket",
     "name": "Pickpocket",
     "rating": 1,
     "num": 124,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags)\n\tif(info.move.flags.concat) \t\n\t{\n\t\tfor (var stat of STATGLOBAL){\n\t\t\tinfo.pokemonTarget.battle.stats[stat] = OSO(info.pokemonFriend.battle.stats[stat]);\n\t\t\tinfo.pokemonFriend.battle.stats[stat] = 0;\n\t\t}\n\t}",
     "keyname": "pickpocket"
   },
   {
-    "shortDesc": "If this Pokemon has no item, it finds one used by an adjacent Pokemon this turn.",
+    "shortDesc": "Copy Ability",
     "onResidualOrder": 26,
     "onResidualSubOrder": 1,
     "id": "pickup",
@@ -1893,7 +1894,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonFriend.battle.ability = info.pokemonTarget.ability;",
     "keyname": "pickup"
   },
   {
@@ -1906,23 +1907,23 @@
     "rating": 4,
     "num": 182,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if (info.move.type === \"Normal\" || info.move.type === \"Fairy\") {\n                info.move.type = \"Fairy\";\n                fata *= 1.2;\n            }",
     "keyname": "pixilate"
   },
   {
     "desc": "If an active ally has this Ability or the Minus Ability, this Pokemon's Special Attack is multiplied by 1.5.",
-    "shortDesc": "If an active ally has this Ability or the Minus Ability, this Pokemon's Sp. Atk is 1.5x.",
+    "shortDesc": "This Pokemon's Sp. Atk is 1.5x.",
     "onModifySpAPriority": 5,
     "id": "plus",
     "name": "Plus",
     "rating": 0,
     "num": 57,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(ata===\"spa\") fata *= 1.5;",
     "keyname": "plus"
   },
   {
@@ -1936,7 +1937,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "customability=0;",
     "keyname": "poisonheal"
   },
   {
@@ -1946,9 +1947,9 @@
     "rating": 1.5,
     "num": 38,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags)\n                if (info.move.flags.contact)\n                    if (getRandomInt(100) >= 70) {\n                        info.pokemonFriend.battle.statusTurn = 0;\n                        info.pokemonFriend.battle.status = randomArray([\"tox\"]);\n                    }",
     "keyname": "poisonpoint"
   },
   {
@@ -1958,14 +1959,14 @@
     "rating": 2,
     "num": 143,
     "blocks": [
-      "begin"
+      "finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags)\n                if (info.move.flags.contact)\n                    if (getRandomInt(100) >= 70) {\n                        info.pokemonTarget.battle.statusTurn = 0;\n                        info.pokemonTarget.battle.status = randomArray([\"tox\"]);\n                    }",
     "keyname": "poisontouch"
   },
   {
     "desc": "If this Pokemon is a Zygarde in its 10% or 50% Forme, it changes to Complete Forme when it has 1\/2 or less of its maximum HP at the end of the turn.",
-    "shortDesc": "If Zygarde 10%\/50%, changes to Complete if at 1\/2 max HP or less at end of turn.",
+    "shortDesc": "10% to changes to full hp if at 1\/2 max HP or less at begin of turn.",
     "onResidualOrder": 27,
     "id": "powerconstruct",
     "name": "Power Construct",
@@ -1974,7 +1975,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=50){\n\tif(getRandomInt(100)>90){\n\t\tinfo.pokemonFriend.battle.stats.hp = 0;\n\t}\n}",
     "keyname": "powerconstruct"
   },
   {
@@ -1985,13 +1986,13 @@
     "rating": 0,
     "num": 223,
     "blocks": [
-      "begin"
+      "target_downhp"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonTarget)<=0){ info.pokemonFriend.battle.ability = info.pokemonTarget.ability; }",
     "keyname": "powerofalchemy"
   },
   {
-    "shortDesc": "This Pokemon's allies have the power of their moves multiplied by 1.3.",
+    "shortDesc": "This Pokemon's have the power of their moves multiplied by 1.3.",
     "onAllyBasePowerPriority": 8,
     "id": "powerspot",
     "name": "Power Spot",
@@ -2000,32 +2001,32 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.move.basePower *= 1.3;",
     "keyname": "powerspot"
   },
   {
-    "shortDesc": "This Pokemon's Status moves have priority raised by 1, but Dark types are immune.",
+    "shortDesc": "This Pokemon's Status moves have priority raised by 1",
     "id": "prankster",
     "name": "Prankster",
     "rating": 4,
     "num": 158,
     "blocks": [
-      "begin"
+      "before_speed"
     ],
-    "code": "",
+    "code": "if (yosoy === \"friend\") \n\tif(friendAction.move.category===\"Status\") friendAction.move.priority = 1;\nif (yosoy === \"target\")\n\tif(enemyAction.move.category===\"Status\") enemyAction.move.priority = 1;",
     "keyname": "prankster"
   },
   {
     "desc": "If this Pokemon is the target of an opposing Pokemon's move, that move loses one additional PP.",
-    "shortDesc": "If this Pokemon is the target of a foe's move, that move loses one additional PP.",
+    "shortDesc": "This Pokemon disable last enemy moves.",
     "id": "pressure",
     "name": "Pressure",
     "rating": 2.5,
     "num": 46,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.disableMove = OSO(info.move)",
     "keyname": "pressure"
   },
   {
@@ -2036,9 +2037,10 @@
     "rating": 4.5,
     "num": 189,
     "blocks": [
+      "switch",
       "begin"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.clima = \"heavyrain\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "primordialsea"
   },
   {
@@ -2050,21 +2052,21 @@
     "rating": 3,
     "num": 232,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if ([\"*2\", \"*4\"].indexOf(multiplier) !== -1) fata *= (3 / 4);",
     "keyname": "prismarmor"
   },
   {
-    "shortDesc": "This Pokemon's moves cannot be redirected to a different target by any effect.",
+    "shortDesc": "This Pokemon's moves cannot be miss unless ohko moves",
     "id": "propellertail",
     "name": "Propeller Tail",
     "rating": 0,
     "num": 239,
     "blocks": [
-      "begin"
+      "after_miss"
     ],
-    "code": "",
+    "code": "if(!info.move.ohko) miss=false;",
     "keyname": "propellertail"
   },
   {
@@ -2077,7 +2079,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonFriend.battle.status =  \"Am_\"+info.move.type;info.pokemonFriend.battle.statusTurn = 0;",
     "keyname": "protean"
   },
   {
@@ -2087,23 +2089,23 @@
     "rating": 4,
     "num": 227,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.terrain = \"psychicterrain\";$scope.BATTLEOBJS.terrainTurn = 0;",
     "keyname": "psychicsurge"
   },
   {
     "desc": "This Pokemon's sound-based moves have their power multiplied by 1.3. This Pokemon takes halved damage from sound-based moves.",
-    "shortDesc": "This Pokemon receives 1\/2 damage from sound moves. Its own have 1.3x power.",
+    "shortDesc": "This Pokemon receives 1\/2 damage from sound moves.",
     "onBasePowerPriority": 8,
     "id": "punkrock",
     "name": "Punk Rock",
     "rating": 3,
     "num": 244,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.sound) damage /= 2;",
     "keyname": "punkrock"
   },
   {
@@ -2114,22 +2116,22 @@
     "rating": 5,
     "num": 74,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(ata===\"atk\")  fata*=2;",
     "keyname": "purepower"
   },
   {
     "desc": "While this Pokemon is active, priority moves from opposing Pokemon targeted at allies are prevented from having an effect.",
-    "shortDesc": "While this Pokemon is active, allies are protected from opposing priority moves.",
+    "shortDesc": "Are protected from opposing priority moves.",
     "id": "queenlymajesty",
     "name": "Queenly Majesty",
     "rating": 2,
     "num": 214,
     "blocks": [
-      "begin"
+      "before_speed"
     ],
-    "code": "",
+    "code": "if (yosoy === \"friend\") \n\t if(enemyAction.move.priority>0) enemyAction.move.priority= 0;\n if (yosoy === \"target\") \n\t if(friendAction.move.priority>0) friendAction.move.priority= 0;",
     "keyname": "queenlymajesty"
   },
   {
@@ -2140,9 +2142,9 @@
     "rating": 2.5,
     "num": 95,
     "blocks": [
-      "begin"
+      "speed"
     ],
-    "code": "",
+    "code": "if (yosoy === \"friend\") \n\tif(friendAction.pokemonFriend.battle.status)\n\t\tfriendSpeed*=2;\n if (yosoy === \"target\") \n\tif(enemyAction.pokemonFriend.battle.status)\n\t\tenemySpeed*=2;",
     "keyname": "quickfeet"
   },
   {
@@ -2155,20 +2157,20 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.clima === \"RainDance\")\n$scope.PKM.stat(info.pokemonFriend,\"hp\",$scope.PKM.basehp(info.pokemonFriend)*(1/16));",
     "keyname": "raindish"
   },
   {
     "desc": "This Pokemon's Speed is raised by 1 stage if hit by a Bug-, Dark-, or Ghost-type attack, or Intimidate.",
-    "shortDesc": "Speed is raised 1 stage if hit by a Bug-, Dark-, or Ghost-type attack, or Intimidated.",
+    "shortDesc": "Speed is raised 1 stage if hit by a Bug-, Dark-, or Ghost-type attack",
     "id": "rattled",
     "name": "Rattled",
     "rating": 1.5,
     "num": 155,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if([\"Bug\",\"Dark\",\"Ghost\"].indexOf(info.move.type)!==-1){\n  $scope.PKM.stat(info.pokemonTarget,\"spe\",-1);\t\n}",
     "keyname": "rattled"
   },
   {
@@ -2179,14 +2181,14 @@
     "rating": 0,
     "num": 222,
     "blocks": [
-      "begin"
+      "target_downhp"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonTarget)<=0){ info.pokemonFriend.battle.ability = info.pokemonTarget.ability; }",
     "keyname": "receiver"
   },
   {
     "desc": "This Pokemon's attacks with recoil or crash damage have their power multiplied by 1.2. Does not affect Struggle.",
-    "shortDesc": "This Pokemon's attacks with recoil or crash damage have 1.2x power; not Struggle.",
+    "shortDesc": "This Pokemon's attacks with recoil or crash damage have 1.2x power",
     "onBasePowerPriority": 8,
     "id": "reckless",
     "name": "Reckless",
@@ -2195,7 +2197,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.recoil) info.move.basePower *=1.2;",
     "keyname": "reckless"
   },
   {
@@ -2208,9 +2210,9 @@
     "rating": 4,
     "num": 174,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if (info.move.type === \"Normal\" || info.move.type === \"Ice\") {\n                info.move.type = \"Ice\";\n                fata *= 1.2;\n            }",
     "keyname": "refrigerate"
   },
   {
@@ -2220,21 +2222,21 @@
     "rating": 4.5,
     "num": 144,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "if(yosoy===\"friend\")\t\n\t$scope.PKM.stat($scope.PKM.friend(),\"hp\",$scope.PKM.basehp($scope.PKM.friend())*(1/3));\nif(yosoy===\"target\")\n\t$scope.PKM.stat($scope.PKM.target(),\"hp\",$scope.PKM.basehp($scope.PKM.target())*(1/3));",
     "keyname": "regenerator"
   },
   {
-    "shortDesc": "When this Pokemon eats a Berry, its effect is doubled.",
+    "shortDesc": "When this Pokemon up a stat, its effect is doubled.",
     "id": "ripen",
     "name": "Ripen",
     "rating": 2.5,
     "num": 247,
     "blocks": [
-      "begin"
+      "before_up_stat"
     ],
-    "code": "",
+    "code": "modifier*=2;",
     "keyname": "ripen"
   },
   {
@@ -2248,24 +2250,24 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonTarget.gender===info.pokemonFriend.gender)\n\tinfo.move.basePower *= 1.25;\nelse\n\tinfo.move.basePower *= 0.75;",
     "keyname": "rivalry"
   },
   {
-    "shortDesc": "If this Pokemon is a Silvally, its type changes to match its held Memory.",
+    "shortDesc": "This Pokemon is semi GOD, all stat up by 2.",
     "id": "rkssystem",
     "name": "RKS System",
     "rating": 4,
     "num": 225,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "if(yosoy===\"friend\")\t\n\tfor (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat($scope.PKM.friend(),stat,-2);\nif(yosoy===\"target\")\n\tfor (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat($scope.PKM.target(),stat,-2);",
     "keyname": "rkssystem"
   },
   {
     "desc": "This Pokemon does not take recoil damage besides Struggle, Life Orb, and crash damage.",
-    "shortDesc": "This Pokemon does not take recoil damage besides Struggle\/Life Orb\/crash damage.",
+    "shortDesc": "This Pokemon does not take recoil damage.",
     "id": "rockhead",
     "name": "Rock Head",
     "rating": 3,
@@ -2273,7 +2275,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "delete info.move.recoil",
     "keyname": "rockhead"
   },
   {
@@ -2285,9 +2287,9 @@
     "rating": 2.5,
     "num": 24,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags) if (info.move.flags.contact) $scope.PKM.stat(info.pokemonFriend,\"hp\",$scope.PKM.basehp(info.pokemonFriend)*(1/8));",
     "keyname": "roughskin"
   },
   {
@@ -2299,12 +2301,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "nocompetitive=0;",
     "keyname": "runaway"
   },
   {
     "desc": "If Sandstorm is active, this Pokemon's Ground-, Rock-, and Steel-type attacks have their power multiplied by 1.3. This Pokemon takes no damage from Sandstorm.",
-    "shortDesc": "This Pokemon's Ground\/Rock\/Steel attacks do 1.3x in Sandstorm; immunity to it.",
+    "shortDesc": "This Pokemon's Ground\/Rock\/Steel attacks do 1.3x in Sandstorm",
     "onBasePowerPriority": 8,
     "id": "sandforce",
     "name": "Sand Force",
@@ -2313,7 +2315,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"Ground\",\"Rock\",\"Steel\"].indexOf(info.move.type)!==-1){\n  info.move.basePower*=1.3;\n}",
     "keyname": "sandforce"
   },
   {
@@ -2324,9 +2326,9 @@
     "rating": 3,
     "num": 146,
     "blocks": [
-      "begin"
+      "speed"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.clima===\"Sandstorm\") {\n                        if (yosoy === \"target\") enemySpeed *= 2;\n                        if (yosoy === \"friend\") friendSpeed *= 2;\n                    }",
     "keyname": "sandrush"
   },
   {
@@ -2337,9 +2339,9 @@
     "rating": 2,
     "num": 245,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.clima=\"Sandstorm\";",
     "keyname": "sandspit"
   },
   {
@@ -2349,14 +2351,14 @@
     "rating": 4,
     "num": 45,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.clima = \"Sandstorm\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "sandstream"
   },
   {
     "desc": "If Sandstorm is active, this Pokemon's evasiveness is multiplied by 1.25. This Pokemon takes no damage from Sandstorm.",
-    "shortDesc": "If Sandstorm is active, this Pokemon's evasiveness is 1.25x; immunity to Sandstorm.",
+    "shortDesc": "If Sandstorm is active, this Pokemon's evasiveness is up;",
     "id": "sandveil",
     "name": "Sand Veil",
     "rating": 1.5,
@@ -2364,7 +2366,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.clima===\"Sandstorm\") $scope.PKM.stat(info.pokemonFriend,\"evasion\",-1);",
     "keyname": "sandveil"
   },
   {
@@ -2376,14 +2378,14 @@
     "rating": 3,
     "num": 157,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if([\"Grass\"].indexOf(info.move.type)!==-1){\n  $scope.PKM.stat(info.pokemonTarget,\"atk\",-1); damage = -1;}",
     "keyname": "sapsipper"
   },
   {
     "desc": "On switch-in, if this Pokemon is a Wishiwashi that is level 20 or above and has more than 1\/4 of its maximum HP left, it changes to School Form. If it is in School Form and its HP drops to 1\/4 of its maximum HP or less, it changes to Solo Form at the end of the turn. If it is in Solo Form and its HP is greater than 1\/4 its maximum HP at the end of the turn, it changes to School Form.",
-    "shortDesc": "If user is Wishiwashi, changes to School Form if it has > 1\/4 max HP, else Solo Form.",
+    "shortDesc": "if it has < 1\/4 max HP, stats up",
     "onResidualOrder": 27,
     "id": "schooling",
     "name": "Schooling",
@@ -2392,33 +2394,34 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=25)\nfor (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat(info.pokemonFriend,stat,-4);",
     "keyname": "schooling"
   },
   {
     "desc": "This Pokemon can hit Ghost types with Normal- and Fighting-type moves. Immune to Intimidate.",
-    "shortDesc": "Fighting, Normal moves hit Ghost. Immune to Intimidate.",
+    "shortDesc": "Fighting, Normal moves hit always",
     "onModifyMovePriority": -5,
     "id": "scrappy",
     "name": "Scrappy",
     "rating": 3,
     "num": 113,
     "blocks": [
-      "begin"
+      "target_multiplier"
     ],
-    "code": "",
+    "code": "if([\"Fighting\",\"Normal\"].indexOf(info.move.type)!==-1){\n    if (multiplier === \"=-1\") {\n\t\tmultiplier = \"*1\";\n\t}\n}",
     "keyname": "scrappy"
   },
   {
-    "shortDesc": "On switch-in, the effects of Aurora Veil, Light Screen, and Reflect end for both sides.",
+    "shortDesc": "The effects of Protects and Reflect ends for both sides.",
     "id": "screencleaner",
     "name": "Screen Cleaner",
     "rating": 2,
     "num": 251,
     "blocks": [
-      "begin"
+      "calcstats",
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "info.move.breaksProtect = true;",
     "keyname": "screencleaner"
   },
   {
@@ -2431,7 +2434,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.secondary) if(info.move.secondary.change) info.move.secondary.change *=2;\t",
     "keyname": "serenegrace"
   },
   {
@@ -2443,14 +2446,14 @@
     "rating": 4,
     "num": 231,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonTarget)>=100){\n\tfata /=2;\n}",
     "keyname": "shadowshield"
   },
   {
     "desc": "Prevents adjacent opposing Pokemon from choosing to switch out unless they are immune to trapping or also have this Ability.",
-    "shortDesc": "Prevents adjacent foes from choosing to switch unless they also have this Ability.",
+    "shortDesc": "Prevents adjacent foes from choosing to switch",
     "id": "shadowtag",
     "name": "Shadow Tag",
     "rating": 5,
@@ -2458,12 +2461,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(true) \n{\n\tinfo.pokemonTarget.battle.status = \"partiallytrapped\";\n\tinfo.pokemonTarget.battle.statusTurn = 0;\n\tinfo.pokemonTarget.battle.statusType = \"Normal\";\n}",
     "keyname": "shadowtag"
   },
   {
     "desc": "This Pokemon has a 33% chance to have its major status condition cured at the end of each turn.",
-    "shortDesc": "This Pokemon has a 33% chance to have its status cured at the end of each turn.",
+    "shortDesc": "This Pokemon has a 33% chance to have its status cured at the begin of each turn.",
     "onResidualOrder": 5,
     "onResidualSubOrder": 1,
     "id": "shedskin",
@@ -2473,7 +2476,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(getRandomInt(100)>70){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "shedskin"
   },
   {
@@ -2487,7 +2490,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.secondary){\n\tinfo.move.basePower *= 1.3;\n\tinfo.move.secondary = null;\n} ",
     "keyname": "sheerforce"
   },
   {
@@ -2498,9 +2501,9 @@
     "rating": 1,
     "num": 75,
     "blocks": [
-      "begin"
+      "target_critical"
     ],
-    "code": "",
+    "code": "accept=-999",
     "keyname": "shellarmor"
   },
   {
@@ -2510,24 +2513,24 @@
     "rating": 2,
     "num": 19,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "if(info.move.secondary){\n\tinfo.move.secondary = null;\n} ",
     "keyname": "shielddust"
   },
   {
     "desc": "If this Pokemon is a Minior, it changes to its Core forme if it has 1\/2 or less of its maximum HP, and changes to Meteor Form if it has more than 1\/2 its maximum HP. This check is done on switch-in and at the end of each turn. While in its Meteor Form, it cannot become affected by major status conditions. Moongeist Beam, Sunsteel Strike, and the Mold Breaker, Teravolt, and Turboblaze Abilities cannot ignore this Ability.",
-    "shortDesc": "If Minior, switch-in\/end of turn it changes to Core at 1\/2 max HP or less, else Meteor.",
+    "shortDesc": "No effects",
     "onResidualOrder": 27,
     "isUnbreakable": true,
     "id": "shieldsdown",
     "name": "Shields Down",
-    "rating": 3.5,
+    "rating": 0,
     "num": 197,
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "noeffects=0;",
     "keyname": "shieldsdown"
   },
   {
@@ -2538,9 +2541,10 @@
     "rating": 4.5,
     "num": 86,
     "blocks": [
-      "begin"
+      "before_up_stat",
+      "before_down_stat"
     ],
-    "code": "",
+    "code": "modifier*=2;",
     "keyname": "simple"
   },
   {
@@ -2552,27 +2556,27 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.multihit)\n\tif(Array.isArray(info.move.multihit))\n\t\tinfo.move.multihit = info.move.multihit[info.move.multihit.length-1];",
     "keyname": "skilllink"
   },
   {
-    "shortDesc": "On switch-in, this Pokemon's Attack and Speed are halved for 5 turns.",
+    "shortDesc": "On switch-in, this Pokemon's Attack and Speed are up.",
     "effect": {
       "duration": 5,
       "onModifyAtkPriority": 5
     },
     "id": "slowstart",
-    "name": "Slow Start",
+    "name": "No Slow Start",
     "rating": -1,
     "num": 112,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "if(yosoy===\"friend\"){\t\n\t$scope.PKM.stat($scope.PKM.friend(),\"spe\",-1);\n\t$scope.PKM.stat($scope.PKM.friend(),\"atk\",-1);\n}\nif(yosoy===\"target\"){\n\t$scope.PKM.stat($scope.PKM.target(),\"spe\",-1);\n\t$scope.PKM.stat($scope.PKM.target(),\"atk\",-1);\n}",
     "keyname": "slowstart"
   },
   {
-    "shortDesc": "If Hail is active, this Pokemon's Speed is doubled.",
+    "shortDesc": "If Hail is active, this Pokemon's Speed is upper.",
     "id": "slushrush",
     "name": "Slush Rush",
     "rating": 2.5,
@@ -2580,7 +2584,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.clima===\"hail\") $scope.PKM.stat(info.pokemonFriend,\"spe\",-4);",
     "keyname": "slushrush"
   },
   {
@@ -2590,14 +2594,14 @@
     "rating": 2,
     "num": 97,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(critial) fata *=1.5;",
     "keyname": "sniper"
   },
   {
     "desc": "If Hail is active, this Pokemon's evasiveness is multiplied by 1.25. This Pokemon takes no damage from Hail.",
-    "shortDesc": "If Hail is active, this Pokemon's evasiveness is 1.25x; immunity to Hail.",
+    "shortDesc": "If Hail is active, this Pokemon's evasiveness is up.",
     "id": "snowcloak",
     "name": "Snow Cloak",
     "rating": 1.5,
@@ -2605,7 +2609,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.clima===\"hail\") $scope.PKM.stat(info.pokemonFriend,\"evasion\",-1);",
     "keyname": "snowcloak"
   },
   {
@@ -2615,9 +2619,9 @@
     "rating": 4,
     "num": 117,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "$scope.BATTLEOBJS.clima = \"hail\";$scope.BATTLEOBJS.climaTurn = 0;",
     "keyname": "snowwarning"
   },
   {
@@ -2629,9 +2633,9 @@
     "rating": 2,
     "num": 94,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.clima===\"sunnyday\") { if(ata===\"spa\") fata*=1.5; $scope.PKM.stat(info.pokemonFriend,\"hp\",$scope.PKM.basehp(info.pokemonFriend)*(1/8));  }",
     "keyname": "solarpower"
   },
   {
@@ -2641,9 +2645,9 @@
     "rating": 3,
     "num": 116,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if ([\"*2\", \"*4\"].indexOf(multiplier) !== -1) fata *= (3 / 4);",
     "keyname": "solidrock"
   },
   {
@@ -2655,26 +2659,26 @@
     "rating": 3.5,
     "num": 220,
     "blocks": [
-      "begin"
+      "target_downhp"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonTarget)<=0){ $scope.PKM.stat(info.pokemonFriend,\"spa\",-1); }",
     "keyname": "soulheart"
   },
   {
-    "shortDesc": "This Pokemon is immune to sound-based moves, including Heal Bell.",
+    "shortDesc": "This Pokemon is immune to sound-based moves.",
     "id": "soundproof",
     "name": "Soundproof",
     "rating": 1.5,
     "num": 43,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.sound) damage = -1;",
     "keyname": "soundproof"
   },
   {
     "desc": "This Pokemon's Speed is raised by 1 stage at the end of each full turn it has been on the field.",
-    "shortDesc": "This Pokemon's Speed is raised 1 stage at the end of each full turn on the field.",
+    "shortDesc": "This Pokemon's Speed is raised 1 stage at the begin of each turn on the field.",
     "onResidualOrder": 26,
     "onResidualSubOrder": 1,
     "id": "speedboost",
@@ -2684,11 +2688,11 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "$scope.PKM.stat(info.pokemonFriend,\"spe\",-1);",
     "keyname": "speedboost"
   },
   {
-    "shortDesc": "This Pokemon's attacking stat is doubled against a target that switched in this turn.",
+    "shortDesc": "If Enemy switched in this turn attack upper.",
     "onModifyAtkPriority": 5,
     "onModifySpAPriority": 5,
     "id": "stakeout",
@@ -2696,13 +2700,13 @@
     "rating": 4.5,
     "num": 198,
     "blocks": [
-      "begin"
+      "switch"
     ],
-    "code": "",
+    "code": "if(yosoy===\"friend\"){\t\n    if($scope.PKM.target().ability===\"stakeout\")\n\t\t$scope.PKM.stat($scope.PKM.target(),\"atk\",-4);\n}\nif(yosoy===\"target\"){\n\tif($scope.PKM.friend().ability===\"stakeout\")\n\t\t$scope.PKM.stat($scope.PKM.friend(),\"atk\",-4);\n}\n",
     "keyname": "stakeout"
   },
   {
-    "shortDesc": "This Pokemon moves last among Pokemon using the same or greater priority moves.",
+    "shortDesc": "No Effect",
     "id": "stall",
     "name": "Stall",
     "rating": -1,
@@ -2710,19 +2714,19 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "noeffect=0;",
     "keyname": "stall"
   },
   {
-    "shortDesc": "This Pokemon's moves cannot be redirected to a different target by any effect.",
+    "shortDesc": "This Pokemon's moves cannot be miss unless ohko",
     "id": "stalwart",
     "name": "Stalwart",
     "rating": 0,
     "num": 242,
     "blocks": [
-      "begin"
+      "after_miss"
     ],
-    "code": "",
+    "code": "if(!info.move.ohko) miss=false;",
     "keyname": "stalwart"
   },
   {
@@ -2732,14 +2736,14 @@
     "rating": 3.5,
     "num": 192,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "$scope.PKM.stat(info.pokemonTarget,\"def\",1);",
     "keyname": "stamina"
   },
   {
     "desc": "If this Pokemon is an Aegislash, it changes to Blade Forme before attempting to use an attacking move, and changes to Shield Forme before attempting to use King's Shield.",
-    "shortDesc": "If Aegislash, changes Forme to Blade before attacks and Shield before King's Shield.",
+    "shortDesc": "This pokemon clear stats each turn",
     "onBeforeMovePriority": 0.5,
     "id": "stancechange",
     "name": "Stance Change",
@@ -2748,7 +2752,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "stancechange"
   },
   {
@@ -2758,9 +2762,9 @@
     "rating": 2,
     "num": 9,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if (info.move.flags)\n                if (info.move.flags.contact)\n                    if (getRandomInt(100) >= 70) {\n                        info.pokemonFriend.battle.statusTurn = 0;\n                        info.pokemonFriend.battle.status = randomArray([\"par\"]);\n                    }",
     "keyname": "static"
   },
   {
@@ -2772,19 +2776,19 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status === \"flinch\")\n\t$scope.PKM.stat(info.pokemonFriend,\"spe\",1);",
     "keyname": "steadfast"
   },
   {
-    "shortDesc": "This Pokemon's Speed is raised by 6 stages after it is damaged by Fire\/Water moves.",
+    "shortDesc": "This Pokemon's Speed is raised by 4 stages after it is damaged by Fire\/Water moves.",
     "id": "steamengine",
     "name": "Steam Engine",
     "rating": 1,
     "num": 243,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if([\"Fire\",\"Water\"].indexOf(info.move.type)!==-1){\n  $scope.PKM.stat(info.pokemonTarget,\"spe\",-1); }",
     "keyname": "steamengine"
   },
   {
@@ -2796,26 +2800,26 @@
     "rating": 3.5,
     "num": 200,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if([\"Steel\",\"Steel\"].indexOf(info.move.type)!==-1){ fata *= 1.5; }",
     "keyname": "steelworker"
   },
   {
-    "shortDesc": "This Pokemon and its allies' Steel-type moves have their power multiplied by 1.5.",
+    "shortDesc": "This Pokemon Steel-type moves have their power multiplied by 1.5.",
     "onAllyBasePowerPriority": 8,
     "id": "steelyspirit",
     "name": "Steely Spirit",
     "rating": 3,
     "num": 252,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if([\"Steel\",\"Steel\"].indexOf(info.move.type)!==-1){ fata *= 1.5; }",
     "keyname": "steelyspirit"
   },
   {
-    "shortDesc": "This Pokemon's attacks without a chance to flinch have a 10% chance to flinch.",
+    "shortDesc": "This Pokemon's attacks without a chance have a 10% chance to flinch.",
     "onModifyMovePriority": -1,
     "id": "stench",
     "name": "Stench",
@@ -2824,11 +2828,11 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(!info.move.secondary){\n\tinfo.move.secondary = {\"chance\": 10,\"volatileStatus\": \"flinch\"};\n}",
     "keyname": "stench"
   },
   {
-    "shortDesc": "This Pokemon cannot lose its held item due to another Pokemon's attack.",
+    "shortDesc": "This Pokemon cannot lose its stats",
     "id": "stickyhold",
     "name": "Sticky Hold",
     "rating": 1.5,
@@ -2836,7 +2840,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "stickyhold"
   },
   {
@@ -2847,14 +2851,14 @@
     "rating": 3,
     "num": 114,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if([\"Water\"].indexOf(info.move.type)!==-1){\n  $scope.PKM.stat(info.pokemonTarget,\"spa\",-1); damage = -1;}",
     "keyname": "stormdrain"
   },
   {
     "desc": "This Pokemon's bite-based attacks have their power multiplied by 1.5.",
-    "shortDesc": "This Pokemon's bite-based attacks have 1.5x power. Bug Bite is not boosted.",
+    "shortDesc": "This Pokemon's bite-based attacks have 1.5x power",
     "onBasePowerPriority": 8,
     "id": "strongjaw",
     "name": "Strong Jaw",
@@ -2863,34 +2867,34 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.bite) info.move.basePower *= 1.5;",
     "keyname": "strongjaw"
   },
   {
     "desc": "If this Pokemon is at full HP, it survives one hit with at least 1 HP. OHKO moves fail when used against this Pokemon.",
-    "shortDesc": "If this Pokemon is at full HP, it survives one hit with at least 1 HP. Immune to OHKO.",
+    "shortDesc": "Immune to OHKO.",
     "onDamagePriority": -100,
     "id": "sturdy",
     "name": "Sturdy",
     "rating": 3,
     "num": 5,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "if(info.move.ohko) { if (callback) callback({critical: false, miss: true, damage: 0});  willreturn='empty';  }",
     "keyname": "sturdy"
   },
   {
-    "shortDesc": "This Pokemon cannot be forced to switch out by another Pokemon's attack or item.",
+    "shortDesc": "This Pokemon cannot be forced to switch out by another Pokemon's attack",
     "onDragOutPriority": 1,
     "id": "suctioncups",
     "name": "Suction Cups",
     "rating": 1,
     "num": 21,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "if(info.move.forceSwitch) delete info.move.forceSwitch;",
     "keyname": "suctioncups"
   },
   {
@@ -2902,11 +2906,11 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.critRatio) info.move.critRatio +=1;\nif(!info.move.critRatio) info.move.critRatio =1;",
     "keyname": "superluck"
   },
   {
-    "shortDesc": "If Electric Terrain is active, this Pokemon's Speed is doubled.",
+    "shortDesc": "If Electric Terrain is active, this Pokemon's Speed is up.",
     "id": "surgesurfer",
     "name": "Surge Surfer",
     "rating": 2.5,
@@ -2914,12 +2918,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.terrain===\"electricterrain\") $scope.PKM.stat(info.pokemonFriend,\"spe\",-1);",
     "keyname": "surgesurfer"
   },
   {
     "desc": "When this Pokemon has 1\/3 or less of its maximum HP, rounded down, its attacking stat is multiplied by 1.5 while using a Bug-type attack.",
-    "shortDesc": "At 1\/3 or less of its max HP, this Pokemon's attacking stat is 1.5x with Bug attacks.",
+    "shortDesc": "At 1\/3 or less of its max HP, this Pokemon's attacking stat is 1.5x with attacks.",
     "onModifyAtkPriority": 5,
     "onModifySpAPriority": 5,
     "id": "swarm",
@@ -2927,9 +2931,9 @@
     "rating": 2,
     "num": 68,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=33) fata *= 1.5;",
     "keyname": "swarm"
   },
   {
@@ -2941,7 +2945,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "customabili=1;",
     "keyname": "sweetveil"
   },
   {
@@ -2954,12 +2958,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if($scope.BATTLEOBJS.terrain===\"RainDance\") $scope.PKM.stat(info.pokemonFriend,\"spe\",-1);",
     "keyname": "swiftswim"
   },
   {
     "desc": "If an ally uses its item, this Pokemon gives its item to that ally immediately. Does not activate if the ally's item was stolen or knocked off.",
-    "shortDesc": "If an ally uses its item, this Pokemon gives its item to that ally immediately.",
+    "shortDesc": "If an ally up stat, this Pokemon up too.",
     "id": "symbiosis",
     "name": "Symbiosis",
     "rating": 0,
@@ -2967,12 +2971,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "for (var stat of STATGLOBAL)\n\tif (info.pokemonTarget.battle.stats[stat] < 0)\n\t\tinfo.pokemonFriend.battle.stats[stat] = info.pokemonTarget.battle.stats[stat];",
     "keyname": "symbiosis"
   },
   {
     "desc": "If another Pokemon burns, paralyzes, poisons, or badly poisons this Pokemon, that Pokemon receives the same major status condition.",
-    "shortDesc": "If another Pokemon burns\/poisons\/paralyzes this Pokemon, it also gets that status.",
+    "shortDesc": "If Pokemon burns\/poisons\/paralyzes enemy Pokemon, it also gets that status.",
     "id": "synchronize",
     "name": "Synchronize",
     "rating": 2,
@@ -2980,7 +2984,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"par\",\"tox\",\"brn\"].indexOf(info.pokemonFriend.battle.status)!==-1){\n\tinfo.pokemonTarget.battle.status = info.pokemonFriend.battle.status;\n\tinfo.pokemonTarget.battle.statusTurn = info.pokemonFriend.battle.statusTurn;\n\tinfo.pokemonTarget.battle.statusType = info.pokemonFriend.battle.statusType;\n}",
     "keyname": "synchronize"
   },
   {
@@ -2992,7 +2996,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"confusion\"].indexOf(info.pokemonFriend.battle.status)!==-1){\n  $scope.PKM.stat(info.pokemonFriend,\"evasion\",-4);\t\n}",
     "keyname": "tangledfeet"
   },
   {
@@ -3002,14 +3006,14 @@
     "rating": 2,
     "num": 221,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.contact) $scope.PKM.stat(info.pokemonFriend,\"spe\",1);",
     "keyname": "tanglinghair"
   },
   {
     "desc": "This Pokemon's moves of 60 power or less have their power multiplied by 1.5. Does affect Struggle.",
-    "shortDesc": "This Pokemon's moves of 60 power or less have 1.5x power. Includes Struggle.",
+    "shortDesc": "This Pokemon's moves of 60 power or less have 1.5x power",
     "onBasePowerPriority": 8,
     "id": "technician",
     "name": "Technician",
@@ -3018,11 +3022,11 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.basePower<=60) info.move.basePower *= 1.5;",
     "keyname": "technician"
   },
   {
-    "shortDesc": "This Pokemon does not take damage from attacks made by its allies.",
+    "shortDesc": "This Pokemon use next friend attacks too in next turn.",
     "id": "telepathy",
     "name": "Telepathy",
     "rating": 0,
@@ -3030,7 +3034,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.team[info.friendIndex+1]){\n\tif(!info.pokemonFriend.battle.moves){\n\t\tvar newmoves = OSO(info.pokemonFriend.moves);\n\t\tvar friendMove = OSO(info.team[info.friendIndex+1].moves);\n\t\tfor(var mov of friendMove){\n\t\t\tmov.helper = true;\n\t\t\tnewmoves.push(mov);\n\t\t}\n\t\tinfo.pokemonFriend.battle.moves = OSO(newmoves);\n\t}\n}",
     "keyname": "telepathy"
   },
   {
@@ -3042,7 +3046,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonTarget.battle.ability = 'noability';",
     "keyname": "teravolt"
   },
   {
@@ -3055,21 +3059,21 @@
     "rating": 3.5,
     "num": 47,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if([\"Fire\",\"Ice\"].indexOf(info.move.type)!==-1){\n  damage /=2;\n}",
     "keyname": "thickfat"
   },
   {
-    "shortDesc": "This Pokemon's attacks that are not very effective on a target deal double damage.",
+    "shortDesc": "Dragon\/Ice-type moves against this Pokemon deal damage with a halved attacking stat.",
     "id": "tintedlens",
     "name": "Tinted Lens",
     "rating": 4,
     "num": 110,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if([\"Dragon\",\"Ice\"].indexOf(info.move.type)!==-1){\n  damage /=2;\n}",
     "keyname": "tintedlens"
   },
   {
@@ -3082,9 +3086,9 @@
     "rating": 2,
     "num": 67,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=33)\n\tif(info.move.type===\"Water\")\n\t\tfata *= 1.5;",
     "keyname": "torrent"
   },
   {
@@ -3097,7 +3101,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.flags) if(info.move.flags.contact) fata *= 1.3;",
     "keyname": "toughclaws"
   },
   {
@@ -3109,14 +3113,14 @@
     "rating": 2.5,
     "num": 137,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "if(info.pokemonFriend.battle.status === \"tox\")\n\tif(info.move.category===\"Physical\")\n\t\tfata *= 1.5;",
     "keyname": "toxicboost"
   },
   {
     "desc": "On switch-in, or when this Pokemon acquires this ability, this Pokemon copies a random adjacent opposing Pokemon's Ability. However, if one or more adjacent Pokemon has the Ability \"No Ability\", Trace won't copy anything even if there is another valid Ability it could normally copy. Otherwise, if there is no Ability that can be copied at that time, this Ability will activate as soon as an Ability can be copied. Abilities that cannot be copied are the previously mentioned \"No Ability\", as well as Comatose, Disguise, Flower Gift, Forecast, Gulp Missile, Hunger Switch, Ice Face, Illusion, Imposter, Multitype, Schooling, Stance Change, Trace, and Zen Mode.",
-    "shortDesc": "On switch-in, or when it can, this Pokemon copies a random adjacent foe's Ability.",
+    "shortDesc": "On Turn, or when it can, this Pokemon copies a random adjacent foe's Ability.",
     "id": "trace",
     "name": "Trace",
     "rating": 2.5,
@@ -3124,7 +3128,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonFriend.battle.ability = info.pokemonTarget.ability;",
     "keyname": "trace"
   },
   {
@@ -3134,23 +3138,23 @@
     "rating": 3.5,
     "num": 205,
     "blocks": [
-      "begin"
+      "before_speed"
     ],
-    "code": "",
+    "code": "if (yosoy === \"friend\") \n\tif(friendAction.move.flags) if(friendAction.move.flags.heal) friendAction.move.priority= 3;\n if (yosoy === \"target\") \n\t if(enemyAction.move.flags) if(enemyAction.move.flags.heal) enemyAction.move.priority= 3;",
     "keyname": "triage"
   },
   {
-    "shortDesc": "This Pokemon skips every other turn instead of using a move.",
+    "shortDesc": "This Pokemon always first",
     "onBeforeMovePriority": 9,
     "effect": {},
     "id": "truant",
     "name": "Truant",
-    "rating": -1,
+    "rating": 4,
     "num": 54,
     "blocks": [
-      "begin"
+      "before_speed"
     ],
-    "code": "",
+    "code": "if (yosoy === \"friend\") \n\tfriendAction.move.priority= 5;\nif (yosoy === \"target\") \n\tenemyAction.move.priority= 5;",
     "keyname": "truant"
   },
   {
@@ -3162,39 +3166,39 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.pokemonTarget.battle.ability = 'noability';",
     "keyname": "turboblaze"
   },
   {
     "desc": "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.",
-    "shortDesc": "This Pokemon ignores other Pokemon's stat stages when taking or doing damage.",
+    "shortDesc": "This Pokemon clean other Pokemon's stat stages doing damage.",
     "id": "unaware",
     "name": "Unaware",
     "rating": 3.5,
     "num": 109,
     "blocks": [
-      "begin"
+      "calcstats"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonTarget);",
     "keyname": "unaware"
   },
   {
     "desc": "If this Pokemon loses its held item for any reason, its Speed is doubled. This boost is lost if it switches out or gains a new item or Ability.",
-    "shortDesc": "Speed is doubled on held item loss; boost is lost if it switches, gets new item\/Ability.",
+    "shortDesc": "This Pokemon clean their Pokemon's stat stages taking damage.",
     "effect": {},
     "id": "unburden",
     "name": "Unburden",
     "rating": 3.5,
     "num": 84,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "unburden"
   },
   {
     "desc": "While this Pokemon is active, it prevents opposing Pokemon from using their Berries. Activation message broadcasts before other Abilities regardless of the Pokemon's Speed tiers.",
-    "shortDesc": "While this Pokemon is active, it prevents opposing Pokemon from using their Berries.",
+    "shortDesc": "While this Pokemon is active, it prevents opposing Pokemon from using their shields.",
     "onFoeTryEatItem": false,
     "id": "unnerve",
     "name": "Unnerve",
@@ -3203,7 +3207,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "info.move.breaksProtect = true;",
     "keyname": "unnerve"
   },
   {
@@ -3215,7 +3219,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "customability=1;",
     "keyname": "victorystar"
   },
   {
@@ -3227,7 +3231,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"slp\"].indexOf(info.pokemonFriend.battle.status)!==-1){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "vitalspirit"
   },
   {
@@ -3238,9 +3242,9 @@
     "rating": 3.5,
     "num": 10,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if([\"Electric\"].indexOf(info.move.type)!==-1){\n  $scope.PKM.stat(info.pokemonTarget,\"hp\",$scope.PKM.basehp(info.pokemonTarget)*(1/4)); damage = -1;}",
     "keyname": "voltabsorb"
   },
   {
@@ -3250,9 +3254,9 @@
     "rating": 2.5,
     "num": 254,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.flags) \n\tif(info.move.flags.contact){\n\t\tinfo.pokemonFriend.battle.ability = OSO(info.pokemonTarget.ability);\n\t\tinfo.pokemonTarget.battle.ability = OSO(info.pokemonFriend.ability);\n\t}",
     "keyname": "wanderingspirit"
   },
   {
@@ -3263,9 +3267,9 @@
     "rating": 3.5,
     "num": 11,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if([\"Water\"].indexOf(info.move.type)!==-1){\n  $scope.PKM.stat(info.pokemonTarget,\"hp\",$scope.PKM.basehp(info.pokemonTarget)*(1/4)); damage = -1;}",
     "keyname": "waterabsorb"
   },
   {
@@ -3280,7 +3284,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Water\")\n\tinfo.move.basePower *=2;\nif(info.move.type===\"Fire\")\n\tinfo.move.basePower /=2;\nif(info.pokemonFriend.battle.status === \"brn\"){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "waterbubble"
   },
   {
@@ -3290,9 +3294,9 @@
     "rating": 1.5,
     "num": 195,
     "blocks": [
-      "begin"
+      "target_calcstats"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Water\"){ $scope.PKM.stat(info.pokemonFriend,\"def\",2); }",
     "keyname": "watercompaction"
   },
   {
@@ -3304,7 +3308,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if([\"brn\"].indexOf(info.pokemonFriend.battle.status)!==-1){\n\tinfo.pokemonFriend.battle.status = undefined;\n\tinfo.pokemonFriend.battle.statusTurn = 0;\n}",
     "keyname": "waterveil"
   },
   {
@@ -3315,9 +3319,9 @@
     "rating": 1,
     "num": 133,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if(info.move.category===\"Physical\") {  $scope.PKM.stat(info.pokemonTarget,\"def\",1);\n$scope.PKM.stat(info.pokemonTarget,\"spe\",-2); }",
     "keyname": "weakarmor"
   },
   {
@@ -3329,7 +3333,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "whitesmoke"
   },
   {
@@ -3340,9 +3344,9 @@
     "rating": 1,
     "num": 193,
     "blocks": [
-      "begin"
+      "target_downhp"
     ],
-    "code": "",
+    "code": " if ($scope.PKM.hp(info.pokemonTarget) <= 50) {\n                                    var lives = [];\n                                    if (info.isEnemy)\n                                        for (var pok in $scope.session.pokemons) {\n                                            if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)\n                                                if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)\n                                                    lives.push(pok);\n                                        }\n                                    if (!info.isEnemy)\n                                        for (var pok in $scope.BATTLEOBJS.TARGETS) {\n                                            if (pok !== $scope.BATTLEOBJS.TARGETINDEX)\n                                                if ($scope.PKM.hp($scope.BATTLEOBJS.TARGETS[pok]) > 0)\n                                                    lives.push(pok);\n                                        }\n                                    if (lives.length > 0) {\n                                        if (!info.isEnemy) {\n                                            $scope.BATTLEOBJS.TARGETINDEX = randomArray(lives);\n                                            $scope.BATTLEOBJS.TARGET = POKEMONBATTLE.TARGET($scope);\n                                        } else {\n                                            $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);\n                                            $scope.BATTLEOBJS.FRIEND = POKEMONBATTLE.FRIEND($scope);\n                                        }\n\n                                        ACTIONS.ANIMATION.PLAYNATURAL(\"Hide\",\n                                            POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                                            POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                                            function () {\n                                                if (!info.isEnemy) {\n                                                    ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);\n                                                    ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl, SOUNDS.system);\n                                                } else {\n                                                    ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);\n                                                    ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl, SOUNDS.system);\n                                                }\n                                            }, undefined, undefined, undefined, undefined, undefined);\n\n                                    }\n                                }",
     "keyname": "wimpout"
   },
   {
@@ -3352,9 +3356,9 @@
     "rating": 5,
     "num": 25,
     "blocks": [
-      "begin"
+      "target_finaldamage"
     ],
-    "code": "",
+    "code": "if ([\"*2\", \"*4\"].indexOf(multiplier) === -1) damage =-1;",
     "keyname": "wonderguard"
   },
   {
@@ -3366,14 +3370,14 @@
     "rating": 2,
     "num": 147,
     "blocks": [
-      "begin"
+      "target_begin"
     ],
-    "code": "",
+    "code": "if(info.move.accuracy===true) info.move.accuracy=50;",
     "keyname": "wonderskin"
   },
   {
     "desc": "If this Pokemon is a Darmanitan or Darmanitan-Galar, it changes to Zen Mode if it has 1\/2 or less of its maximum HP at the end of a turn. If Darmanitan's HP is above 1\/2 of its maximum HP at the end of a turn, it changes back to Standard Mode. This Ability cannot be removed or suppressed.",
-    "shortDesc": "If Darmanitan, at end of turn changes Mode to Standard if > 1\/2 max HP, else Zen.",
+    "shortDesc": "Permanent",
     "onResidualOrder": 27,
     "effect": {},
     "id": "zenmode",
@@ -3383,25 +3387,25 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "Permanentasdasd=1;",
     "keyname": "zenmode"
   },
   {
-    "shortDesc": "On switch-in, this Pokemon avoids all Rock-type attacks and Stealth Rock.",
+    "shortDesc": "40% chance, to avoid Rock-type attacks",
     "id": "mountaineer",
     "isNonstandard": "CAP",
     "name": "Mountaineer",
     "rating": 3,
     "num": -2,
     "blocks": [
-      "begin"
+      "after_miss"
     ],
-    "code": "",
+    "code": "if(info.move.type===\"Rock\") if(getRandomInt(100)>60) miss = true;",
     "keyname": "mountaineer"
   },
   {
     "desc": "On switch-in, this Pokemon blocks certain status moves and instead uses the move against the original user.",
-    "shortDesc": "On switch-in, blocks certain status moves and bounces them back to the user.",
+    "shortDesc": "Clear Status each par turn",
     "id": "rebound",
     "isNonstandard": "CAP",
     "name": "Rebound",
@@ -3414,12 +3418,12 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "if ($scope.BATTLEOBJS.numTurn % 2 === 0) POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "rebound"
   },
   {
     "desc": "The duration of Gravity, Heal Block, Magic Room, Safeguard, Tailwind, Trick Room, and Wonder Room is increased by 2 turns if the effect is started by this Pokemon.",
-    "shortDesc": "When used, Gravity\/Heal Block\/Safeguard\/Tailwind\/Room effects last 2 more turns.",
+    "shortDesc": "This pokemon accuracy up each turn",
     "id": "persistent",
     "isNonstandard": "CAP",
     "name": "Persistent",
@@ -3428,7 +3432,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "",
+    "code": "$scope.PKM.stat(info.pokemonFriend,\"accuracy\",-1);",
     "keyname": "persistent"
   }
 ]

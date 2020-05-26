@@ -1,4 +1,8 @@
+<script src="js/tools/codemirror.js"></script>
+<script src="js/tools/javascript.js"></script>
 <script src="js/tools/angular.min.js"></script>
+<script src="js/tools/ui-codemirror.js"></script>
+<script src="js/tools/autorefresh.js"></script>
 
 <!-- Jquery Core Js -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -11,6 +15,8 @@
 <!-- Custom Js -->
 <script src="js/admin.js"></script>
 <!-- Demo Js -->
+<script src="plugins/jquery-countto/jquery.countTo.js"></script>
+<script src="js/pages/ui/cou.js"></script>
 <script src="js/pages/ui/animations.js"></script>
 <script src="js/pages/ui/modals.js"></script>
 <script src="plugins/sweetalert/sweetalert.min.js"></script>
@@ -18,3 +24,4 @@
 <script src="js/script.js?v=<?php echo $version ?>"></script>
 <script src="js/models/pokedex.js?v=<?php echo $version ?>"></script>
 <script src="js/controller/language.js"></script>
+

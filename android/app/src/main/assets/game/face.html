@@ -28,259 +28,273 @@
         .swal2-container {
             z-index: 999999999999;
         }
+
+        .block-header {
+            margin-bottom: 7px;
+        }
+
+        .nav-tabs + .tab-content {
+            padding: 0 0;
+        }
+
+        .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 0px 10px;
+        }
+
+        .nav-tabs > li > a {
+            margin-right: 0px;
+            line-height: 1.42857143;
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0;
+        }
     </style>
     <script>
         LOADEDG = 0;
+
         function loadedg() {
             LOADEDG++;
         }
     </script>
 </head>
 <body class="theme-red">
-<!-- Page Loader -->
-<div class="page-loader-wrapper">
-    <div class="loader">
-        <div class="preloader">
-            <div class="spinner-layer pl-red">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
-        </div>
-        <p>Please wait...</p>
-    </div>
-</div>
-<div class="page-loader-wrapper2" id="globalload" style="display: none">
-    <div class="loader">
-        <div class="preloader">
-            <div class="spinner-layer pl-red">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
+<div ng-app="pokemon" ng-controller="character">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
                 </div>
             </div>
+            <p>...</p>
         </div>
-        <p id="loadingtext">Please wait...</p>
     </div>
-</div>
-<!-- #END# Page Loader -->
-<!-- Overlay For Sidebars -->
-<div class="overlay"></div>
-<!-- #END# Overlay For Sidebars -->
-<style>
-    .avatar_table td {
-        border: black solid 1px;
-    }
-
-    .selected {
-        border: red 2px solid !important;
-    }
-
-    .nav-tabs > li {
-        position: relative;
-        top: 0px;
-        left: -2px;
-    }
-
-    h1, .h1, h2, .h2, h3, .h3 {
-        margin-top: 9px;
-        margin-bottom: 6px;
-    }
-
-</style>
-
-<section id="charactercontroller" ng-app="pokemon" ng-controller="character" style="overflow: hidden">
-    <img ng-repeat="(key,value) in COLORS"
-         src="{{value}}" title="1"
-         id="grd_{{gradientID(value)}}_r"
-         style="float: left; position: absolute;top: -999999px">
-    <div class="container-fluid">
-        <div class="block-header">
-            <h3 style="text-align: center"><span style="color: red">{{form.data.name}}</span> Crea tu flow unico para la
-                aventura!</h3>
+    <div class="page-loader-wrapper2" id="globalload" style="display: none">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p id="loadingtext">...</p>
         </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <style>
+        .avatar_table td {
+            border: black solid 1px;
+        }
 
-        <div class="col-xs-3">
-            <canvas id="canvas_face" width="144"
-                    height="144"></canvas>
+        .selected {
+            border: red 2px solid !important;
+        }
 
-            <canvas id="canvas_sv" width="576" style="display: none"
-                    height="384"></canvas>
+        .nav-tabs > li {
+            position: relative;
+            top: 0px;
+            left: -2px;
+        }
 
-            <canvas id="canvas_tvd" width="144" style="display: none"
-                    height="48"></canvas>
+        h1, .h1, h2, .h2, h3, .h3 {
+            margin: 0 !important;
+        }
 
-            <select style="width: 146px" class="form-control show-tick" ng-model="form.data.gender">
-                <option selected value="Female">Chica</option>
-                <option value="Male">Chico</option>
-            </select>
-            <input ng-disabled="prop.mode==='edit'" style="width: 146px" id="charactername" placeholder="Nombre"
-                   type="text" ng-model="form.data.name"
-                   class="form-control">
-        </div>
-        <div class="col-xs-9">
+    </style>
 
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation">
-                    <a href="#parte" data-toggle="tab">
-                        <i class="material-icons">face</i> Parte
-                    </a>
-                </li>
-                <li role="presentation" class="active">
-                    <a href="#profile_with_icon_title" data-toggle="tab">
-                        <i class="material-icons">developer_board</i> Diseño
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#messages_with_icon_title" data-toggle="tab">
-                        <i class="material-icons">color_lens</i> Colores
-                    </a>
-                </li>
-                <li>
+    <section id="charactercontroller" style="overflow: hidden">
+        <img ng-repeat="(key,value) in COLORS"
+             src="{{value}}" title="1"
+             id="grd_{{gradientID(value)}}_r"
+             style="float: left; position: absolute;top: -999999px">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h3 style="text-align: center">
+                    <select style="width: 90px;display: inline-block;" class="form-control show-tick"
+                            ng-model="form.data.gender">
+                        <option selected value="Female">{{LAN.t("Girl")}}</option>
+                        <option value="Male">{{LAN.t("Boy")}}</option>
+                    </select>
+                    <span style="color: red; text-transform: capitalize">{{form.data.name}}</span>
+                    {{LAN.t("Create your avatar!")}}
                     <button ng-click="randomName()" type="button"
                             class="btn btn-red bg-red waves-effect">
-                        A lo loco!
+                        {{LAN.t("Random")}}
                     </button>
-                </li>
-
-            </ul>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade" id="parte"
-                     style="height: 150px;overflow: scroll">
-
-                    <div ng-show="form.data.gender==='Male'"
-                         ng-repeat="(key, category) in {FrontHair:{},RearHair1:{},Eyebrows:{},Mouth:{},Face:{},Eyes:{},Nose:{},AccA:{},Clothing2:{},Cloak1:{},Glasses:{},AccB:{},Ears:{},BeastEars:{},FacialMark:{},Beard:{}}">
-                        <button ng-click="selectCategory(key)" style="width: 103px; float: left;margin: 3px"
-                                type="button"
-                                ng-show="(['Body'].indexOf(key)===-1 && key.indexOf('2')===-1) || key==='Clothing2'"
-                                class="btn bg-{{selection.category==key?'red':'default'}} waves-effect">
-                            {{LAN.t(key)}}
-                        </button>
-                    </div>
-
-                    <div ng-show="form.data.gender==='Female'"
-                         ng-repeat="(key, category) in {FrontHair:{},RearHair1:{},Eyebrows:{},Mouth:{},Face:{},Eyes:{},Nose:{},AccA:{},Clothing2:{},Cloak1:{},Glasses:{},AccB:{},Ears:{},BeastEars:{},FacialMark:{}}">
-                        <button ng-click="selectCategory(key)" style="width: 103px; float: left;margin: 3px"
-                                type="button"
-                                ng-show="(['Body'].indexOf(key)===-1 && key.indexOf('2')===-1) || key==='Clothing2'"
-                                class="btn bg-{{selection.category==key?'red':'default'}} waves-effect">
-                            {{LAN.t(key)}}
-                        </button>
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane fade  in active" id="profile_with_icon_title"
-                     style="height: 150px;overflow: scroll">
-                    <img ng-show="form.data.avatar.required.indexOf(selection.category)===-1"
-                         ng-click="selectItem('p00')" title="p00"
-                         style="border: {{form.data.avatar.prop[selection.category]=='p00'?'red':'black'}} 2px solid"
-                         width="48" height="48" src="../resources/na.png">
-
-
-                    <img ng-repeat="(key, image) in AVATARDB[form.data.gender].icon[selection.category.replace('1','').replace('2','')]"
-                         ng-click="selectItem(key)" title="{{key}}"
-                         style="border: {{form.data.avatar.prop[selection.category]==key?'red':'black'}} 2px solid"
-                         width="48" height="48" src="{{image['c1']['url']}}">
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="messages_with_icon_title"
-                     style="height: 150px;overflow: scroll">
-                    <button
-                            ng-click="selectColor(key)"
-                            class="btn bg-{{selection.color==key?'red':'default'}} waves-effect"
-                            ng-repeat="(key, value) in AVATARDB[form.data.gender].SV[selection.category][form.data.avatar.prop[selection.category]]"
-                            style="width: 80px" type="button">
-                        {{value.layer.replace("c","Color ")}}
-                    </button>
-                    <button
-                            ng-click="selectColor(key)"
-                            class="btn bg-{{selection.color==key?'red':'default'}} waves-effect"
-                            ng-show="!AVATARDB[form.data.gender].SV[selection.category][form.data.avatar.prop[selection.category]][key]"
-                            ng-repeat="(key, value) in AVATARDB[form.data.gender].FG[selection.category][form.data.avatar.prop[selection.category]]"
-                            style="width: 80px" type="button">
-                        {{value.layer.replace("c","Color ")}}
-                    </button>
-                    <div id="gradients">
-                        <img
-                                src="../resources/na.png" title="0"
-                                width="20px"
-                                height="20px"
-                                id="grd_0"
-                                ng-click="layerIDSet(0)"
-                                class="{{(layerID(value)==0)?'selected':''}}"
-                                style="float: left; position: relative;border: 2px solid;">
-                        <img
-                                onload="loadedg()"
-                                ng-repeat="(key,value) in COLORS"
-                                src="{{value}}" title="1"
-                                width="20px"
-                                height="20px"
-                                id="grd_{{gradientID(value)}}"
-                                ng-click="layerIDSet(gradientID(value))"
-                                class="{{(layerID(value)==gradientID(value))?'selected':''}}"
-                                style="float: left; position: relative;border: 2px solid;">
-
-                        <img ng-repeat="(key,value) in COLORS"
-                             src="{{value}}" title="1"
-                             id="grd_{{gradientID(value)}}_r"
-                             style="float: left; position: absolute;top: -999999px">
-                    </div>
-                </div>
+                </h3>
             </div>
-        </div>
-        <div class="col-xs-12">
+
             <div class="col-xs-3">
-                <button style="float: right;font-size: 18px;width: 135px" type="button"
-                        class="btn  bg-primary" ng-click="save()">
+                <canvas id="canvas_face" width="144"
+                        height="144"></canvas>
+
+                <button style="font-size: 24px;width: 144px" type="button" class="btn  bg-primary" ng-click="save()">
                     <center>
                         <div style="height: 48px;width: 48px;overflow: hidden;">
-                            <canvas id="canvas_tv" width="144"
-                                    height="192"></canvas>
+                            <canvas id="canvas_tv" width="144" height="192"></canvas>
                         </div>
                     </center>
-                    JUGAR
+                    {{LAN.t("Play")}}
                 </button>
+
+                <canvas id="canvas_sv" width="576" style="display: none"
+                        height="384"></canvas>
+                <canvas id="canvas_tvd" width="144" style="display: none"
+                        height="48"></canvas>
+
             </div>
             <div class="col-xs-9">
-                <h3>Diseños y colores para cada parte!</h3>
-                <b>Asegurate de usar los 3 tabs, selecciona cada parte aplicale un diseño y luego un color.</b>
+
+                <ul class="nav nav-tabs" role="tablist" style="font-size: 18px !important;">
+                    <li role="presentation" style="text-align: center;width: 33%;">
+                        <a href="#parte" data-toggle="tab">
+                            <i class="material-icons">face</i> {{LAN.t("Part")}}
+                        </a>
+                    </li>
+                    <li role="presentation" style="text-align: center;width: 33%;" class="active">
+                        <a href="#profile_with_icon_title" data-toggle="tab">
+                            <i class="material-icons">developer_board</i> {{LAN.t("Design")}}
+                        </a>
+                    </li>
+                    <li role="presentation" style="text-align: center;width: 33%;">
+                        <a href="#messages_with_icon_title" data-toggle="tab">
+                            <i class="material-icons">color_lens</i> {{LAN.t("Colors")}}
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade" id="parte"
+                         style="overflow: scroll">
+                        <center>
+                            <div ng-show="form.data.gender==='Male'"
+                                 ng-repeat="(key, category) in {FrontHair:{},RearHair1:{},Eyebrows:{},Mouth:{},Face:{},Eyes:{},Nose:{},AccA:{},Clothing2:{},Cloak1:{},Glasses:{},AccB:{},Ears:{},BeastEars:{},FacialMark:{},Beard:{}}">
+                                <button ng-click="selectCategory(key)" style="width: 128px; float: left;margin: 3px"
+                                        type="button"
+                                        ng-show="(['Body'].indexOf(key)===-1 && key.indexOf('2')===-1) || key==='Clothing2'"
+                                        class="btn bg-{{selection.category==key?'red':'default'}} waves-effect">
+                                    {{LAN.t(key)}}
+                                </button>
+                            </div>
+
+                            <div ng-show="form.data.gender==='Female'"
+                                 ng-repeat="(key, category) in {FrontHair:{},RearHair1:{},Eyebrows:{},Mouth:{},Face:{},Eyes:{},Nose:{},AccA:{},Clothing2:{},Cloak1:{},Glasses:{},AccB:{},Ears:{},BeastEars:{},FacialMark:{}}">
+                                <button ng-click="selectCategory(key)" style="width: 128px; float: left;margin: 3px"
+                                        type="button"
+                                        ng-show="(['Body'].indexOf(key)===-1 && key.indexOf('2')===-1) || key==='Clothing2'"
+                                        class="btn bg-{{selection.category==key?'red':'default'}} waves-effect">
+                                    {{LAN.t(key)}}
+                                </button>
+                            </div>
+                        </center>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade  in active" id="profile_with_icon_title"
+                         style="overflow: scroll">
+                        <img ng-show="form.data.avatar.required.indexOf(selection.category)===-1"
+                             ng-click="selectItem('p00')" title="p00"
+                             style="float: left;border: {{form.data.avatar.prop[selection.category]=='p00'?'red':'black'}} 2px solid"
+                             width="48" height="48" src="../resources/na.png">
+
+                        <img ng-repeat="(key, image) in AVATARDB[form.data.gender].icon[selection.category.replace('1','').replace('2','')]"
+                             ng-click="selectItem(key)" title="{{key}}"
+                             style="border: {{form.data.avatar.prop[selection.category]==key?'red':'black'}} 2px solid"
+                             width="48" height="48" src="{{image['c1']['url']}}">
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="messages_with_icon_title"
+                         style="overflow: scroll">
+                        <button
+                                ng-click="selectColor(key)"
+                                class="btn bg-{{selection.color==key?'red':'default'}} waves-effect"
+                                ng-repeat="(key, value) in AVATARDB[form.data.gender].SV[selection.category][form.data.avatar.prop[selection.category]]"
+                                style="width: 80px" type="button">
+                            {{value.layer.replace("c",LAN.t("Color")+" ")}}
+                        </button>
+                        <button
+                                ng-click="selectColor(key)"
+                                class="btn bg-{{selection.color==key?'red':'default'}} waves-effect"
+                                ng-show="!AVATARDB[form.data.gender].SV[selection.category][form.data.avatar.prop[selection.category]][key]"
+                                ng-repeat="(key, value) in AVATARDB[form.data.gender].FG[selection.category][form.data.avatar.prop[selection.category]]"
+                                style="width: 80px" type="button">
+                            {{value.layer.replace("c",LAN.t("Color")+" ")}}
+                        </button>
+                        <div id="gradients">
+                            <img
+                                    src="../resources/na.png" title="0"
+                                    width="25px"
+                                    height="25px"
+                                    id="grd_0"
+                                    ng-click="layerIDSet(0)"
+                                    class="{{(layerID(value)==0)?'selected':''}}"
+                                    style="float: left; position: relative;border: 2px solid;">
+                            <img
+                                    onload="loadedg()"
+                                    ng-repeat="(key,value) in COLORS"
+                                    src="{{value}}" title="1"
+                                    width="25px"
+                                    height="25px"
+                                    id="grd_{{gradientID(value)}}"
+                                    ng-click="layerIDSet(gradientID(value))"
+                                    class="{{(layerID(value)==gradientID(value))?'selected':''}}"
+                                    style="float: left; position: relative;border: 2px solid;">
+
+                            <img ng-repeat="(key,value) in COLORS"
+                                 src="{{value}}" title="1"
+                                 id="grd_{{gradientID(value)}}_r"
+                                 style="float: left; position: absolute;top: -999999px">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Form  -->
-</section>
+        <!-- Form  -->
+    </section>
+    <script src="js/tools/codemirror.js"></script>
+    <script src="js/tools/javascript.js"></script>
+    <script src="js/tools/angular.min.js"></script>
+    <script src="js/tools/ui-codemirror.js"></script>
+    <script src="js/tools/autorefresh.js"></script>
+    <script src="plugins/jquery/jquery.min.js?version=2"></script>
+    <script src="plugins/bootstrap/js/bootstrap.js?version=2"></script>
+    <script src="js/tools/createjs.min.js?version=2"></script>
+    <script src="js/tools/ThresholdFilter.js?version=2"></script>
+    <script src="js/tools/tinycolor-min.js?version=2"></script>
+    <script src="js/tools/ScaleBitmap.js?version=2"></script>
+    <script src="js/admin.js?version=2"></script>
+    <script src="js/pages/ui/animations.js?version=2"></script>
+    <script src="js/pages/ui/modals.js?version=2"></script>
+    <script src="plugins/sweetalert/sweetalert.min.js?version=2"></script>
+    <script src="js/api.js?version=2"></script>
+    <script src="js/script.js?version=2"></script>
+    <script src="js/models/pokedex.js?version=2"></script>
+    <script src="js/controller/language.js?version=2"></script>
+    <script src="js/controller/home.js?version=2"></script>
+    <script src="js/controller/avatares.js"></script>
+    <script src="js/controller/face.js"></script>
+    <script src="js/controller/pokemon.js"></script>
+    <script>
+        $(document).ready(function () {
+            SESSION();
+        });
 
-<script src="js/tools/angular.min.js?version=1"></script>
-<script src="plugins/jquery/jquery.min.js?version=1"></script>
-<script src="plugins/bootstrap/js/bootstrap.js?version=1"></script>
-<script src="js/tools/createjs.min.js?version=1"></script>
-<script src="js/tools/ThresholdFilter.js?version=1"></script>
-<script src="js/tools/tinycolor-min.js?version=1"></script>
-<script src="js/tools/ScaleBitmap.js?version=1"></script>
-<script src="js/admin.js?version=1"></script>
-<script src="js/pages/ui/animations.js?version=1"></script>
-<script src="js/pages/ui/modals.js?version=1"></script>
-<script src="plugins/sweetalert/sweetalert.min.js?version=1"></script>
-<script src="js/api.js?version=1"></script>
-<script src="js/script.js?version=1"></script>
-<script src="js/models/pokedex.js?version=1"></script>
-<script src="js/controller/language.js?version=1"></script>
-<script src="js/controller/home.js?version=1"></script>
-<script src="js/controller/avatares.js"></script>
-<script src="js/controller/face.js"></script>
-<script src="js/controller/pokemon.js"></script>
-<script>
-    $(document).ready(function () {
-        SESSION();
-    });
-    function onSignIn(googleUser) {
+        function onSignIn(googleUser) {
 
 
-    }
-</script>
+        }
+    </script>
+</div>
 </body>
 
 </html>

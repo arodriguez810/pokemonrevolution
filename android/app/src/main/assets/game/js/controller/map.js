@@ -11,6 +11,11 @@ MAP = function () {
         bgm: "",
         bgs: "",
         steps: "",
+        rate: 1,
+        enviroment: "outside",
+        inside: false,
+        maper: "0,0",
+        pokecenter: "ACTIONS.PLAYER.TELEPORT(0,0,\"MapName\",undefined,function(){\n" + "ACTIONS.POKEMON.POKECENTER();\n" + "})",
         type: "Outside",
         battleback: {
             floor: "",
@@ -70,7 +75,9 @@ MAP_ = {
             "name": name,
             "data": dataset
         });
-        await MAP_.UPLOAD(name, gender);
+        if (IKNOWTOSAVE) {
+            await MAP_.UPLOAD(name, gender);
+        }
         resolve(data.data || MAP);
     }),
     DELETE: (name) => new Promise(async (resolve, reject) => {
@@ -145,8 +152,16 @@ _colorsReal = ["#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3",
 pokemon.controller('map', ['$scope', function ($scope) {
     //Draw tools
     createjs.Ticker.framerate = 3;
+    $scope.codeProp = {
+        smartIndent: true,
+        lineWrapping: true,
+        lineNumbers: true,
+        mode: 'javascript',
+        autoRefresh: true
+    };
     $scope.E_movement = ["fixed", "random", "fallow"];
     $scope.E_trigger = ["click", "near", "auto", "collision"];
+    $scope.E_emviroment = ["outside", "inside", "cave"];
     $scope.selectorImage = "../resources/selectors/red.png";
     $scope.selectorImageBlue = "../resources/selectors/bluep.png?v=1";
     $scope.baseWidth = 48;
@@ -514,7 +529,9 @@ pokemon.controller('map', ['$scope', function ($scope) {
         }, 500);
     };
     $scope.eventForMove = undefined;
+    IKNOWTOSAVE = false;
     $scope.drawTiles = function (event) {
+        IKNOWTOSAVE = true;
         var x = Math.floor(event.stageX / $scope.baseWidth);
         var y = Math.floor(event.stageY / $scope.baseHeight);
         if ($scope.selection.tool === "select") {
@@ -744,6 +761,22 @@ pokemon.controller('map', ['$scope', function ($scope) {
                 width: 0,
                 height: 0
             };
+        }
+    };
+    $scope.showposition = false;
+    $scope.boundsTable = function () {
+        if ($scope.form) {
+            var width = ($scope.form.data.width) || 0;
+            var height = ($scope.form.data.height) || 0;
+            var list = [];
+
+            for (var y = 0; y < height; y++)
+                for (var x = 0; x < width; x++) {
+                    list.push(`${x}x${y}`);
+                }
+            return list;
+        } else {
+            return [`${0}x${0}`];
         }
     };
     $scope.drawBattle = function () {
@@ -2163,21 +2196,23 @@ pokemon.controller('map', ['$scope', function ($scope) {
                             //floor.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
                             WORLD.addChild(floor);
                         } else {
-                            var w = queueTILETS.getResult(e.object.url).width;
-                            var h = queueTILETS.getResult(e.object.url).width;
-                            var r = (w / e.object.width) * (h / e.object.height);
-                            var SpriteSheet = new createjs.SpriteSheet({
-                                framerate: e.object.framerate,
-                                "images": [queueTILETS.getResult(e.object.url)],
-                                "frames": {width: parseInt(e.object.width), height: parseInt(e.object.height)},
-                                "animations": {
-                                    "run": {frames: e.object.animation}
-                                }
-                            });
-                            var sprite = new createjs.Sprite(SpriteSheet, "run");
-                            sprite.x = x * $scope.baseWidth;
-                            sprite.y = y * $scope.baseHeight;
-                            WORLD.addChild(sprite);
+                            if (e.object.url) {
+                                var w = queueTILETS.getResult(e.object.url).width;
+                                var h = queueTILETS.getResult(e.object.url).width;
+                                var r = (w / e.object.width) * (h / e.object.height);
+                                var SpriteSheet = new createjs.SpriteSheet({
+                                    framerate: e.object.framerate,
+                                    "images": [queueTILETS.getResult(e.object.url)],
+                                    "frames": {width: parseInt(e.object.width), height: parseInt(e.object.height)},
+                                    "animations": {
+                                        "run": {frames: e.object.animation}
+                                    }
+                                });
+                                var sprite = new createjs.Sprite(SpriteSheet, "run");
+                                sprite.x = x * $scope.baseWidth;
+                                sprite.y = y * $scope.baseHeight;
+                                WORLD.addChild(sprite);
+                            }
                         }
                     }
                 }
@@ -2222,6 +2257,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $('#map_form').modal('hide');
     };
     $scope.edit = function (edit) {
+        IKNOWTOSAVE = false;
         $scope.selection.layer = 1;
         $('#map_form').modal('show');
         $("[loading='map']").show();
@@ -2246,12 +2282,14 @@ pokemon.controller('map', ['$scope', function ($scope) {
 
         $(".modal-body").show();
         $scope.drawTools();
+        $scope.points = $scope.boundsTable();
         setTimeout(() => {
             $scope.$digest();
         }, 500);
 
     };
     $scope.new = function () {
+        IKNOWTOSAVE = true;
         $scope.selection.layer = 1;
         $scope.clearData();
         $('#map_form').modal('show');
@@ -2259,6 +2297,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
 
         $scope.drawBattle();
         $scope.draw();
+        $scope.points = $scope.boundsTable();
         setTimeout(() => {
 
             $scope.drawTools();

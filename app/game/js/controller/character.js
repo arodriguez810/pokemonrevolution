@@ -65,6 +65,11 @@ GRADIENTS = [];
 pokemon.controller('character', ['$scope', function ($scope) {
     //CRUD
     $scope.POKEMON = POKEMON;
+    $scope.trainerLevels = [];
+    $scope.TYPEDEFF = TYPEDEFF;
+    for (var i in POKEMON.trainersRange) {
+        $scope.trainerLevels.push(i.toString());
+    }
     $scope.clearData = function () {
         $scope.prop = {mode: "new"};
         $scope.form = new CHARACTER;
@@ -75,18 +80,16 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $scope.form.data.avatar.draw($scope.form.data.gender);
     };
     $scope.personalities = {
-        _1: "Gruñon",
-        _2: "Amable",
-        _3: "Presumido",
-        _4: "Modesto",
-        _5: "Agresivo",
-        _6: "Tranquilo",
-        _7: "Neutral",
-        _8: "Divertido",
-        _9: "Holgazan",
-        _10: "Activo",
-        _11: "Pesimista",
-        _12: "Optimista"
+        "Grunon": "Grunon",
+        "Amable": "Amable",
+        "Presumido": "Presumido",
+        "Modesto": "Modesto",
+        "Agresivo": "Agresivo",
+        "Tranquilo": "Tranquilo",
+        "Divertido": "Divertido",
+        "Holgazan": "Holgazan",
+        "Pesimista": "Pesimista",
+        "Optimista": "Optimista"
     };
     $scope.cache = new Date().getTime();
     $scope.randomName = async function () {
@@ -95,27 +98,36 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $scope.form.data.name = `Cargando Nombre`;
         if (!$scope.$$phase)
             $scope.$digest();
-        var response = await API.GET(`https://cors-anywhere.herokuapp.com/http://names.drycodes.com/1?nameOptions=${genderd}_names`);
+        var response = await API.GETLOCAL(`https://cors-anywhere.herokuapp.com/http://names.drycodes.com/1?nameOptions=${genderd}_names`);
         response = response.data[0];
         response = response.split("_");
         $scope.form.data.name = `${response.join(' ')}`;
-        for (var c in AVATARDB[$scope.form.data.gender].FG) {
-            category = AVATARDB[$scope.form.data.gender].FG[c];
+        for (var c in AVATARDB[$scope.form.data.gender].icon) {
+            category = AVATARDB[$scope.form.data.gender].icon[c];
             var item = getRandomInt(Object.size(category));
             if ($scope.form.data.avatar.required.indexOf(c) !== -1)
                 item = getRandomInt(Object.size(category) - 1) + 1;
+
+            if (["Eyes"].indexOf(c) !== -1)
+                item = getRandomInt(18);
+            if (["Mouth"].indexOf(c) !== -1)
+                item = getRandomInt(9);
+            if (["Nose"].indexOf(c) !== -1)
+                item = getRandomInt(13);
+            if (["Ears"].indexOf(c) !== -1)
+                item = getRandomInt(4);
             var keys = Object.keys(category);
             item = keys[item];
             $scope.selectCategory(c);
-            if (["Cloak2", "BeastEars", "Glasses", "AccB", "Cloak1", "FacialMark"].indexOf(c) !== -1) {
+            if (["Wing", "Cloak2", "BeastEars", "Glasses", "AccB", "AccA", "Cloak1", "FacialMark"].indexOf(c) !== -1) {
                 item = "p00";
             }
             if (["Body"].indexOf(c) !== -1) {
                 item = "p01";
             }
             $scope.selectItem(item, false);
-            for (var co in AVATARDB[$scope.form.data.gender].FG[$scope.selection.category][item]) {
-                var color = AVATARDB[$scope.form.data.gender].FG[$scope.selection.category][item][co];
+            for (var co in AVATARDB[$scope.form.data.gender].icon[$scope.selection.category][item]) {
+                var color = AVATARDB[$scope.form.data.gender].icon[$scope.selection.category][item][co];
                 $scope.selectColor(co);
                 var colRan = getRandomInt(COLORS.length);
                 if (["Body", "Face", "Ears", "Nose", "Mouth"].indexOf(c) !== -1) {
@@ -125,7 +137,7 @@ pokemon.controller('character', ['$scope', function ($scope) {
                     if (co == "c2")
                         colRan = 0;
                 }
-                if ($scope.form.data.gender == "Male")
+                if ($scope.form.data.gender === "Male")
                     if (["RearHair1", "RearHair2"].indexOf(c) !== -1) {
                         $scope.form.data.avatar.color["Beard"]["c1"] = colRan;
                     }
@@ -152,13 +164,15 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $scope.prop = {mode: "edit"};
         $scope.form = new CHARACTER;
         $scope.selection = new SELECTION;
-
+        console.log(edit.data);
         $scope.form.data.name = edit.data.name;
         $scope.form.data.gender = edit.data.gender;
         $scope.form.data.title = edit.data.title;
         $scope.form.data.biography = edit.data.biography;
         $scope.form.data.objective = edit.data.objective;
         $scope.form.data.personality = edit.data.personality;
+        $scope.form.data.level = edit.data.level;
+        $scope.form.data.types = edit.data.types;
         $scope.form.data.avatar.prop = edit.data.avatar.prop;
         $scope.form.data.avatar.color = edit.data.avatar.color;
         $('#character_form').modal('show');

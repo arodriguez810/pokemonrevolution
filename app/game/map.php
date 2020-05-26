@@ -340,13 +340,19 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <ul class="list-group">
                                             <li ng-repeat="(key,value) in currentEvent.actions" class="list-group-item">
-                                                <pre ng-dblclick="editaccionshita=!editaccionshita">if ({{value.CC}}) { {{value.script}} }</pre>
-                                                <div ng-show="editaccionshita">
-                                                    <textarea ng-model="value.script"></textarea>
-                                                    <textarea ng-model="value.CC"></textarea>
+                                                <div class="col-sm-12" id="conditioncode"
+                                                     style="height: 30px !important;">
+                                                    <ui-codemirror style="font-size: 20px;"
+                                                                   ui-codemirror-opts="codeProp"
+                                                                   ng-model="currentEvent.actions[key].CC"></ui-codemirror>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <ui-codemirror style="font-size: 20px;"
+                                                                   ui-codemirror-opts="codeProp"
+                                                                   ng-model="currentEvent.actions[key].script"></ui-codemirror>
                                                 </div>
                                                 <button type="button" ng-click="currentEvent.actions.splice($index,1)"
                                                         class="btn btn-default waves-effect">
@@ -428,6 +434,7 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Música de fondo</label>
                                 <select required title="Música de fondo" class="form-control show-tick"
                                         ng-model="form.data.bgm">
                                     <option selected value="">N/A</option>
@@ -442,6 +449,7 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Sonido de fondo</label>
                                 <select required title="Sonido de fondo" class="form-control show-tick"
                                         ng-model="form.data.bgs">
                                     <option selected value="">N/A</option>
@@ -458,6 +466,7 @@
                     <div class="row clearfix">
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Tile</label>
                                 <select required title="Tipo" class="form-control show-tick" ng-model="form.data.type">
                                     <option value="{{key}}" ng-repeat="(key,value) in TILESET">{{key}}</option>
                                 </select>
@@ -465,6 +474,7 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Piso de batalla</label>
                                 <select required title="Piso de batalla" class="form-control show-tick"
                                         ng-model="form.data.battleback.floor">
                                     <option selected value="">N/A</option>
@@ -476,6 +486,7 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Fondo de batalla</label>
                                 <select required title="Fondo de batalla" class="form-control show-tick"
                                         ng-model="form.data.battleback.back">
                                     <option selected value="">N/A</option>
@@ -501,6 +512,7 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Pasos</label>
                                 <select required title="Pasos" class="form-control show-tick"
                                         ng-model="form.data.steps">
                                     <option selected value="">N/A</option>
@@ -516,6 +528,7 @@
 
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
+                                <label class="form-label">Mapas Vecinos</label>
                                 <select required title="Mapas Vecinos" multiple class="form-control show-tick"
                                         ng-model="form.data.vecinos">
                                     <option ng-show="value.data.name!==form.data.name" value="{{value.data.name}}"
@@ -526,8 +539,43 @@
                             </div>
                         </div>
 
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <input type="text" ng-model="form.data.pokecenter"
+                                           class="form-control">
+                                    <label class="form-label">Poke center action </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <input type="text" ng-model="form.data.rate"
+                                           class="form-control">
+                                    <label class="form-label">Rate Salvaje </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                    <input type="text" ng-model="form.data.maper"
+                                           class="form-control">
+                                    <label class="form-label">Map Indicator </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <select title="Detonador" class="form-control show-tick"
+                                    ng-model="form.data.enviroment">
+                                <option ng-repeat="(key,value) in E_emviroment">{{value}}</option>
+                            </select>
+                            <label class="form-label">Type </label>
+                        </div>
                     </div>
                     <div class="row clearfix">
+
                         <center>
                             <canvas ng-click="canvas_bg_tama=canvas_bg_tama?undefined:true"
                                     style="border: 1px blue solid;{{(canvas_bg_tama?'':'width:300px')}}" id="canvas_bg"
@@ -570,7 +618,8 @@
                                                 class="btn bg-{{selection.tool=='select'?'amber':'default'}}  waves-effect">
                                             <i class="material-icons">apps</i>
                                         </button>
-                                        <button type="button" ng-click="selectTool('draw')"
+                                        <button type="button" ng-dblclick="showposition=!showposition"
+                                                ng-click="selectTool('draw')"
                                                 class="btn bg-{{selection.tool=='draw'?'cyan':'default'}}  waves-effect">
                                             <i class="material-icons">brush</i>
                                         </button>
@@ -608,6 +657,7 @@
                                             <i class="material-icons">replay_10</i>
                                         </button>
 
+
                                         <button ng-repeat="(ket,value) in [1,2,3,4,5,6,7,8,9]" type="button"
                                                 ng-click="selectLayer(value)"
                                                 ng-dblclick="hideLayer(value)"
@@ -635,6 +685,16 @@
                                         width="{{bounds().width}}"
                                         height="{{bounds().height}}">
                                 </canvas>
+
+                                <div ng-if="showposition"
+                                     style="position: absolute;z-index: 10;background-color: transparent;border: red 1px solid;float: left;width: {{bounds().width+2}}px"
+                                     id="positions"
+                                     width="{{bounds().width}}"
+                                     height="{{bounds().height}}">
+                                    <div style="float: left;width: 48px;height: 48px;color: black;font-size: 12px;text-align: center;padding: 10px;border: 1px red solid;"
+                                         ng-repeat="(key,blo) in points">{{blo}}
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -776,5 +836,6 @@
 <script src="js/controller/map.js"></script>
 <script src="js/controller/character.js"></script>
 </body>
-
+<style>
+</style>
 </html>

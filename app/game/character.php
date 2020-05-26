@@ -87,7 +87,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+
+                        <div class="col-sm-2">
+                            <div class="form-group form-float ">
+                                <div class="form-line">
+                                    <input type="text" ng-model="form.data.medal"
+                                           class="form-control">
+                                    <label class="form-label">Medalla </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
                             <div class="form-group form-float ">
                                 <div class="form-line">
                                     <textarea rows="1" ng-model="form.data.biography" class="form-control"></textarea>
@@ -117,18 +127,37 @@
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
                                 <select class="form-control show-tick" ng-model="form.data.level">
-                                    <option ng-repeat="(key,value) in POKEMON.trainersRange">{{key}}</option>
+                                    <option ng-repeat="(key,value) in trainerLevels">{{value}}</option>
                                 </select>
                                 <label class="form-label">Nivel</label>
                             </div>
                         </div>
 
+
                         <div class="col-sm-2">
                             <div class="form-group form-float ">
-                                <select multiple class="form-control show-tick" ng-model="form.data.types">
-                                    <option ng-repeat="(key,value) in TYPES">{{key}}</option>
+                                <select class="form-control show-tick" ng-model="form.data.callejero">
+                                    <option ng-repeat="(key,value) in ['YES','NO']">{{value}}</option>
                                 </select>
-                                <label class="form-label">Tipos</label>
+                                <label class="form-label">Callejero</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group form-float ">
+                                <div class="form-line">
+                                    <textarea rows="1" ng-model="form.data.win" class="form-control"></textarea>
+                                    <label class="form-label">Win</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group form-float ">
+                                <div class="form-line">
+                                    <textarea rows="1" ng-model="form.data.lose" class="form-control"></textarea>
+                                    <label class="form-label">Lose</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -282,6 +311,12 @@
 
                                             </tr>
                                         </table>
+
+
+                                        <select style="height: 336px"  multiple class="form-control show-tick" ng-model="form.data.types">
+                                            <option ng-repeat="(key,value) in TYPEDEFF">{{value}}</option>
+                                        </select>
+                                        <label class="form-label">Tipos</label>
 
                                     </div>
                                 </div>

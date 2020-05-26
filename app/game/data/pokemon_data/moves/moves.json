@@ -3160,7 +3160,7 @@
     },
     "secondary": {
       "chance": 10,
-      "status": "psn"
+      "status": "tox"
     },
     "critRatio": 2,
     "target": "normal",
@@ -7152,7 +7152,7 @@
     "basePower": 150,
     "category": "Physical",
     "desc": "Opponents are each randomly paralyzed or poisoned. Base Power scales with the base move's Base Power.",
-    "shortDesc": "Foe(s): Par\/Psn. BP scales with base move's BP.",
+    "shortDesc": "Foe(s): Par\/tox. BP scales with base move's BP.",
     "id": "gmaxstunshock",
     "isNonstandard": "Unobtainable",
     "name": "G-Max Stun Shock",
@@ -7677,7 +7677,7 @@
     },
     "secondary": {
       "chance": 30,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -8203,7 +8203,7 @@
     "basePower": 0,
     "category": "Status",
     "desc": "The power of the target's attack this turn is multiplied by 1.5 (this effect is stackable). Fails if there is no ally adjacent to the user or if the ally already moved this turn, but does not fail if the ally is using a two-turn move.",
-    "shortDesc": "One adjacent ally's move power is 3x next turn.",
+    "shortDesc": "50% move power is 3x next turn.",
     "id": "helpinghand",
     "name": "Helping Hand",
     "pp": 20,
@@ -8212,7 +8212,7 @@
       "authentic": 1
     },
     "secondary": {
-      "chance": 30,
+      "chance": 50,
       "volatileStatus": "helpinghand"
     },
     "target": "self",
@@ -13040,7 +13040,7 @@
       "reflectable": 1,
       "mirror": 1
     },
-    "status": "psn",
+    "status": "tox",
     "secondary": null,
     "target": "normal",
     "type": "Poison",
@@ -13069,7 +13069,7 @@
     },
     "secondary": {
       "chance": 30,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -13093,7 +13093,7 @@
       "reflectable": 1,
       "mirror": 1
     },
-    "status": "psn",
+    "status": "tox",
     "secondary": null,
     "target": "normal",
     "type": "Poison",
@@ -13120,7 +13120,7 @@
     },
     "secondary": {
       "chance": 30,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -13146,7 +13146,7 @@
     "critRatio": 2,
     "secondary": {
       "chance": 10,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -16245,7 +16245,7 @@
     },
     "secondary": {
       "chance": 30,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -16271,7 +16271,7 @@
     },
     "secondary": {
       "chance": 30,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -16296,7 +16296,7 @@
     },
     "secondary": {
       "chance": 10,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "allAdjacent",
     "type": "Poison",
@@ -16390,7 +16390,7 @@
     },
     "secondary": {
       "chance": 40,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Poison",
@@ -18561,7 +18561,7 @@
   {
     "num": 100,
     "accuracy": true,
-    "basePower": 100,
+    "basePower": 50,
     "category": "Special",
     "desc": "If this move is successful and the user has not fainted, the user switches out even if it is trapped and is replaced immediately by a selected party member. The user does not switch out if there are no unfainted party members.",
     "shortDesc": "legendary.",
@@ -18570,13 +18570,8 @@
     "pp": 20,
     "priority": -6,
     "flags": {
-      "heal": 1,
       "mirror": 1
     },
-    "heal": [
-      1,
-      5
-    ],
     "selfSwitch": true,
     "onTryHit": true,
     "secondary": null,
@@ -19033,7 +19028,7 @@
       "reflectable": 1,
       "mirror": 1
     },
-    "status": "psn",
+    "status": "tox",
     "boosts": {
       "spe": -1
     },
@@ -19275,7 +19270,7 @@
     "multihit": 2,
     "secondary": {
       "chance": 40,
-      "status": "psn"
+      "status": "tox"
     },
     "target": "normal",
     "type": "Bug",

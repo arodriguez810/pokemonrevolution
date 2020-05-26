@@ -1,5 +1,5 @@
 HOME_ = {
-    PLAYERPROFILE: (id, set) => new Promise(async (resolve, reject) => {
+    PLAYERPROFILE: (id, set, position) => new Promise(async (resolve, reject) => {
         var folder = `players/${id}`;
         var data = await API.POST("dataplayer.php", {
             "folder": folder
@@ -10,6 +10,15 @@ HOME_ = {
                 for (var i in set) {
                     currment[i] = set[i];
                 }
+
+                if (position) {
+                    await API.POST("save.php", {
+                        "folder": `players/${id}/position`,
+                        "name": "data",
+                        "data": position
+                    });
+                }
+
                 await API.POST("save.php", {
                     "folder": folder,
                     "name": "data",
@@ -34,9 +43,42 @@ HOME_ = {
             resolve(sdates)
         }
     }),
+    EXIST: (id) => new Promise(async (resolve, reject) => {
+        var folder = `players/${id}`;
+        var data = await API.POST("dataplayerexist.php", {
+            "folder": folder
+        });
+        if (data.data[0]) {
+            resolve(true);
+        } else {
+            resolve(false);
+        }
+    }),
+    GETFRIEND: (id) => new Promise(async (resolve, reject) => {
+        var folder = `players/${id}`;
+        var data = await API.POST("dataplayerexist.php", {
+            "folder": folder
+        });
+        if (data.data[0]) {
+            resolve(data.data[0]);
+        } else {
+            resolve(undefined);
+        }
+    }),
+    GETFRIENDS: () => new Promise(async (resolve, reject) => {
+        var folder = `players`;
+        var data = await API.POST("datafolder.php", {
+            "folder": folder
+        });
+        if (data.data) {
+            resolve(data.data);
+        } else {
+            resolve(undefined);
+        }
+    }),
 };
 GAME = {
-    START: {x: 0, y: 0, l: 1, map: "Castillo"},
+    START: {x: 0, y: 0, l: 1, map: "MiCasa"},
     DATA: {
         medals: {},
         pokemon: {},
@@ -106,8 +148,11 @@ E_trigger = {
 E_shortcuts = {
     "@next": "resolve(true);"
 };
-pokemon.controller('play', ['$scope', function ($scope) {
+pokemon.controller('play', ['$scope', function ($scope,$sce) {
     //Base Variables and Configs
+    CURRENTONLINERATING = undefined;
+    CURRENTONLINE = undefined;
+    CURRENTONLINEDATA = undefined;
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     SOUNDS = {
         bgm: new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.2}),

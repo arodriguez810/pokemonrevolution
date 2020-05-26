@@ -27,7 +27,7 @@
 
 
                 <li>
-                    <a href="character.php" class="toggled waves-effect waves-block">
+                    <a href="player.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">child_care</i>
                         <span>Usuarios</span>
                     </a>
@@ -71,19 +71,11 @@
                     </a>
                 </li>
                 <li>
-                    <a href="character.php" class="toggled waves-effect waves-block">
+                    <a href="stats.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">poll</i>
                         <span>Estadisticas</span>
                     </a>
                 </li>
-
-                <li>
-                    <a href="character.php" class="toggled waves-effect waves-block">
-                        <i class="material-icons">bug_report</i>
-                        <span>Reportes</span>
-                    </a>
-                </li>
-
             </ul>
         </div>
         <!-- #Menu -->

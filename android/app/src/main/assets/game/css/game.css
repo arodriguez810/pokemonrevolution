@@ -34,8 +34,6 @@
 
 .DialogWindow {
     background-color: #ccc;
-    border: solid;
-    border-image: url("../../resources/system/dialog.png") 28 / 10px 10px 10px 10px stretch;
     padding: 15px;
     opacity: 0.9;
 }
@@ -43,7 +41,7 @@
 .DialogTitle {
     font-size: xx-large;
     font-weight: bold;
-    margin-bottom: 15px;
+    color: white;
 }
 
 .DialogFooter {

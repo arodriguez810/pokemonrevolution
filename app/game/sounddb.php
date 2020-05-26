@@ -15,7 +15,7 @@ function getDirContents($dir, &$results = array())
             $url = explode("audio\Sound", $path);
             $url = str_replace("\\", "/", $url[1]);
             array_push($numbers, str_replace("." . $fileType, "", $value));
-            $url = "{$GLOBALS['DOMAINRESOURCE']}audio/Sound/$url";
+            $url = "$root$url";
             array_push($results, $url);
         }
     }

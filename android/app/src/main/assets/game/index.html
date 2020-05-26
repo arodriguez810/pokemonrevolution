@@ -105,39 +105,56 @@
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <body oncontextmenu="return false;" style="overflow: hidden" onload="autoNotify()" onclick="autoNotify()">
-<section id="play" ng-app="pokemon" ng-controller="home">
+<section id="play" ng-app="pokemon" ng-controller="home" style="height:100%; overflow:hidden !important;">
 
     <center>
         <div class="card" style="opacity: 0.8;font-size: 24px !important;">
             <div class="body">
-                <form id="sign_in" method="POST" novalidate="novalidate">
+                <div id="sign_in">
                     <center>
                         <button style="width: 30%;font-size: 24px !important;margin-right: 12px;" role="button"
                                 ng-show="mode==='selecting'" type="button"
                                 ng-click="mode='login'"
                                 class="btn bg-pink btn-lg m-l-15 waves-effect animated bounceInLeft in">
                             <i class="material-icons">adb</i>
-                            Play
+                            {{LAN.t("Play")}}
                         </button>
-                        <img src="images/logo/logo.png" style="width: 20%;border-radius: 65px;"
+                        <img ng-show="mode==='selecting'" src="images/logo/logo.png"
+                             style="width: 20%;border-radius: 65px;"
                              class="animated shake in">
                         <button style="width: 30%;font-size: 24px !important;" role="button"
                                 ng-show="mode==='selecting'" type="button"
                                 ng-click="mode='register'"
                                 class="btn bg-blue btn-lg m-l-15 waves-effect animated bounceInRight in">
                             <i class="material-icons">face</i>
-                            Register
+                            {{LAN.t("Register")}}
                         </button>
                     </center>
-                    <h2 id="mark" ng-show="mode==='selecting'" class="animated fadeInDown  in" >
+                    <h2 id="mark" ng-show="mode==='selecting'" class="animated fadeInDown  in">
                         Pokemon Revolution</h2>
+                    <div>
+                        <button style="width: 30%;font-size: 24px !important;margin-right: 12px;" role="button"
+                                ng-show="mode==='selecting'"
+                                onclick="location.href='index.html'"
+                                type="button"
+                                class="btn bg-green btn-lg m-l-15 waves-effect animated bounceInLeft in">
+                            English
+                        </button>
+                        <button style="width: 30%;font-size: 24px !important;margin-right: 12px;" role="button"
+                                ng-show="mode==='selecting'"
+                                onclick="location.href='index.html?lan=es'"
+                                type="button"
+                                class="btn bg-amber btn-lg m-l-15 waves-effect animated bounceInLeft in">
+                            Español
+                        </button>
+                    </div>
                     <div class="input-group" ng-show="mode!=='selecting'">
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <div class="form-line">
                                     <input type="text" required ng-model="entrenador" maxlength="20"
                                            class="form-control"
-                                           placeholder="Name">
+                                           placeholder="{{LAN.t('Name')}}">
                                 </div>
                             </div>
                         </div>
@@ -145,7 +162,7 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <input type="password" required ng-model="pin" maxlength="10" class="form-control"
-                                           placeholder="Password">
+                                           placeholder="{{LAN.t('Password')}}">
                                 </div>
                             </div>
                         </div>
@@ -155,7 +172,7 @@
                                     ng-click="login()"
                                     class="btn bg-green btn-lg m-l-15 waves-effect animated bounceInLeft in">
                                 <i class="material-icons">adb</i>
-                                Enter
+                                {{LAN.t("Enter")}}
                             </button>
                             <button style="font-size: 24px !important;" role="button"
                                     ng-show="mode==='register'" type="button"
@@ -175,29 +192,33 @@
                             </button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </center>
-    <audio id="sound" loop src="{{DOMAINRESOURCE}}/resources/audio/pokemon/adventure.ogg" style="display: none"></audio>
+    <audio id="sound" loop src="../resources/audio/system/adventure.ogg" style="display: none"></audio>
 </section>
 
-<script src="js/tools/angular.min.js?version=1"></script>
-<script src="plugins/jquery/jquery.min.js?version=1"></script>
-<script src="plugins/bootstrap/js/bootstrap.js?version=1"></script>
-<script src="js/tools/createjs.min.js?version=1"></script>
-<script src="js/tools/ThresholdFilter.js?version=1"></script>
-<script src="js/tools/tinycolor-min.js?version=1"></script>
-<script src="js/tools/ScaleBitmap.js?version=1"></script>
-<script src="js/admin.js?version=1"></script>
-<script src="js/pages/ui/animations.js?version=1"></script>
-<script src="js/pages/ui/modals.js?version=1"></script>
-<script src="plugins/sweetalert/sweetalert.min.js?version=1"></script>
-<script src="js/api.js?version=1"></script>
-<script src="js/script.js?version=1"></script>
-<script src="js/models/pokedex.js?version=1"></script>
-<script src="js/controller/language.js?version=1"></script>
-<script src="js/controller/home.js?version=1"></script>
+<script src="js/tools/codemirror.js"></script>
+<script src="js/tools/javascript.js"></script>
+<script src="js/tools/angular.min.js"></script>
+<script src="js/tools/ui-codemirror.js"></script>
+<script src="js/tools/autorefresh.js"></script>
+<script src="plugins/jquery/jquery.min.js?version=2"></script>
+<script src="plugins/bootstrap/js/bootstrap.js?version=2"></script>
+<script src="js/tools/createjs.min.js?version=2"></script>
+<script src="js/tools/ThresholdFilter.js?version=2"></script>
+<script src="js/tools/tinycolor-min.js?version=2"></script>
+<script src="js/tools/ScaleBitmap.js?version=2"></script>
+<script src="js/admin.js?version=2"></script>
+<script src="js/pages/ui/animations.js?version=2"></script>
+<script src="js/pages/ui/modals.js?version=2"></script>
+<script src="plugins/sweetalert/sweetalert.min.js?version=2"></script>
+<script src="js/api.js?version=2"></script>
+<script src="js/script.js?version=2"></script>
+<script src="js/models/pokedex.js?version=2"></script>
+<script src="js/controller/language.js?version=2"></script>
+<script src="js/controller/home.js?version=2"></script>
 
 
 <script>
@@ -234,11 +255,6 @@
         }
     }
 
-    $(document).ready(function () {
-        $("body").css("background-image", `url('../resources/parallaxes/${TitleImg()}.png')`);
-        $("#mark").css('color', TitleColor());
-        check();
-    });
 
     async function check() {
         if (STORAGED.exist()) {
@@ -247,26 +263,22 @@
                 location.href = "play.html";
             else
                 location.href = "face.html";
+        } else {
+            GAME.PLAY();
         }
     }
-
 
     function autoNotify() {
         var popupsound = document.getElementById("sound");
         popupsound.play(); //play the audio file
     }
-</script>
-<script>
-    function onSignIn(googleUser) {
-        PROFILE = googleUser.getBasicProfile();
-        HOME_.PLAYERPROFILE(STORAGED.get()).then(function (profile) {
-            if (!profile.avatar) {
-                location.href = "face.html";
-            } else {
-                location.href = "play.html";
-            }
-        });
-    }
+
+    $(document).ready(function () {
+        $("body").css("background-image", `url('../resources/parallaxes/${TitleImg()}.png')`);
+        $("#mark").css('color', TitleColor());
+        check();
+
+    });
 </script>
 </body>
 

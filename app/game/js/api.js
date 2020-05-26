@@ -16,6 +16,15 @@
             console.log(data);
         });
     }),
+    GETLOCAL: (url) => new Promise((resolve, reject) => {
+        $http = angular.injector(["ng"]).get("$http");
+        delete $http.defaults.headers.common['X-Requested-With'];
+        $http.get(url).then(function (data) {
+            resolve(data);
+        }, function (data) {
+            console.log(data);
+        });
+    }),
     AJAXGET: (url, data) => new Promise((resolve, reject) => {
         $.ajax({
             url: DOMAIN + url,

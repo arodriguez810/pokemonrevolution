@@ -122,40 +122,46 @@ pokemon.controller('character', ['$scope', function ($scope) {
     };
     $scope.cache = new Date().getTime();
     $scope.randomName = async function () {
-
-
-        for (var c in AVATARDB[$scope.form.data.gender].FG) {
-            category = AVATARDB[$scope.form.data.gender].FG[c];
+        for (var c in AVATARDB[$scope.form.data.gender].icon) {
+            category = AVATARDB[$scope.form.data.gender].icon[c];
             var item = getRandomInt(Object.size(category));
             if ($scope.form.data.avatar.required.indexOf(c) !== -1)
                 item = getRandomInt(Object.size(category) - 1) + 1;
+            if (["Eyes"].indexOf(c) !== -1)
+                item = getRandomInt(18);
+            if (["Mouth"].indexOf(c) !== -1)
+                item = getRandomInt(9);
+            if (["Nose"].indexOf(c) !== -1)
+                item = getRandomInt(13);
+            if (["Ears"].indexOf(c) !== -1)
+                item = getRandomInt(4);
+
             var keys = Object.keys(category);
             item = keys[item];
             $scope.selectCategory(c);
-            if (["Cloak2", "BeastEars", "Glasses", "AccB", "Cloak1", "FacialMark"].indexOf(c) !== -1) {
+            if (["Wing", "Cloak2", "BeastEars", "Glasses", "AccB", "AccA", "Cloak1", "FacialMark"].indexOf(c) !== -1) {
                 item = "p00";
             }
             if (["Body"].indexOf(c) !== -1) {
                 item = "p01";
             }
             $scope.selectItem(item, false);
-            for (var co in AVATARDB[$scope.form.data.gender].FG[$scope.selection.category][item]) {
-                var color = AVATARDB[$scope.form.data.gender].FG[$scope.selection.category][item][co];
+            for (var co in AVATARDB[$scope.form.data.gender].icon[$scope.selection.category][item]) {
+                var color = AVATARDB[$scope.form.data.gender].icon[$scope.selection.category][item][co];
                 $scope.selectColor(co);
                 var colRan = getRandomInt(COLORS.length);
                 if (["Body", "Face", "Ears", "Nose", "Mouth"].indexOf(c) !== -1) {
-                    colRan = getRandomIntRange(16, 45);
+                    colRan = getRandomIntRange(17, 45);
                 }
                 if (["Eyes"].indexOf(c) !== -1) {
                     if (co == "c2")
                         colRan = 0;
                 }
-                if ($scope.form.data.gender == "Male")
+                if ($scope.form.data.gender === "Male")
                     if (["RearHair1", "RearHair2"].indexOf(c) !== -1) {
                         $scope.form.data.avatar.color["Beard"]["c1"] = colRan;
                     }
                 colRan = colRan == 24 ? colRan = 0 : colRan;
-
                 $scope.layerIDSet(colRan, false);
             }
         }
@@ -239,11 +245,12 @@ pokemon.controller('character', ['$scope', function ($scope) {
         });
     };
     $scope.save = async function () {
-        $scope.playLoading("Guardando Avatar");
+        $scope.playLoading(LANGUAGE.t("Saving Avatar"));
+
         await CHARACTER_.SAVE($scope.form.data.name, $scope.form, $scope.session.id);
         $scope.playLoading("Guardando Perfil");
         await HOME_.PLAYERPROFILE($scope.session.id, {avatar: 1});
-        $scope.playLoading("Redireccionando");
+        $scope.playLoading(LANGUAGE.t("Redirecting"));
         location.href = "play.html";
         // $scope.form.data.avatar.clear();
         // $scope.form.data.avatar.update();
@@ -309,7 +316,9 @@ pokemon.controller('character', ['$scope', function ($scope) {
         }
     };
     $scope.refresh = async function () {
-        $scope.playLoading("Cargando Avatar");
+        LAN = await LANGUAGE_.ALL();
+        $scope.LAN = LANGUAGE;
+        $scope.playLoading(LANGUAGE.t("Loading"));
         $scope.cache = new Date().getTime();
         $("[loading='character']").show();
         AVATARDB = await AVATAR_.db();
@@ -317,8 +326,6 @@ pokemon.controller('character', ['$scope', function ($scope) {
         $scope.AVATARDB = await AVATAR_.db();
         $scope.COLORS = await AVATAR_.colors();
         $scope.TYPES = await CHARACTER_.TYPES();
-        LAN = await LANGUAGE_.ALL();
-        $scope.LAN = LANGUAGE;
         $("[loading='character']").hide(200);
         $scope.$digest();
         if ($scope.session.avatar) {
@@ -408,4 +415,6 @@ pokemon.controller('character', ['$scope', function ($scope) {
     $scope.$watchCollection('form.data.avatar.color', function (newValue, oldValue, scope) {
 
     });
+
+
 }]);

@@ -37,7 +37,7 @@ HOME_ = {
     }),
     EXIST: (id) => new Promise(async (resolve, reject) => {
         var folder = `players/${id}`;
-        var data = await API.POST("dataplayer.php", {
+        var data = await API.POST("dataplayerexist.php", {
             "folder": folder
         });
         if (data.data[0]) {
@@ -64,17 +64,17 @@ pokemon.controller('home', ['$scope', function ($scope) {
     $scope.DOMAIN = DOMAIN;
     $scope.DOMAINRESOURCE = DOMAINRESOURCE;
     $scope.mode = "selecting";
-    $scope.registerText = "Register";
-    $scope.loginText = "Entrar";
+
+
     $scope.register = async function () {
         if (!$scope.entrenador || !$scope.pin) {
-            $scope.mensaje("Please, fill your Name and Password");
+            $scope.mensaje($scope.LAN.t("Please, fill your Name and Password"));
             return;
         }
         if (await HOME_.EXIST($scope.entrenador)) {
-            $scope.mensaje("This trainer already exists, please use another name");
+            $scope.mensaje($scope.LAN.t("This trainer already exists, please use another name"));
         } else {
-            $scope.registerText = "Loading...";
+            $scope.registerText = $scope.LAN.t("Loading");
             await HOME_.PLAYERPROFILE($scope.entrenador, $scope.pin).then(function () {
                 STORAGED.add($scope.entrenador);
                 location.href = "face.html";
@@ -83,35 +83,44 @@ pokemon.controller('home', ['$scope', function ($scope) {
     };
     $scope.login = async function () {
         if (!$scope.entrenador || !$scope.pin) {
-            $scope.mensaje("Please, fill your Name and Password");
+            $scope.mensaje($scope.LAN.t("Please, fill your Name and Password"));
             return;
         }
-        $scope.loginText = "Loading...";
+        $scope.loginText = $scope.LAN.t("Loading");
         await HOME_.VERIFY($scope.entrenador).then(function (trainer) {
-            $scope.loginText = "Entrar";
+            $scope.loginText = $scope.LAN.t("Enter");
             if (!trainer) {
-                $scope.mensaje("Invalid name or password, please try again");
+                $scope.mensaje($scope.LAN.t("Invalid name or password, please try again"));
                 return;
             }
             if (trainer)
                 if (trainer.pin !== $scope.pin) {
-                    $scope.mensaje("Invalid name or password, please try again");
+                    $scope.mensaje($scope.LAN.t("Invalid name or password, please try again"));
                     return;
                 }
-            STORAGED.add(trainer.id);
+            STORAGED.add(trainer.id, (getParams().lan || ""));
             location.href = "play.html";
         });
     };
-
     $scope.mensaje = function (message, button) {
         swal({
             title: message,
             showCancelButton: false,
             confirmButtonColor: "#09dd00",
-            confirmButtonText: button || "Entendido!",
+            confirmButtonText: button || $scope.LAN.t("OK"),
             closeOnConfirm: true,
         }, function () {
 
         });
+    };
+    GAME = {
+        PLAY: async function () {
+            LAN = await LANGUAGE_.ALL();
+            $scope.LAN = LANGUAGE;
+            $scope.registerText = $scope.LAN.t("Register");
+            $scope.loginText = $scope.LAN.t("Enter");
+            if (!$scope.$$phase)
+                $scope.$digest();
+        }
     }
 }]);
