@@ -583,6 +583,302 @@ function playvars($scope) {
 
     };
 
+    $scope.personalitiesFeeds = {
+        "Grunon": {
+            "textos1": [
+                "La gente siempre se toma la vida a la ligera con tantas cosas del que hacer.",
+                "$amigo, No entiendo para que quieres hablar",
+                "No me gusta que la gente me moleste",
+                "Que tal, Adiós",
+                "Te saludo para que te vayas?",
+            ],
+            "textos2": [
+                "No molestes",
+                "Pero y que es?",
+                "En realidad ya me estoy enfureciendo",
+                "$amigo...",
+                "En serio?",
+            ],
+            "textos3": [
+                "Me tienes hasta la coronilla de hablar",
+                "No me agrada hablar tanto, suelta el tema",
+                "No me toques",
+                "No me hables",
+                "Pierdete",
+            ],
+            "jarto": [
+                "Oye!, déjame tranquilo",
+                "Suelta",
+                "No",
+                "Que fue?",
+                "Fastidioso",
+            ]
+        },
+        "Amable": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        },
+        "Presumido": {
+            "textos1": [
+                "Tienes el privilegio de estar hablando con lo mejor de lo mejor",
+                "Que bueno que puedes conocerme $amigo",
+                "Es un placer para ti hablar conmigo",
+                "Sabía que ibas a querer hablar conmigo a todos les pasa",
+                "Soy una persona muy apuesta, llamo la atención como llamé la tuya $amigo"
+            ],
+            "textos2": [
+                "Tanto quieres hablar conmigo?",
+                "Es de sumo interés mi presencia para ti",
+                "Ya veo que tengo que estar mas escondido para no interesar tanto como siempre",
+                "Pero es verdad que soy un querido!",
+                "Quieres saber mas de mi?"
+            ],
+            "textos3": [
+                "Es normal que las personas me insistan",
+                "$amigo, no eres diferente todos insisten de la misma manera hacia moa",
+                "Soy importante, Hellowwww",
+                "O sea, ya va haciendo tiempo que no te acostumbres a mi, no soy de nadie",
+                "Soy una joya"
+            ],
+            "jarto": [
+                "Soy tan perfecto que quieres reflejarte en mi hablando tanto conmigo.",
+                "$amigo, quieres conocerme?, pues sabes calcular el número perfecto?... no? pues te falta",
+                "$amigo, tu insistencia no es rara, asi son todos",
+                "La verdad que yo soy demasiado impresionante",
+                "Soy el mejor de todos y todas"
+            ]
+        },
+        "Modesto": {
+            "textos1": [
+                "Hola $amigo, espero que todo normal",
+                "Nada en especial por aquí",
+                "En vista normal",
+                "Soy una persona comun y corriente",
+                "Todos somos iguales"
+            ],
+            "textos2": [
+                "En realidad es normal que hablemos",
+                "Espero que te sea útil hablar",
+                "Veo que todo va normal contigo",
+                "Yo en realidad soy bastante normal en eso de los Pokemones, nada especial"
+            ],
+            "textos3": [
+                "Espero que todo vaya normal",
+            ],
+            "jarto": [
+                "De todo lo que creo que es normal, estoy empezando a cambiar de opinión",
+                "No es para tanto",
+                "Todo va normal"
+            ]
+        },
+        "Agresivo": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        },
+        "Tranquilo": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        },
+        "Divertido": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        },
+        "Holgazan": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        },
+        "Pesimista": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        },
+        "Optimista": {
+            "textos1": [
+                "Hola querido $amigo, espero que la estes pasando muy bien",
+                "Hoy es un buen día espero que el tuyo esté de igual manera",
+                "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+                "Hola $amigo, es un gusto verte",
+                "Hola $amigo, es un placer ayudarte"
+            ],
+            "textos2": [
+                "Que puedo hacer por ti?",
+                "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+                "Gracias por hablar conmigo $amigo",
+                "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+                "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+            ],
+            "textos3": [
+                "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+                "$amigo, ahora que me fijo mejor eres una persona hermosa",
+                "$amigo, gracias por la confianza",
+                "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+                "Muy bien $amigo, te encanta charlar!"
+            ],
+            "jarto": [
+                "$amigo, espero que encuentres muchos amigos en tu aventura",
+                "$amigo, espero que te vaya bien",
+                "$amigo, eres de lo mejor",
+                "$amigo, que bueno todo esto, es importante hablar",
+                "$amigo, genial!"
+            ]
+        }
+    };
+
     $scope.frameSetSave = 500;
     $scope.medals1 = [
         {type: 'Bicho', name: 'BugCatcher'},
@@ -608,7 +904,7 @@ function playvars($scope) {
     ];
     $scope._colors = _colors;
     $scope._colorsReal = _colorsReal;
-    $scope.routesTick = 3;
+    $scope.routesTick = 5;
     $scope.loadedSounds = [];
     $scope.extraResources = [];
     $scope.sounds = {};
@@ -1041,10 +1337,11 @@ function playvars($scope) {
         }
     };
     $scope.lastEventCollision = "";
-    $scope.move = async function (hero, event, actions, callback) {
+    $scope.lastEventLook = "";
+    $scope.move = async function (hero, event, actions, callback, force) {
 
         if (hero) {
-            if ($scope.pause)
+            if ($scope.pause && !force)
                 return;
             if (!hero.walking) {
                 var local = STAGE.globalToLocal(event.stageX, event.stageY);
@@ -1072,6 +1369,7 @@ function playvars($scope) {
                 }
                 if ($scope.lastEventCollision !== `${cx}x${cy}`) {
                     $scope.lastEventCollision = `${cx}x${cy}`;
+                    ACTIONS.PLAYER.WHOLOOKME();
                     for (var i in $scope.OBJECTS) {
                         if ($scope.OBJECTS[i].event.trigger === E_trigger.collision) {
                             $scope.clickEvent(hero, cx, cy, E_trigger.collision);

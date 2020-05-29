@@ -143,12 +143,14 @@ E_trigger = {
     "click": "click",
     "near": "near",
     "auto": "auto",
-    "collision": "collision"
+    "collision": "collision",
+    "entrenador": "entrenador",
+    "andante": "andante"
 };
 E_shortcuts = {
     "@next": "resolve(true);"
 };
-pokemon.controller('play', ['$scope', function ($scope,$sce) {
+pokemon.controller('play', ['$scope', function ($scope, $sce) {
     //Base Variables and Configs
     CURRENTONLINERATING = undefined;
     CURRENTONLINE = undefined;

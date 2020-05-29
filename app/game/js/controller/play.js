@@ -142,12 +142,24 @@ E_movement = {
 E_trigger = {
     "click": "click",
     "near": "near",
+    "neartranquilo": "neartranquilo",
     "auto": "auto",
     "collision": "collision",
-    "entrenador": "entrenador"
+    "entrenador": "entrenador",
+    "entrenadortranquilo": "entrenadortranquilo",
+    "andante": "andante",
+    "andantetranquilo": "andantetranquilo"
 };
 E_shortcuts = {
     "@next": "resolve(true);"
+};
+PERSONALITY_ = {
+    ALL: () => new Promise(async (resolve, reject) => {
+        var data = await API.POST("data.php", {
+            "folder": "personalitys"
+        });
+        resolve(data.data);
+    })
 };
 pokemon.controller('play', ['$scope', function ($scope, $sce) {
     //Base Variables and Configs

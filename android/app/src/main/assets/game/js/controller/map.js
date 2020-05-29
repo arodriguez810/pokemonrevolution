@@ -160,7 +160,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         autoRefresh: true
     };
     $scope.E_movement = ["fixed", "random", "fallow"];
-    $scope.E_trigger = ["click", "near", "auto", "collision"];
+    $scope.E_trigger = ["click", "near", "auto", "collision", "entrenador", "andante"];
     $scope.E_emviroment = ["outside", "inside", "cave"];
     $scope.selectorImage = "../resources/selectors/red.png";
     $scope.selectorImageBlue = "../resources/selectors/bluep.png?v=1";

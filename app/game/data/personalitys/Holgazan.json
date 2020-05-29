@@ -1,0 +1,69 @@
+{
+  "name": "Holgazan",
+  "Holgazan": {
+    "intro": [
+      "Hola",
+      "Ven"
+    ],
+    "perdiendo": [
+      "Eres bueno",
+      "Wow",
+      "$pokemon",
+      "Ve $pokemon",
+      "$pokemon"
+    ],
+    "perdiendomal": [
+      "Que fuerte $amigo",
+      "Podemos terminar aquí $amigo?",
+      "$pokemon, dale",
+      "Eres!",
+      "Bien!"
+    ],
+    "ganando": [
+      "Ok, $pokemon!",
+      "Gracias $pokemon",
+      "Bien",
+      "Mejor dale a siguiente",
+      "Bueno"
+    ],
+    "ganandofacil": [
+      "$amigo",
+      "Para la próxima",
+      "Buenooo",
+      "$amigo, que fastidio?",
+      "Debemos dejarlo aquí"
+    ],
+    "alganar": [
+      "Bien",
+      "Gracias",
+      "Nos vemos",
+      "Adiós",
+      "Nos vemos"
+    ],
+    "alperder": [
+      "Eres bueno",
+      "Eres bueno",
+      "Adiós",
+      "Nos vemos $amigo",
+      "Siguiente"
+    ],
+    "textos1": [
+      "hmm... tal vez mañana..."
+    ],
+    "textos2": [
+      ""
+    ],
+    "textos3": [
+      ""
+    ],
+    "textos4": [
+      ""
+    ],
+    "textos5": [
+      ""
+    ],
+    "jarto": [
+      "..."
+    ]
+  }
+}

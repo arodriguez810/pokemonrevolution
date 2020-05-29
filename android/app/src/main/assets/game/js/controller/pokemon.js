@@ -24,9 +24,13 @@ POKEMON = {
         specialProFull: [0, 0, 1, 1, 1, 1],
         gymFriend: [1, 1, 1, 1, 1],
         gymFriendPro: [1, 1, 1, 1, 1, 1],
+        gymFriendProFull: [1, 1, 1, 1, 1, 2],
         gym: [1, 1, 1, 1, 1, 2],
+        gymPro: [1, 1, 1, 1, 2, 2],
+        gymProFull: [1, 1, 1, 2, 2, 2],
         profesor: [1, 1, 2, 2, 2, 2],
-        profesorPro: [2, 2, 2, 2, 2, 2]
+        profesorPro: [2, 2, 2, 2, 2, 3],
+        profesorProFull: [2, 2, 2, 2, 3, 3]
     },
     categories: [
         {
@@ -735,7 +739,7 @@ POKEMONBATTLE = {
         "animate": "animate",
         "dead": "dead",
     },
-    LAUNCH: function ($scope, tier, trainer, win, loose) {
+    LAUNCH: function ($scope, tier, trainer, win, loose, revenge) {
         if (!$scope.session.pokemons.length)
             return;
         $("#footer, #footer2").hide();
@@ -807,9 +811,15 @@ POKEMONBATTLE = {
             } else if (trainer) {
                 $scope.BATTLEOBJS.trainerProp = players[trainer];
                 $scope.BATTLEOBJS.ENEMY = POKEMONBATTLE.ENEMY($scope, trainer);
+                var finalTypes = players[trainer].level;
+                if (revenge) {
+
+                    finalTypes = finalTypes.replace('Pro', '').replace('Full', '');
+                    finalTypes += "ProFull";
+                }
                 $scope.BATTLEOBJS.TARGETS =
                     $scope.BATTLEOBJS.TARGETS = $scope.BATTLEOBJS.trainerProp.predeterminedTeam ||
-                        POKEMOMFIND.TRAINER(tier, players[trainer].level, players[trainer].types);
+                        POKEMOMFIND.TRAINER(tier, finalTypes, players[trainer].types);
             } else {
                 $scope.BATTLEOBJS.ENEMY = POKEMONBATTLE.ENEMY($scope, trainer);
                 $scope.BATTLEOBJS.TARGETS = [POKEMOMFIND.WILD(tier)];
@@ -4469,9 +4479,11 @@ POKEMONBATTLE = {
                 $scope.BATTLEOBJS = {};
                 $("#footer, #footer2").show();
                 ACTIONS.GAME.UNBLOCK();
+                ACTIONS.GAME.RESUME();
                 if (pokemon === false) {
                     eval(maps[FIRSTMAP].pokecenter);
-                    ACTIONS.POKEMON.POKECENTER();
+                    if (maps[FIRSTMAP].pokecenter.indexOf('POKEMON.POKECENTER') === -1)
+                        ACTIONS.POKEMON.POKECENTER();
                 } else if (pokemon) {
                     POKEMOMFIND.ADD(OSO(pokemon));
                 }

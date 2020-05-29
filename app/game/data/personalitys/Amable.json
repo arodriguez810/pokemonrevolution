@@ -1,0 +1,82 @@
+{
+  "name": "Amable",
+  "Amable": {
+    "intro": [
+      "Hola $amigo, espero que este bien",
+      "Hola $amigo, tomemos un tiempo para competir",
+      "Hola $amigo, te ayudaré a entrenar tus pokemones",
+      "Hola $amigo, gracias por mirarme",
+      "$amigo, que gusto verte por aquí"
+    ],
+    "perdiendo": [
+      "Eres un entrenador muy bueno te admiro",
+      "Me da gusto competir contigo espero ser tu amigo",
+      "$pokemon no te esfuerces mucho",
+      "haz tu mejor esfuerzo $pokemon",
+      "$pokemon gracias por prestarme tu fuerza"
+    ],
+    "perdiendomal": [
+      "Estas muy preparado $amigo",
+      "Estas haciendo un buen trabajo $amigo",
+      "$pokemon, ayúdame con $move",
+      "Eres demasiado bueno $amigo!",
+      "Eres un súper entrenador!"
+    ],
+    "ganando": [
+      "Te lo agradezco mucho $pokemon!",
+      "Gracias por luchar tan bien $pokemon",
+      "Espero que no te enoje que yo gane por que quiero ser tu amigo.",
+      "No te preocupes sé que serás mucho mejor",
+      "Eres bueno todos podemos mejorar"
+    ],
+    "ganandofacil": [
+      "Yo estoy dispuesto a enseñarte $amigo",
+      "No te sientas triste la próxima será mejor",
+      "Espero que estés bien con este combate",
+      "$amigo, todos podemos mejorar no te preocupes",
+      "Solo tienes que entrenar más eres muy bueno?"
+    ],
+    "alganar": [
+      "Muy buena batalla ten buen resto del día",
+      "Muy bueno resultado podrás mejorar",
+      "Espero verte pronto",
+      "Nos vemos en otra ocasión, cuídate mucho",
+      "Espero volver a verte amigo"
+    ],
+    "alperder": [
+      "Eres demasiado bueno",
+      "Eres de lo mejor",
+      "Feliz resto del día amigo",
+      "Te admiro $amigo",
+      "Quiero volver a verte $amigo"
+    ],
+    "textos1": [
+      "Hola querido $amigo, espero que la estes pasando muy bien",
+      "Hoy es un buen día espero que el tuyo esté de igual manera",
+      "Hola $amigo, necesitas algo, te puedo ayudar en algo?",
+      "Hola $amigo, es un gusto verte",
+      "Hola $amigo, es un placer ayudarte"
+    ],
+    "textos2": [
+      "Que puedo hacer por ti?",
+      "Eres un buen entrenador $amigo, me gusta mucho hablar contigo",
+      "Gracias por hablar conmigo $amigo",
+      "Te gusta charlar?, pues estoy aquí para ti mi querido $amigo",
+      "Hola de nuevo $amigo, que bien que te interese hablar, contigo no hay problemas"
+    ],
+    "textos3": [
+      "$amigo, sabes que me ando fijando que ya te siento como un amigo?",
+      "$amigo, ahora que me fijo mejor eres una persona hermosa",
+      "$amigo, gracias por la confianza",
+      "$amigo, es un placer hablar todo lo que se pueda con una persona como tu",
+      "Muy bien $amigo, te encanta charlar!"
+    ],
+    "jarto": [
+      "$amigo, espero que encuentres muchos amigos en tu aventura",
+      "$amigo, espero que te vaya bien",
+      "$amigo, eres de lo mejor",
+      "$amigo, que bueno todo esto, es importante hablar",
+      "$amigo, genial!"
+    ]
+  }
+}

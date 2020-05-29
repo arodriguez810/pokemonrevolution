@@ -135,10 +135,11 @@ pokemon.controller('character', ['$scope', function ($scope) {
                 item = getRandomInt(13);
             if (["Ears"].indexOf(c) !== -1)
                 item = getRandomInt(4);
-
+            if (["Face"].indexOf(c) !== -1)
+                item = getRandomInt(5);
             var keys = Object.keys(category);
             item = keys[item];
-            $scope.selectCategory(c);
+            $scope.selectCategory(c.replace('Clothing', 'Clothing2').replace('RearHair', 'RearHair2'));
             if (["Wing", "Cloak2", "BeastEars", "Glasses", "AccB", "AccA", "Cloak1", "FacialMark"].indexOf(c) !== -1) {
                 item = "p00";
             }
@@ -146,8 +147,11 @@ pokemon.controller('character', ['$scope', function ($scope) {
                 item = "p01";
             }
             $scope.selectItem(item, false);
-            for (var co in AVATARDB[$scope.form.data.gender].icon[$scope.selection.category][item]) {
-                var color = AVATARDB[$scope.form.data.gender].icon[$scope.selection.category][item][co];
+            for (var co in AVATARDB[$scope.form.data.gender].icon[$scope.selection.category.replace('Clothing2', 'Clothing').replace('RearHair2', 'RearHair')][item]) {
+                var color = AVATARDB[$scope.form.data.gender].icon[$scope.selection.category.replace('Clothing2', 'Clothing').replace('RearHair2', 'RearHair')][item][co];
+                if (["Clothing"].indexOf(c) !== -1) {
+                    continue;
+                }
                 $scope.selectColor(co);
                 var colRan = getRandomInt(COLORS.length);
                 if (["Body", "Face", "Ears", "Nose", "Mouth"].indexOf(c) !== -1) {

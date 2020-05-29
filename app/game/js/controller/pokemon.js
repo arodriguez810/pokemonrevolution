@@ -9,6 +9,12 @@ POKEMON = {
         [97, 99],
         [100, 100]
     ],
+    wildRangesSunset: [
+        [0, 40],
+        [41, 96],
+        [97, 99],
+        [100, 100]
+    ],
     trainersRange: {
         noob: [0],
         noobPro: [0, 0, 0],
@@ -24,9 +30,13 @@ POKEMON = {
         specialProFull: [0, 0, 1, 1, 1, 1],
         gymFriend: [1, 1, 1, 1, 1],
         gymFriendPro: [1, 1, 1, 1, 1, 1],
+        gymFriendProFull: [1, 1, 1, 1, 1, 2],
         gym: [1, 1, 1, 1, 1, 2],
+        gymPro: [1, 1, 1, 1, 2, 2],
+        gymProFull: [1, 1, 1, 2, 2, 2],
         profesor: [1, 1, 2, 2, 2, 2],
-        profesorPro: [2, 2, 2, 2, 2, 2]
+        profesorPro: [2, 2, 2, 2, 2, 3],
+        profesorProFull: [2, 2, 2, 2, 3, 3]
     },
     categories: [
         {
@@ -329,7 +339,8 @@ POKEMOMFIND = {
         var potency = getRandomInt(100);
 
         var next = 0;
-        for (var range of POKEMON.wildRanges) {
+        var ranges = ACTIONS.AMBIENT.TIME() === "Sunset" ? POKEMON.wildRangesSunset : POKEMON.wildRanges;
+        for (var range of ranges) {
             if (potency > range[0] && potency < range[1]) {
                 break;
             } else {
@@ -735,7 +746,7 @@ POKEMONBATTLE = {
         "animate": "animate",
         "dead": "dead",
     },
-    LAUNCH: function ($scope, tier, trainer, win, loose) {
+    LAUNCH: function ($scope, tier, trainer, win, loose, revenge) {
         if (!$scope.session.pokemons.length)
             return;
         $("#footer, #footer2").hide();
@@ -770,8 +781,7 @@ POKEMONBATTLE = {
         $scope.BATTLEOBJS.allowtrap = false;
         $scope.BATTLEOBJS.winbattle = win;
         $scope.BATTLEOBJS.losebattle = loose;
-
-        ACTIONS.GAME.SCREEN(0.5, "#000", 1, async function () {
+        ACTIONS.GAME.SCREEN(0.5, "#000", 1, function () {
             for (var l = 0; l <= 9; l++) {
                 eval(`layer${l}.visible = false;`);
             }
@@ -805,11 +815,17 @@ POKEMONBATTLE = {
                     $scope.BATTLEOBJS.TARGETINDEX = getRandomInt($scope.BATTLEOBJS.TARGETS.length - 1);
                 }
             } else if (trainer) {
-                $scope.BATTLEOBJS.trainerProp = players[trainer];
+                $scope.BATTLEOBJS.trainerProp = CURRENTTRAINER;
                 $scope.BATTLEOBJS.ENEMY = POKEMONBATTLE.ENEMY($scope, trainer);
+                var finalTypes = CURRENTTRAINER.level;
+                if (revenge) {
+
+                    finalTypes = finalTypes.replace('Pro', '').replace('Full', '');
+                    finalTypes += "ProFull";
+                }
                 $scope.BATTLEOBJS.TARGETS =
                     $scope.BATTLEOBJS.TARGETS = $scope.BATTLEOBJS.trainerProp.predeterminedTeam ||
-                        POKEMOMFIND.TRAINER(tier, players[trainer].level, players[trainer].types);
+                        POKEMOMFIND.TRAINER(tier, finalTypes, CURRENTTRAINER.types);
             } else {
                 $scope.BATTLEOBJS.ENEMY = POKEMONBATTLE.ENEMY($scope, trainer);
                 $scope.BATTLEOBJS.TARGETS = [POKEMOMFIND.WILD(tier)];
@@ -891,7 +907,8 @@ POKEMONBATTLE = {
                 $scope.PKM.mainMenu = true;
                 ACTIONS.GAME.ALPHABASE(layerBattle, 0.5, 1, function () {
                     //Draw Hero
-                    setTimeout(async () => {
+                    setTimeout(function () {
+                        ACTIONS.CAMERA.ZERO();
                         $scope.BATTLEOBJS.FRIEND = POKEMONBATTLE.FRIEND($scope);
                         $scope.BATTLEOBJS.HERO.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
                         ACTIONS.ANIMATION.THROWNATURAL('Pokeball_' + $scope.PKM.friend().quality,
@@ -901,6 +918,7 @@ POKEMONBATTLE = {
                             POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
                             true,
                             function () {
+                                ACTIONS.CAMERA.ZERO();
                                 ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.friend().superShiny ? 'SuperShiny' : ($scope.PKM.friend().shiny ? 'Starts' : 'OutPokeball'),
                                     POKEMONBATTLE.XS($scope.BATTLEOBJS.FRIEND.body.x + ($scope.BATTLEOBJS.FRIEND.body.width / 2)),
                                     POKEMONBATTLE.YS($scope.BATTLEOBJS.FRIEND.body.y + ($scope.BATTLEOBJS.FRIEND.body.height / 2)),
@@ -930,10 +948,12 @@ POKEMONBATTLE = {
                                         $scope.BATTLEOBJS.allowtrap = true;
                                         if (trainer) {
                                             setTimeout(function () {
+                                                ACTIONS.CAMERA.ZERO();
                                                 $scope.BATTLEOBJS.TARGET = POKEMONBATTLE.TARGET($scope);
                                                 $scope.BATTLEOBJS.ENEMY.body.gotoAndPlay(POKEMONBATTLE.FORMS.punch);
 
-                                                $scope.PKM.talk(`${LANGUAGE.t("I choose you")} ${$scope.PKM.target().name}`, 2);
+                                                if (!$scope.BATTLEOBJS.isWild)
+                                                    $scope.PKM.talk(`${LANGUAGE.t("I choose you")} ${$scope.PKM.target().name}`, 2);
                                                 ACTIONS.ANIMATION.THROWNATURAL('Pokeball_' + $scope.PKM.target().quality,
                                                     $scope.BATTLEOBJS.ENEMY.body.x,
                                                     $scope.BATTLEOBJS.ENEMY.body.y,
@@ -941,6 +961,7 @@ POKEMONBATTLE = {
                                                     POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
                                                     true,
                                                     function () {
+                                                        ACTIONS.CAMERA.ZERO();
                                                         ACTIONS.ANIMATION.PLAYNATURAL($scope.PKM.target().superShiny ? 'SuperShiny' : ($scope.PKM.target().shiny ? 'Starts' : 'OutPokeball'),
                                                             POKEMONBATTLE.XS($scope.BATTLEOBJS.TARGET.body.x + ($scope.BATTLEOBJS.TARGET.body.width / 2)),
                                                             POKEMONBATTLE.YS($scope.BATTLEOBJS.TARGET.body.y + ($scope.BATTLEOBJS.TARGET.body.height / 2)),
@@ -966,15 +987,15 @@ POKEMONBATTLE = {
                                                                         }
                                                                     }
                                                             }
-                                                        )
-                                                        ;
+                                                        );
                                                     });
                                             }, 500);
                                         } else {
+
                                             $scope.BATTLEOBJS.TARGET = POKEMONBATTLE.TARGET($scope);
                                             ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);
                                             setTimeout(function () {
-
+                                                ACTIONS.CAMERA.ZERO();
                                                 ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl, SOUNDS.system);
 
                                                 var yosoy = "target";
@@ -1758,7 +1779,7 @@ POKEMONBATTLE = {
             }
             //return
             if (info.move.num === 283) {
-                info.pokemonTarget.battle.stats.hp = info.pokemonTarget.stats.hp * ($scope.PKM.hp(info.pokemonFriend) / 100);
+                info.pokemonTarget.battle.stats.hp = info.pokemonFriend.battle.stats.hp;
                 return 0;
             }
             if (info.move.num === 775) {
@@ -1948,11 +1969,7 @@ POKEMONBATTLE = {
             }
             if (info.move.accuracy === true)
                 return false;
-            if (info.move.keyname === "snore") {
-                if (info.pokemonFriend.battle.status !== "slp") {
-                    return true;
-                }
-            }
+
             if (info.move.missLast === true) {
                 if (last) {
                     return true;
@@ -2829,6 +2846,7 @@ POKEMONBATTLE = {
         POKEMONBATTLE.CALCS.GIGA(info, $scope, info.pokemonFriend, info.friend, function () {
             if (result)
                 if (result.miss) {
+                    info.enemy.body.gotoAndPlay(POKEMONBATTLE.FORMS.evade);
                     ACTIONS.ANIMATION.PLAYNATURAL("b_intrerrogation",
                         POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
                         POKEMONBATTLE.YS(info.friend.body.y + (info.friend.body.height / 2)),
@@ -2840,6 +2858,7 @@ POKEMONBATTLE = {
                 }
             if (result)
                 if (result.critical) {
+                    info.hero.body.gotoAndPlay(POKEMONBATTLE.FORMS.hurt);
                     ACTIONS.ANIMATION.PLAYNATURAL('critico', POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),
                         POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)));
                 }
@@ -2908,19 +2927,16 @@ POKEMONBATTLE = {
                                                                 });
                                                             });
                                                     } else {
-                                                        info.hero.body.gotoAndPlay(POKEMONBATTLE.FORMS.happy);
                                                         layerAnimation.removeChild(layerAnimation.getChildByName("stop_pela"));
                                                         POKEMONBATTLE.END($scope, "catched");
                                                     }
                                                 }, 1000);
                                             } else {
-                                                info.hero.body.gotoAndPlay(POKEMONBATTLE.FORMS.happy);
                                                 layerAnimation.removeChild(layerAnimation.getChildByName("stop_pela"));
                                                 POKEMONBATTLE.END($scope, "catched");
                                             }
                                         }, 1000);
                                     } else {
-                                        info.hero.body.gotoAndPlay(POKEMONBATTLE.FORMS.happy);
                                         layerAnimation.removeChild(layerAnimation.getChildByName("stop_pela"));
                                         POKEMONBATTLE.END($scope, "catched");
                                     }
@@ -3211,7 +3227,8 @@ POKEMONBATTLE = {
             }
         }
         if (info.isEnemy) {
-            $scope.PKM.talk(`${LANGUAGE.t("Use")} ${info.move.name}`, 2);
+            if (!$scope.BATTLEOBJS.isWild)
+                $scope.PKM.talk(`${LANGUAGE.t("Use")} ${info.move.name}`, 2);
             if (info.move.num === 226) {
                 if ($scope.BATTLEOBJS.TARGETS.length > 1) {
 
@@ -4381,6 +4398,8 @@ POKEMONBATTLE = {
             POKEMONBATTLE.CLEARSTATSEND(poke);
         }
         if (win === true) {
+            $scope.BATTLEOBJS.HERO.body.gotoAndStop(POKEMONBATTLE.FORMS.happy);
+            $scope.BATTLEOBJS.ENEMY.body.gotoAndStop(POKEMONBATTLE.FORMS.dead);
             POKEMONBATTLE.PERSONALITY($scope, true);
             if (CURRENTONLINERATING !== undefined) {
                 $scope.session.rating = ($scope.session.rating || 0);
@@ -4393,29 +4412,37 @@ POKEMONBATTLE = {
                 }
             }
             if (!$scope.BATTLEOBJS.isWild) {
-                if ($scope.BATTLEOBJS.winbattle)
+                if (typeof $scope.BATTLEOBJS.winbattle === "function")
                     $scope.BATTLEOBJS.winbattle();
+                else if ($scope.BATTLEOBJS.winbattle)
+                    eval($scope.BATTLEOBJS.winbattle);
                 $scope.play("Victory", SOUNDS.system);
                 setTimeout(function () {
                     POKEMONBATTLE.ENDFINAL($scope);
                     if (!CURRENTONLINE)
-                        $scope.PKM.evolcheck();
+                        $scope.PKM.evolcheck(CURRENTTRAINER.level);
                 }, 7000);
             } else {
+                $scope.PKM.evolcheck('salvaje');
                 setTimeout(function () {
                     POKEMONBATTLE.ENDFINAL($scope);
                 }, 2000);
             }
         }
         if (win === "catched") {
-            if ($scope.BATTLEOBJS.winbattle)
+            $scope.BATTLEOBJS.HERO.body.gotoAndStop(POKEMONBATTLE.FORMS.happy);
+            if (typeof $scope.BATTLEOBJS.winbattle === "function")
                 $scope.BATTLEOBJS.winbattle();
+            else if ($scope.BATTLEOBJS.winbattle)
+                eval($scope.BATTLEOBJS.winbattle);
             $scope.play("PokeCaught", SOUNDS.system);
             setTimeout(function () {
                 POKEMONBATTLE.ENDFINAL($scope, $scope.PKM.target());
             }, 5000);
         }
         if (win === false) {
+            $scope.BATTLEOBJS.ENEMY.body.gotoAndStop(POKEMONBATTLE.FORMS.happy);
+            $scope.BATTLEOBJS.HERO.body.gotoAndStop(POKEMONBATTLE.FORMS.dead);
             POKEMONBATTLE.PERSONALITY($scope, false);
             if (CURRENTONLINERATING !== undefined) {
                 $scope.session.rating = $scope.session.rating || 0;
@@ -4431,8 +4458,13 @@ POKEMONBATTLE = {
                         $scope.session.rating = 0;
                 }
             }
-            if ($scope.BATTLEOBJS.losebattle)
+
+
+            if (typeof $scope.BATTLEOBJS.losebattle === "function")
                 $scope.BATTLEOBJS.losebattle();
+            else if ($scope.BATTLEOBJS.losebattle)
+                eval($scope.BATTLEOBJS.losebattle);
+
             $scope.play("Defeat", SOUNDS.system);
             setTimeout(function () {
                 POKEMONBATTLE.ENDFINAL($scope, false);
@@ -4464,14 +4496,18 @@ POKEMONBATTLE = {
             layerBattle.alpha = 0;
             CURRENTONLINEDATA = undefined;
             CURRENTONLINERATING = undefined;
+            CURRENTTRAINER = undefined;
+            ASSAULTING = false;
             ACTIONS.GAME.SCREENOFF(1, function () {
                 $scope.isBattlening = false;
                 $scope.BATTLEOBJS = {};
                 $("#footer, #footer2").show();
                 ACTIONS.GAME.UNBLOCK();
+                ACTIONS.GAME.RESUME();
                 if (pokemon === false) {
                     eval(maps[FIRSTMAP].pokecenter);
-                    ACTIONS.POKEMON.POKECENTER();
+                    if (maps[FIRSTMAP].pokecenter.indexOf('POKEMON.POKECENTER') === -1)
+                        ACTIONS.POKEMON.POKECENTER();
                 } else if (pokemon) {
                     POKEMOMFIND.ADD(OSO(pokemon));
                 }
@@ -4896,8 +4932,10 @@ POKEMONBATTLE = {
     //Draws
     DRAWBG: function ($scope) {
         var imageD = mapQueues[FIRSTMAP].getResult("BG");
-        var BG = new createjs.ScaleBitmap(mapQueues[FIRSTMAP].getResult("BG"), new createjs.Rectangle(0, 0, imageD.width, imageD.height));
-        BG.setDrawSize($scope.width * $scope.baseWidth, $scope.height * $scope.baseHeight);
+        var BG = new createjs.Bitmap(mapQueues[FIRSTMAP].getResult("BG"), new createjs.Rectangle(0, 0, imageD.width, imageD.height));
+        BG.scaleX = 0.575;
+        BG.scaleY = 0.5;
+        //BG.setDrawSize($scope.width * $scope.baseWidth, $scope.height * $scope.baseHeight);
         layerBattle.addChild(BG);
         return BG;
     },

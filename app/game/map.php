@@ -140,14 +140,19 @@
                                 <div class="row clearfix" ng-show="currentEvent.isActor=='1'">
 
                                     <div class="col-sm-12">
+                                        <h2>{{currentEvent.hero.name}}</h2>
+                                        <img class="img-responsive thumbnail" src='data/characters_file/{{currentEvent.hero.name}}/face.png?{{cache}}'>
+                                    </div>
+                                    <div class="col-sm-12">
                                         <div class="form-group form-float ">
-                                            <img src="data/characters_file/{{character.data.name}}/face.png?{{cache}}"
-                                                 style="background-color: transparent;padding: 0 0 0 0;width: 48px;height: 48px;border: {{currentEvent.hero.name==character.data.name?'red':'blue'}} solid 1px;float: left"
-                                                 ng-click="currentEvent.hero.name=character.data.name"
-                                                 ng-repeat="(key,character) in characters"/>
-                                            <img class="img-responsive thumbnail"
-                                                 src='data/characters_file/{{currentEvent.hero.name}}/face.png?{{cache}}'>
-                                            {{currentEvent.hero.name}}
+                                            <div ng-repeat="(key,character) in characters"
+                                                 style="background-color: transparent;padding: 0 0 0 0;border: {{currentEvent.hero.name==character.data.name?'red':'blue'}} solid 1px;float: left">
+                                                <img src="data/characters_file/{{character.data.name}}/face.png?{{cache}}"
+                                                     ng-click="currentEvent.hero.name=character.data.name"/>
+                                                <br>
+                                                <label style="font-size: 12px">{{character.data.name}}</label>
+                                            </div>
+
                                         </div>
                                     </div>
 

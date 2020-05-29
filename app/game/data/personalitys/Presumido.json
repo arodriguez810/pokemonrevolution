@@ -1,0 +1,82 @@
+{
+  "name": "Presumido",
+  "Presumido": {
+    "intro": [
+      "Con que pokemon quieres perder?",
+      "Esto será muy fácil",
+      "Hola $amigo, vas a perder mi tiempo",
+      "Hola $amigo, miraste y ya perderás",
+      "Obvio que yo seré el ganador"
+    ],
+    "perdiendo": [
+      "La suerte te favorece demasiado, solo eso",
+      "Estas seguro que no tienes esteroides?",
+      "$pokemon vamos pelea como siempre!",
+      "No puedes dar un golpe crítico $pokemon?",
+      "$pokemon no luchaste como siempre, eso pasa"
+    ],
+    "perdiendomal": [
+      "Espera estoy un poco distraído $amigo",
+      "La suerte está de tu lado y aun así doy batalla",
+      "$pokemon, tira $move a ver si tengo suerte como $amigo",
+      "Eres demasiado suertudo, así no puedo $amigo!",
+      "Eso es mentira!"
+    ],
+    "ganando": [
+      "Mi victoria es de esperarse!",
+      "Mi $pokemon es normal, lo que pasa que no sabes combatir",
+      "Espero que desinstales desde que termines esta batalla.",
+      "Eso es todo?",
+      "Que obvio!"
+    ],
+    "ganandofacil": [
+      "Wow, mejor juego con la maquina $amigo, me harás perder poder",
+      "Es obvio que nunca podrás ganarme",
+      "Ay Dios mío!, desintalaaaaa",
+      "$amigo, todos podemos mejorar pero creo que tu no",
+      "Mi nivel es muy alto para ti?"
+    ],
+    "alganar": [
+      "Fue una batalla obvia",
+      "Fue muy fácil",
+      "Viste que ibas a perder",
+      "Yo tú y ni paso de cerca por aquí",
+      "La próxima por lo menos hazme sudar"
+    ],
+    "alperder": [
+      "Este ambiente no me favorece",
+      "La suerte tuvo de tu lado",
+      "Esto no pasa siempre, seguro es un error",
+      "Sabes que yo gane como quiera $amigo, verdad?",
+      "Yo te mate algunos aunque seas abusivo"
+    ],
+    "textos1": [
+      "Tienes el privilegio de estar hablando con lo mejor de lo mejor",
+      "Que bueno que puedes conocerme $amigo",
+      "Es un placer para ti hablar conmigo",
+      "Sabía que ibas a querer hablar conmigo a todos les pasa",
+      "Soy una persona muy apuesta, llamo la atención como llamé la tuya $amigo"
+    ],
+    "textos2": [
+      "Tanto quieres hablar conmigo?",
+      "Es de sumo interés mi presencia para ti",
+      "Ya veo que tengo que estar mas escondido para no interesar tanto como siempre",
+      "Pero es verdad que soy un querido!",
+      "Quieres saber mas de mi?"
+    ],
+    "textos3": [
+      "Es normal que las personas me insistan",
+      "$amigo, no eres diferente todos insisten de la misma manera hacia moa",
+      "Soy importante, Hellowwww",
+      "O sea, ya va haciendo tiempo que no te acostumbres a mi, no soy de nadie",
+      "Soy una joya"
+    ],
+    "jarto": [
+      "Soy tan perfecto que quieres reflejarte en mi hablando tanto conmigo.",
+      "$amigo, quieres conocerme?, pues sabes calcular el número perfecto?... no? pues te falta",
+      "$amigo, tu insistencia no es rara, asi son todos",
+      "La verdad que yo soy demasiado impresionante",
+      "Soy el mejor de todos y todas"
+    ]
+  }
+}

@@ -6,13 +6,13 @@
     <meta content=" initial-scale=0.899, maximum-scale=0.899, user-scalable=no" name="viewport">
     <title>Pokemon Revolution</title>
     <link rel="icon" href="images/logo/favicon.ico" type="image/x-icon">
-    <link href="js/font/material.css?v=1.0.0.54" rel="stylesheet" type="text/css">
-    <link href="plugins/bootstrap/css/bootstrap.css?v=1.0.0.54" rel="stylesheet">
-    <link href="css/game.css?v=1.0.0.54" rel="stylesheet">
-    <link href="plugins/animate-css/animate.css?v=1.0.0.54" rel="stylesheet"/>
-    <link href="plugins/sweetalert/sweetalert.css?v=1.0.0.54" rel="stylesheet"/>
-    <link href="css/style.css?v=1.0.0.54" rel="stylesheet">
-    <link href="css/themes/all-themes.css?v=1.0.0.54" rel="stylesheet"/>
+    <link href="js/font/material.css?v=1.0.0.55" rel="stylesheet" type="text/css">
+    <link href="plugins/bootstrap/css/bootstrap.css?v=1.0.0.55" rel="stylesheet">
+    <link href="css/game.css?v=1.0.0.55" rel="stylesheet">
+    <link href="plugins/animate-css/animate.css?v=1.0.0.55" rel="stylesheet"/>
+    <link href="plugins/sweetalert/sweetalert.css?v=1.0.0.55" rel="stylesheet"/>
+    <link href="css/style.css?v=1.0.0.55" rel="stylesheet">
+    <link href="css/themes/all-themes.css?v=1.0.0.55" rel="stylesheet"/>
     <style>
         .swal2-container {
             z-index: 999999999999;
@@ -661,7 +661,7 @@
                      class="{{PKM.hpcolor(PKM.hp(pokemon))}}">
                 </div>
             </div>
-            <div class="pokemonLife" ng-show="PKM.target().battle" onclick="ACTIONS.UNIT.NEXT();">
+            <div class="pokemonLife" ng-show="PKM.target().battle">
                 <img ng-src="../resources/icons/{{PKM.target().gender}}.png"> {{PKM.target().name}}
                 <div class="{{PKM.hpcolor(PKM.hp(PKM.target()))}}"
                      style="width: {{PKM.hp(PKM.target())}}%;transition: width 2s, height 4s;">
@@ -888,9 +888,9 @@
          id="enemyText">
         <div id="enemyTextDiv" class="text-primary" style="float: left;"></div>
         <img style="float: right;width: 72px;" ng-show="!BATTLEOBJS.ENEMY.online"
-             ng-src="{{DOMAIN}}data/characters_file/{{BATTLEOBJS.ENEMY.name}}/face.png?v=1.0.0.54">
+             ng-src="{{DOMAIN}}data/characters_file/{{BATTLEOBJS.ENEMY.name}}/face.png?v=1.0.0.55">
         <img style="float: right;width: 72px;" ng-show="BATTLEOBJS.ENEMY.online"
-             ng-src="{{DOMAIN}}data/players/{{BATTLEOBJS.ENEMY.name}}/images/face.png?v=1.0.0.54">
+             ng-src="{{DOMAIN}}data/players/{{BATTLEOBJS.ENEMY.name}}/images/face.png?v=1.0.0.55">
     </div>
     <!--MENU-->
 
@@ -951,33 +951,33 @@
 
 </section>
 
-<script src="js/tools/codemirror.js"></script>
-<script src="js/tools/javascript.js"></script>
-<script src="js/tools/angular.min.js"></script>
-<script src="js/tools/ui-codemirror.js"></script>
-<script src="js/tools/autorefresh.js"></script>
-<script src="plugins/jquery/jquery.min.js?v=1.0.0.54"></script>
-<script src="plugins/bootstrap/js/bootstrap.js?v=1.0.0.54"></script>
-<script src="js/tools/createjs.min.js?v=1.0.0.54"></script>
-<script src="js/tools/tweenjsB.min.js?v=1.0.0.54"></script>
-<script src="js/tools/ThresholdFilter.js?v=1.0.0.54"></script>
-<script src="js/tools/tinycolor-min.js?v=1.0.0.54"></script>
-<script src="js/tools/ScaleBitmap.js?v=1.0.0.54"></script>
-<script src="js/admin.js?v=1.0.0.54"></script>
-<script src="js/pages/ui/animations.js?v=1.0.0.54"></script>
-<script src="js/pages/ui/modals.js?v=1.0.0.54"></script>
-<script src="plugins/sweetalert/sweetalert.min.js?v=1.0.0.54"></script>
-<script src="js/api.js?v=1.0.0.54"></script>
-<script src="js/script.js?v=1.0.0.54"></script>
-<script src="js/models/pokedex.js?v=1.0.0.54"></script>
-<script src="js/controller/language.js?v=1.0.0.54"></script>
-<script src="js/controller/home.js?v=1.0.0.54"></script>
-<script src="js/controller/play.js?v=1.0.0.54"></script>
-<script src="js/controller/playvars.js?v=1.0.0.54"></script>
-<script src="js/controller/playfunctions.js?v=1.0.0.54"></script>
-<script src="js/controller/playactions.js?v=1.0.0.54"></script>
-<script src="js/controller/pokemon.js?v=1.0.0.54"></script>
-<script src="js/joy.min.js?v=1.0.0.54"></script>
+<script src="js/tools/codemirror.js?v=1.0.0.55"></script>
+<script src="js/tools/javascript.js?v=1.0.0.55"></script>
+<script src="js/tools/angular.min.js?v=1.0.0.55"></script>
+<script src="js/tools/ui-codemirror.js?v=1.0.0.55"></script>
+<script src="js/tools/autorefresh.js?v=1.0.0.55"></script>
+<script src="plugins/jquery/jquery.min.js?v=1.0.0.55"></script>
+<script src="plugins/bootstrap/js/bootstrap.js?v=1.0.0.55"></script>
+<script src="js/tools/createjs.min.js?v=1.0.0.55"></script>
+<script src="js/tools/tweenjsB.min.js?v=1.0.0.55"></script>
+<script src="js/tools/ThresholdFilter.js?v=1.0.0.55"></script>
+<script src="js/tools/tinycolor-min.js?v=1.0.0.55"></script>
+<script src="js/tools/ScaleBitmap.js?v=1.0.0.55"></script>
+<script src="js/admin.js?v=1.0.0.55"></script>
+<script src="js/pages/ui/animations.js?v=1.0.0.55"></script>
+<script src="js/pages/ui/modals.js?v=1.0.0.55"></script>
+<script src="plugins/sweetalert/sweetalert.min.js?v=1.0.0.55"></script>
+<script src="js/api.js?v=1.0.0.55"></script>
+<script src="js/script.js?v=1.0.0.55"></script>
+<script src="js/models/pokedex.js?v=1.0.0.55"></script>
+<script src="js/controller/language.js?v=1.0.0.55"></script>
+<script src="js/controller/home.js?v=1.0.0.55"></script>
+<script src="js/controller/play.js?v=1.0.0.55"></script>
+<script src="js/controller/playvars.js?v=1.0.0.55"></script>
+<script src="js/controller/playfunctions.js?v=1.0.0.55"></script>
+<script src="js/controller/playactions.js?v=1.0.0.55"></script>
+<script src="js/controller/pokemon.js?v=1.0.0.55"></script>
+<script src="js/joy.min.js?v=1.0.0.55"></script>
 <style>
 
     #main {

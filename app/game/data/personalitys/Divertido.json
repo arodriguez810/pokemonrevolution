@@ -1,0 +1,72 @@
+{
+  "name": "Divertido",
+  "Divertido": {
+    "intro": [
+      "Hola $amigo, esto será divertido vamos!",
+      "Hola $amigo, siiiiii",
+      "Hola $amigo, vamos a divertirnos con nuestros pokemones",
+      "Hola $amigo, me miraste! OMG",
+      "$amigo, que ultra genial verte por aquí!"
+    ],
+    "perdiendo": [
+      "Eres un entrenador demasiado bueno Dios dame tu autógrafo!",
+      "Es demasiado divertidillo contigo espero volver a repetir",
+      "$pokemon daleee que tu puedeees!",
+      "diviértete en tu próximo ataque $pokemon!",
+      "$pokemon eso es gracias!"
+    ],
+    "perdiendomal": [
+      "Estas demasiado preparado pones esto más divertido preparado $amigo",
+      "El trabajo que estás haciendo es divertido $amigo!",
+      "$pokemon, diviérteme con $move!",
+      "Eres el mejor te amo $amigo!",
+      "Eres un súper entrenador!"
+    ],
+    "ganando": [
+      "Esa es la mejor forma de divertirme $pokemon!",
+      "Gracias por luchar tan divertido $pokemon!",
+      "Espero que te estés divirtiendo aunque yo este ganando.",
+      "Espero que te estés divirtiendo aún",
+      "Todo es divertido, una pela, reñido y zumba!"
+    ],
+    "ganandofacil": [
+      "Yo me estoy divirtiendo demasiado $amigo",
+      "No te sientas triste mejor diviértete como quiera",
+      "Este combate esta supeeeeeeeeeeer!!",
+      "$amigo, dale diviértete ahí esta la victoria",
+      "Solo tienes que chilear y más eres bueno"
+    ],
+    "alganar": [
+      "Muy buena batalla ten buen feliz día",
+      "Que gozadora de resultados podrás mejorar",
+      "Espero divertirme pronto",
+      "Nos divertiremos en otra ocasión, cuídate mucho",
+      "Espero volver a divertirme amigo"
+    ],
+    "alperder": [
+      "Eres demasiado divertido",
+      "Eres de lo mejor",
+      "Feliz resto del día amigo!",
+      "Te admiriloooo $amigo!",
+      "Quiero volver a verte, eres muy divertido $amigo"
+    ],
+    "textos1": [
+      "¿A ti también te gusta hablar con las personas? ¡Hola! ¡Espero que nos llevemos bien!"
+    ],
+    "textos2": [
+      "¡Las batallas pokémon son muy divertidas! Cada entrenador siempre tiene su manera de luchar, ¡nunca sabes que pasará!"
+    ],
+    "textos3": [
+      "¿Cuál es tu pokémon favorito? ¡El mío son todos!"
+    ],
+    "textos4": [
+      "¡jajajajaja! --Oh lo siento! es que recordé un chiste jejeje"
+    ],
+    "textos5": [
+      "¡Esta vida es tan interesante! ¿Te imaginas un mundo sin pokémon? ¡No lo soportaria!"
+    ],
+    "jarto": [
+      "Eres muy curioso, ¿no? jajajajaja"
+    ]
+  }
+}

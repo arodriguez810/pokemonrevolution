@@ -41,6 +41,13 @@
                     </a>
                 </li>
                 <li>
+                    <a href="personality.php" class="toggled waves-effect waves-block">
+                        <i class="material-icons">bubble_chart</i>
+                        <span>Personalidades</span>
+
+                    </a>
+                </li>
+                <li>
                     <a href="map.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">border_all</i>
                         <span>Mapas</span>
@@ -74,6 +81,18 @@
                     <a href="stats.php" class="toggled waves-effect waves-block">
                         <i class="material-icons">poll</i>
                         <span>Estadisticas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="spanish.php" class="toggled waves-effect waves-block">
+                        <i class="material-icons">language</i>
+                        <span>Spanish</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="english.php" class="toggled waves-effect waves-block">
+                        <i class="material-icons">language</i>
+                        <span>English</span>
                     </a>
                 </li>
             </ul>

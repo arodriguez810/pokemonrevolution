@@ -1,0 +1,72 @@
+{
+  "name": "Optimista",
+  "Optimista": {
+    "intro": [
+      "Podre con esto!",
+      "Hola $amigo, vamos a batallar",
+      "Hola $amigo, vamos a luchar con nuestros pokemones",
+      "Hola $amigo, me miraste! yo ganaré espero que estés preparado",
+      "$amigo, que genial verte por aquí!"
+    ],
+    "perdiendo": [
+      "Eres un entrenador demasiado bueno pero yo ganaré!",
+      "Aun así yo ganaré",
+      "$pokemon vamos sé que tu ataque vencerá!",
+      "vamos con todo $move $pokemon!",
+      "$pokemon tu puedes, ganaremos!"
+    ],
+    "perdiendomal": [
+      "Estas demasiado preparado pero yo ganaré $amigo",
+      "El trabajo que estás haciendo es estupendo pero perderás $amigo!",
+      "$pokemon, tu puedes $move!",
+      "Muy buena pelea pero yo ganaré $amigo!",
+      "Eres un súper entrenador, pero yo más ya verás"
+    ],
+    "ganando": [
+      "Esa es la mejor forma de yo ganar $pokemon!",
+      "Gracias por luchar tan bien $pokemon!",
+      "Espero que entiendas que yo este ganando.",
+      "Espero que estés planeando algo!",
+      "Todo es súper!"
+    ],
+    "ganandofacil": [
+      "Yo me estoy divirtiendo demasiado $amigo",
+      "No te sientas mal es que soy muy fuerte",
+      "súpeeeeeeeeeeer!!",
+      "$amigo, dale tu puedes también ahí está la victoria",
+      "Solo tienes que luchar con otro porque está la gano yo"
+    ],
+    "alganar": [
+      "Muy buena batalla ten buen feliz día",
+      "Que bien podrás mejorar",
+      "Espero volver a ganar pronto",
+      "Batallaremos siempre, cuídate mucho",
+      "Espero volver a divertirme amigo"
+    ],
+    "alperder": [
+      "La próxima voy a ganar!",
+      "No me rendiré seré el mejor",
+      "Tengo que ser siempre el mejor!",
+      "Seré mejor que nadie más aun así!",
+      "Quiero volver a verte, eres muy interesante $amigo"
+    ],
+    "textos1": [
+      "¡Mañana será un gran día! ¿Como lo se? ¡porque será uno nuevo!"
+    ],
+    "textos2": [
+      "¡Toda experiencia es una buena experiencia! ¡Siempre que sientas que algo va mal busca una manera de aprovechar al máximo todos los beneficios del aprender de esa experiencia!"
+    ],
+    "textos3": [
+      "Todos los pokémon son nuestros amigos, salvajes o no. Así como las personas, ellos aprenden aprecio, confianza y afecto."
+    ],
+    "textos4": [
+      "¿Sabías que los pokémon quieren ser fuertes al igual que nosotros? Ellos saben que con ayuda de nosotros pueden llegar a ser mucho más fuertes! Por eso para atraparlos debes debilitarlos primero, para demostrar que eres digno de ser su maestro!"
+    ],
+    "textos5": [
+      "¡Hola! Si te gustan los pokémon al igual que a mi seremos buenos amigos."
+    ],
+    "jarto": [
+      "me alegra que quieras seguir hablando, pero no tengo nada mas que decir"
+    ]
+  }
+}

@@ -115,37 +115,61 @@ function playfunctions($scope) {
             }
         }, 500);
         $scope.fristRouteTick = true;
+        LIFETICK($scope);
+        ACTIONS.AMBIENT.RUN();
         setInterval(function () {
             $scope.fristRouteTick = false;
             if (!$scope.pause) {
                 if (!$scope.runningEvent) {
-                    for (var i in $scope.NPCS) {
-                        var NPC = $scope.NPCS[i];
-                        if (NPC.event.visible) {
-                            NPC.body.visible = eval(NPC.event.visible);
-                            NPC.shadow.visible = eval(NPC.event.visible);
-                        }
-                        if (NPC.event.route.length > 0) {
-                            var route = NPC.event.route[$scope.indexTick % NPC.event.route.length];
-                            $scope.runScript(route);
-                        }
-                    }
-                    for (var i in $scope.OBJECTS) {
-                        var NPC = $scope.OBJECTS[i];
-                        if (NPC.event.visible)
-                            NPC.body.visible = eval(NPC.event.visible);
-                        if (NPC.event.route.length > 0) {
-                            var route = NPC.event.route[$scope.indexTick % NPC.event.route.length];
-                            $scope.runScript(route);
-                        }
-                    }
+                    LIFETICK($scope);
                     $scope.indexTick++;
                 }
             }
             ACTIONS.AMBIENT.RUN();
             $scope.transition = false;
-        }, $scope.fristRouteTick ? 0 : ($scope.routesTick * 1000));
-
+        }, ($scope.routesTick * 1000));
+    };
+    LIFETICK = function ($scope) {
+        if (!$scope.pause && !$scope.block) {
+            for (var i in $scope.NPCS) {
+                var NPC = $scope.NPCS[i];
+                if (NPC.event.visible) {
+                    NPC.body.visible = eval(NPC.event.visible);
+                    NPC.shadow.visible = eval(NPC.event.visible);
+                }
+                if (NPC.event.route.length > 0) {
+                    var route = NPC.event.route[$scope.indexTick % NPC.event.route.length];
+                    $scope.runScript(route);
+                }
+            }
+            for (var i in $scope.OBJECTS) {
+                var NPC = $scope.OBJECTS[i];
+                if (NPC.event.visible)
+                    NPC.body.visible = eval(NPC.event.visible);
+                if (NPC.event.route.length > 0) {
+                    var route = NPC.event.route[$scope.indexTick % NPC.event.route.length];
+                    $scope.runScript(route);
+                }
+            }
+            if (!ASSAULTING) {
+                for (var i in TRAINERS) {
+                    if (TRAINERS[i]) {
+                        if (TRAINERS[i].event.trigger === E_trigger.entrenador) {
+                            var DIR = randomArray(["UP", "DOWN", "LEFT", "RIGHT"]);
+                            var ACT = randomArray(["MOVE_", "", "", ""]);
+                            eval(`eval(ACTIONS.NPC.${ACT}${DIR}("${TRAINERS[i].name}"));`);
+                        }
+                    }
+                }
+            }
+            for (var i in ANDANTES) {
+                if (ANDANTES[i]) {
+                    var DIR = randomArray(["UP", "DOWN", "LEFT", "RIGHT"]);
+                    var ACT = randomArray(["MOVE_", "", "", ""]);
+                    eval(`eval(ACTIONS.NPC.${ACT}${DIR}("${ANDANTES[i].name}"));`);
+                }
+            }
+        }
     };
     $scope.drawObject = function (hero, name, x, y, L) {
         x = x || hero.x;
@@ -813,6 +837,7 @@ function playfunctions($scope) {
     $scope.existSound = function (url) {
         return $scope.loadedSounds.indexOf(url) !== -1;
     };
+    $scope.playing = [];
     $scope.play = function (id, config) {
         if ($scope.sounds[id])
             createjs.Sound.play($scope.sounds[id], config);
@@ -1066,10 +1091,72 @@ function playfunctions($scope) {
             $scope.mapperIcon = `margin-left:${POKEMONBATTLE.X(0)};margin-top:${POKEMONBATTLE.Y(0)};top: ${positens[1]}px;left: ${positens[0]}px;`;
         }
     };
-    $scope.TRAINERS = [];
+    TRAINERS = [];
+    ANDANTES = [];
+    INSISTENCIA = {};
+    $scope.setLife = function () {
+        TRAINERS = [];
+        ANDANTES = [];
+        INSISTENCIA = {};
+        for (var i in $scope.NPCS)
+            if ($scope.NPCS[i].event.trigger === E_trigger.entrenador || $scope.NPCS[i].event.trigger === E_trigger.entrenadortranquilo) {
+                TRAINERS[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
+                eval(`
+                $scope.NPCS['${i}'].body.on("click", function (evt) {
+                    if (!ACTIONS.GAME.NEAR($scope.hero, $scope.NPCS['${i}']))
+                        return;
+                        
+                    if (ACTIONS.PROGRESS.GETNATURAL("trainer" + '${i}')) {
+                        ACTIONS.NPC.LOOK(ACTIONS.NPC.GET('${i}'), ACTIONS.PLAYER.GET());
+                        ACTIONS.PLAYER.LOOK(ACTIONS.NPC.GET('${i}'));
+                        ACTIONS.MESSAGE.CHOICE('${i}', 'Quieres volver a pelear conmigo?', [
+                        {text: "Si",
+                        click: function () { 
+                        ACTIONS.SOUND.STOPALL();
+                        ACTIONS.SOUND.system("look");
+                        ACTIONS.POKEMON.BATTLESTART('${i}','revenge');
+                        }
+                        },
+                        {text: "No",click: function () { ACTIONS.GAME.RESUME(); }}
+                        ]);
+                    }
+                });
+                `);
+            }
+
+        for (var i in $scope.NPCS)
+            if ($scope.NPCS[i].event.trigger === E_trigger.andante || $scope.NPCS[i].event.trigger === E_trigger.andantetranquilo) {
+                ANDANTES[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
+                eval(`
+                $scope.NPCS['${i}'].body.on("click", function (evt) {
+
+                    if (!ACTIONS.GAME.NEAR($scope.hero, $scope.NPCS['${i}']))
+                        return;
+                    var texts = $scope.personalities[players['${i}'].personality];
+
+                    if (INSISTENCIA['${i}'])
+                        INSISTENCIA['${i}']++;
+                    else
+                        INSISTENCIA['${i}'] = 1;
+                    var insistencia = INSISTENCIA['${i}'] > 3 ? "jarto" : "textos" + INSISTENCIA['${i}'];
+                    var textFinal = randomArray(texts[insistencia]);
+                    
+                    ACTIONS.NPC.LOOK(ACTIONS.NPC.GET('${i}'), ACTIONS.PLAYER.GET());
+                    ACTIONS.PLAYER.LOOK(ACTIONS.NPC.GET('${i}'));
+                    
+                    ACTIONS.MESSAGE.CHOICE('${i}', $scope.personCheck(textFinal), [{
+                        text: 'Ok', click: function () {
+                            ACTIONS.MESSAGE.HIDE();
+                        }
+                    }]);
+                });
+                `);
+            }
+    };
     $scope.init = async function () {
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
+        PERSONALITY = await PERSONALITY_.ALL();
         var position = await GAME.PLAYERPOSITION();
         $scope.gposition = position;
         FIRSTMAP = position.map;
@@ -1205,6 +1292,12 @@ function playfunctions($scope) {
         APIS.TYPES = await POKEMONAPI.TYPES();
         APIS.LEARNS = await POKEMONAPI.LEARNS();
         APIS.POKEDEX = await POKEMONAPI.ALL();
+
+        $scope.personalities = {};
+        for (var personaity of PERSONALITY) {
+            $scope.personalities[personaity.name] = personaity[personaity.name];
+        }
+
         for (var termino in $scope.personalities) {
             for (var category in $scope.personalities[termino]) {
                 for (var text in $scope.personalities[termino][category]) {
@@ -1221,9 +1314,8 @@ function playfunctions($scope) {
         if (maps[FIRSTMAP].enviroment === "cave") {
             $scope.ambient = "darkcave";
         }
-        $scope.TRAINERS = $scope.NPCS.filter(d => {
-            return d.event.trigger === E_trigger.entrenador
-        });
+
+        $scope.setLife();
         if (!$scope.$$phase)
             $scope.$digest();
         LASTMOVEMENT = undefined;

@@ -1,0 +1,75 @@
+{
+  "name": "Modesto",
+  "Modesto": {
+    "intro": [
+      "Vamos a combatir normal?",
+      "Que sea lo que sea",
+      "Hola $amigo, vamos a combatir",
+      "Hola $amigo, ven",
+      "Cualquiera puede ganar"
+    ],
+    "perdiendo": [
+      "Es normal cualquiera pierde o gana",
+      "Muy bien?",
+      "$pokemon tu puedes!",
+      "Eso $pokemon?",
+      "$pokemon luchaste normal"
+    ],
+    "perdiendomal": [
+      "Es normal que ganes $amigo",
+      "Alguien debe perder aunque sea yo",
+      "$pokemon, prueba $move a ver",
+      "normal $amigo!",
+      "Es normal!"
+    ],
+    "ganando": [
+      "No es que haya hecho nada extraordinario!",
+      "Mi $pokemon es normal, también puede perder",
+      "Un día se gana y otro se pierde",
+      "No hay que preocuparse mucho",
+      "Muy bien!"
+    ],
+    "ganandofacil": [
+      "No es nada del otro mundo",
+      "Seguro me ganas después",
+      "Piensa un poco más",
+      "$amigo, todos podemos mejorar",
+      "Puedes entrenar eso es normal"
+    ],
+    "alganar": [
+      "Fue una batalla normal $amigo",
+      "Fue bien",
+      "Todo muy bien en ambos",
+      "Un día se gana y otro se pierde",
+      "La próxima será normal también"
+    ],
+    "alperder": [
+      "Todo puede pasar",
+      "Muy bien $amigo",
+      "Esto pasa siempre, un día se gana y otro se pierde",
+      "Pudo haber ganado cualquiera",
+      "Todo fluye"
+    ],
+    "textos1": [
+      "Hola $amigo, espero que todo normal",
+      "Nada en especial por aquí",
+      "En vista normal",
+      "Soy una persona comun y corriente",
+      "Todos somos iguales"
+    ],
+    "textos2": [
+      "En realidad es normal que hablemos",
+      "Espero que te sea útil hablar",
+      "Veo que todo va normal contigo",
+      "Yo en realidad soy bastante normal en eso de los Pokemones, nada especial"
+    ],
+    "textos3": [
+      "Espero que todo vaya normal"
+    ],
+    "jarto": [
+      "De todo lo que creo que es normal, estoy empezando a cambiar de opinión",
+      "No es para tanto",
+      "Todo va normal"
+    ]
+  }
+}
