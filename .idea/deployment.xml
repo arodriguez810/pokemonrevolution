@@ -10,6 +10,7 @@
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/android" />
             <excludedPath local="true" path="$PROJECT_DIR$/tools" />
+            <excludedPath local="true" path="$PROJECT_DIR$/electron" />
           </excludedPaths>
         </serverdata>
       </paths>

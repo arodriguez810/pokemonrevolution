@@ -16347,7 +16347,7 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
+    "evos": [
       "kyogreprimal"
     ],
     "tier": "Illegal",
@@ -16410,7 +16410,7 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
+    "evos": [
       "groudonprimal"
     ],
     "tier": "Illegal",
@@ -17923,7 +17923,8 @@
     "weightkg": 3.3,
     "color": "Pink",
     "evos": [
-      "cherrim"
+      "cherrim",
+      "cherrimsunshine"
     ],
     "eggGroups": [
       "Fairy",
@@ -20128,7 +20129,7 @@
     "eggGroups": [
       "Amorphous"
     ],
-    "otherFormes": [
+    "evos": [
       "rotomheat",
       "rotomwash",
       "rotomfrost",
@@ -26826,7 +26827,7 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
+    "evos": [
       "kyuremblack",
       "kyuremwhite"
     ],
@@ -27784,7 +27785,9 @@
     "prevo": "scatterbug",
     "evoLevel": 9,
     "evos": [
-      "vivillon"
+      "vivillon",
+      "vivillonfancy",
+      "vivillonpokeball"
     ],
     "eggGroups": [
       "Bug"
@@ -29986,8 +29989,7 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
-      "zygarde10",
+    "evos": [
       "zygardecomplete"
     ],
     "tier": "Illegal",
@@ -30022,6 +30024,9 @@
     "color": "Green",
     "eggGroups": [
       "Undiscovered"
+    ],
+    "evos": [
+      "zygarde"
     ],
     "inheritsFrom": "zygarde",
     "tier": "Illegal",
@@ -31327,7 +31332,7 @@
     "eggGroups": [
       "Water 2"
     ],
-    "otherFormes": [
+    "evos": [
       "wishiwashischool"
     ],
     "tier": "PU",
@@ -33933,10 +33938,9 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
+    "evos": [
       "necrozmaduskmane",
-      "necrozmadawnwings",
-      "necrozmaultra"
+      "necrozmadawnwings"
     ],
     "tier": "UU",
     "keyname": "necrozma",
@@ -33969,6 +33973,9 @@
     "eggGroups": [
       "Undiscovered"
     ],
+    "evos": [
+      "necrozmaultra"
+    ],
     "inheritsFrom": "necrozma",
     "tier": "Uber",
     "keyname": "necrozmaduskmane",
@@ -34000,6 +34007,9 @@
     "color": "Blue",
     "eggGroups": [
       "Undiscovered"
+    ],
+    "evos": [
+      "necrozmaultra"
     ],
     "inheritsFrom": "necrozma",
     "tier": "Uber",
@@ -34307,6 +34317,9 @@
     "abilities": {
       "0": "Magnet Pull"
     },
+    "evos": [
+      "melmetal"
+    ],
     "heightm": 0.2,
     "weightkg": 8,
     "color": "Gray",
@@ -37817,7 +37830,7 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
+    "evos": [
       "zaciancrowned"
     ],
     "tier": "Uber",
@@ -37881,7 +37894,7 @@
     "eggGroups": [
       "Undiscovered"
     ],
-    "otherFormes": [
+    "evos": [
       "zamazentacrowned"
     ],
     "tier": "Uber",
@@ -37940,6 +37953,9 @@
     "abilities": {
       "0": "Pressure"
     },
+    "evos": [
+      "eternatuseternamax"
+    ],
     "heightm": 20,
     "weightkg": 950,
     "color": "Purple",

@@ -1,0 +1,18 @@
+{
+  "id": "pain",
+  "name": "pain",
+  "email": "",
+  "pin": "123",
+  "avatar": 1,
+  "tier": "Omega",
+  "logros": [],
+  "canJump": false,
+  "canDive": false,
+  "canFly": false,
+  "pokemons": [],
+  "bobeda": [],
+  "items": [],
+  "friends": [],
+  "progress": [
+  ]
+}

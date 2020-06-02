@@ -160,7 +160,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         autoRefresh: true
     };
     $scope.E_movement = ["fixed", "random", "fallow"];
-    $scope.E_trigger = ["click", "near", "auto", "collision", "entrenador", "andante"];
+    $scope.E_trigger = ["click", "auto", "collision", "near", "neartranquilo", "entrenador", "entrenadortranquilo", "andante", "andantetranquilo"];
     $scope.E_emviroment = ["outside", "inside", "cave"];
     $scope.selectorImage = "../resources/selectors/red.png";
     $scope.selectorImageBlue = "../resources/selectors/bluep.png?v=1";
@@ -516,7 +516,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         setTimeout(() => {
 
         }, 1000);
-        setTimeout(function () {
+        setTimeout(()=> {
 
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
@@ -2273,7 +2273,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.drawBattle();
         $scope.drawEvents();
         $("[loading='map']").hide(200);
-        setTimeout(function () {
+        setTimeout(()=> {
 
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
@@ -2390,7 +2390,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
     $scope.$watch('form.data.width', function (newValue, oldValue, scope) {
         if ($('#map_form').is(":visible"))
             if (typeof WORLD !== "undefined") {
-                setTimeout(function () {
+                setTimeout(()=> {
                     for (var l = 0; l < $scope.layers.length; l++) {
                         eval(`W_${$scope.layers[l]}A.update()`);
                     }
@@ -2401,7 +2401,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
     $scope.$watch('form.data.height', function (newValue, oldValue, scope) {
         if ($('#map_form').is(":visible"))
             if (typeof WORLD !== "undefined") {
-                setTimeout(function () {
+                setTimeout(()=> {
                     for (var l = 0; l < $scope.layers.length; l++) {
                         eval(`W_${$scope.layers[l]}A.update()`);
                     }

@@ -13,12 +13,6 @@
 <!-- Slimscroll Plugin Js -->
 <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 
-<!-- Waves Effect Plugin Js -->
-<script src="plugins/node-waves/waves.js"></script>
-
-<!-- Jquery CountTo Plugin Js -->
-<script src="plugins/jquery-countto/jquery.countTo.js"></script>
-
 
 
 

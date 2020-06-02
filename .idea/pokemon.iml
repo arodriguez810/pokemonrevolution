@@ -6,6 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/app/dionell" />
       <excludeFolder url="file://$MODULE_DIR$/app/game/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/app/giftosprite" />
+      <excludeFolder url="file://$MODULE_DIR$/electron" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

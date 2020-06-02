@@ -133,7 +133,7 @@ function showAjaxLoaderMessage() {
         closeOnConfirm: false,
         showLoaderOnConfirm: true,
     }, function () {
-        setTimeout(function () {
+        setTimeout(()=> {
             swal("Ajax request finished!");
         }, 2000);
     });

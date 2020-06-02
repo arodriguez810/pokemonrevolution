@@ -100,7 +100,7 @@
     "blocks": [
       "switch_friend"
     ],
-    "code": "for (var mov of $scope.PKM.target().moves) \n\tif (mov.category !== \"Status\") \n\t\tif (POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mov.type, true) > 3) {\n\t\t\tswal(\"Anticipación: Me debilita con \" + mov.name);\n\t\t\tbreak;\n\t\t}",
+    "code": "for (var mov of $scope.PKM.target().moves) \n\tif (mov.category !== \"Status\") \n\t\tif ($scope.POKEMONBATTLE.CALCS.MULTIPLIER($scope.PKM.friend().types, mov.type, true) > 3) {\n\t\t\tswal(\"Anticipación: Me debilita con \" + mov.name);\n\t\t\tbreak;\n\t\t}",
     "keyname": "anticipation"
   },
   {
@@ -126,7 +126,7 @@
     "blocks": [
       "target_begin"
     ],
-    "code": "if ([\"attract\", \"disable\", \"encore\", \"healblock\", \"taunt\", \"torment\"].indexOf(info.move.keyname) !== -1) {\n            if (callback)\n                callback({critical: false, miss: true, damage: 0});\n             willreturn='empty'; \n        }",
+    "code": "if ([\"attract\", \"disable\", \"encore\", \"healblock\", \"taunt\", \"torment\"].indexOf(info.move.keyname) !== -1) {\n            if (callback)\n                callback({critical: false, miss: true, damage: 0});\n              $scope.willreturn='empty'; \n        }",
     "keyname": "aromaveil"
   },
   {
@@ -306,7 +306,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
+    "code": "$scope.POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "clearbody"
   },
   {
@@ -622,7 +622,7 @@
     "blocks": [
       "target_calcstats"
     ],
-    "code": " if ($scope.BATTLEOBJS.clima === \"RainDance\")\n                $scope.PKM.stat(info.pokemonTarget, \"hp\", ($scope.PKM.basehp(info.pokemonTarget) * (1 / 8)) * -1);\n            if (info.move.type === \"Water\") {\n                ACTIONS.ANIMATION.PLAYNATURAL(\"Heal\",\n                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        $scope.PKM.stat(info.pokemonTarget, \"hp\", ($scope.PKM.basehp(info.pokemonTarget) * (1 / 4)) * -1);\n                    }, undefined, undefined, undefined, undefined, undefined);\n                willreturn -1;\n            }\n            if (info.move.type === \"Fire\") {\n                fata *= 1.25;\n                ACTIONS.ANIMATION.PLAYNATURAL(\"critico\",\n                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                    }, undefined, undefined, undefined, undefined, undefined);\n            }",
+    "code": " if ($scope.BATTLEOBJS.clima === \"RainDance\")\n                $scope.PKM.stat(info.pokemonTarget, \"hp\", ($scope.PKM.basehp(info.pokemonTarget) * (1 / 8)) * -1);\n            if (info.move.type === \"Water\") {\n                $scope.ACTIONS.ANIMATION.PLAYNATURAL(\"Heal\",\n                    $scope.POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    $scope.POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        $scope.PKM.stat(info.pokemonTarget, \"hp\", ($scope.PKM.basehp(info.pokemonTarget) * (1 / 4)) * -1);\n                    }, undefined, undefined, undefined, undefined, undefined);\n                 $scope.willreturn -1;\n            }\n            if (info.move.type === \"Fire\") {\n                fata *= 1.25;\n                $scope.ACTIONS.ANIMATION.PLAYNATURAL(\"critico\",\n                    $scope.POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    $scope.POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                    }, undefined, undefined, undefined, undefined, undefined);\n            }",
     "keyname": "dryskin"
   },
   {
@@ -672,7 +672,7 @@
     "blocks": [
       "target_downhp"
     ],
-    "code": "if ($scope.PKM.hp(info.pokemonTarget) <= 50) {\n            var lives = [];\n            if (info.isEnemy)\n                for (var pok in $scope.session.pokemons) {\n                    if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)\n                        if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)\n                            lives.push(pok);\n                }\n\n            if (lives.length > 0) {\n\n                $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);\n                $scope.BATTLEOBJS.FRIEND = POKEMONBATTLE.FRIEND($scope);\n                \n\n                ACTIONS.ANIMATION.PLAYNATURAL(\"Hide\",\n                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        if (!info.isEnemy) {\n                            ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);\n                            ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl, SOUNDS.system);\n                        } else {\n                            ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);\n                            ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl, SOUNDS.system);\n                        }\n                    }, undefined, undefined, undefined, undefined, undefined);\n\n            }\n        }",
+    "code": "if ($scope.PKM.hp(info.pokemonTarget) <= 50) {\n            var lives = [];\n            if (info.isEnemy)\n                for (var pok in $scope.session.pokemons) {\n                    if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)\n                        if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)\n                            lives.push(pok);\n                }\n\n            if (lives.length > 0) {\n\n                $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);\n                $scope.BATTLEOBJS.FRIEND = $scope.POKEMONBATTLE.FRIEND($scope);\n                \n\n                $scope.ACTIONS.ANIMATION.PLAYNATURAL(\"Hide\",\n                    $scope.POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    $scope.POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        if (!info.isEnemy) {\n                            $scope.ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);\n                            $scope.ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl,  $scope.SOUNDS.system);\n                        } else {\n                            $scope.ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);\n                            $scope.ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl,  $scope.SOUNDS.system);\n                        }\n                    }, undefined, undefined, undefined, undefined, undefined);\n\n            }\n        }",
     "keyname": "emergencyexit"
   },
   {
@@ -771,7 +771,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "for (var stat of STATGLOBAL)  if (info.pokemonFriend.battle.stats[stat] > 0)  info.pokemonFriend.battle.stats[stat] = 0;",
+    "code": "for (var stat of $scope.STATGLOBAL)  if (info.pokemonFriend.battle.stats[stat] > 0)  info.pokemonFriend.battle.stats[stat] = 0;",
     "keyname": "flowerveil"
   },
   {
@@ -848,7 +848,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
+    "code": "$scope.POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "fullmetalbody"
   },
   {
@@ -1203,7 +1203,7 @@
     "blocks": [
       "switch"
     ],
-    "code": "setTimeout(function(){\nif(yosoy===\"friend\")\nPOKEMONBATTLE.CALCS.TRANSFORMDIRECT($scope,$scope.BATTLEOBJS.FRIEND,$scope.PKM.friend(),false);\nif(yosoy===\"target\")\nPOKEMONBATTLE.CALCS.TRANSFORMDIRECT($scope,$scope.BATTLEOBJS.TARGET,$scope.PKM.target(),true);\t\t\n},3000);",
+    "code": "setTimeout(function(){\nif(yosoy===\"friend\")\n$scope.POKEMONBATTLE.CALCS.TRANSFORMDIRECT($scope,$scope.BATTLEOBJS.FRIEND,$scope.PKM.friend(),false);\nif(yosoy===\"target\")\n$scope.POKEMONBATTLE.CALCS.TRANSFORMDIRECT($scope,$scope.BATTLEOBJS.TARGET,$scope.PKM.target(),true);\t\t\n},3000);",
     "keyname": "imposter"
   },
   {
@@ -1345,7 +1345,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
+    "code": "$scope.POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "klutz"
   },
   {
@@ -1476,7 +1476,7 @@
     "blocks": [
       "target_begin"
     ],
-    "code": "if(info.move.category===\"Status\") { if (callback)  callback({critical: false, miss: true, damage: 0});  willreturn='empty'; }",
+    "code": "if(info.move.category===\"Status\") { if (callback)  callback({critical: false, miss: true, damage: 0});   $scope.willreturn='empty'; }",
     "keyname": "magicbounce"
   },
   {
@@ -1489,7 +1489,7 @@
     "blocks": [
       "target_begin"
     ],
-    "code": "if(info.move.category===\"Status\") { if (callback)  callback({critical: false, miss: true, damage: 0});  willreturn='empty'; }",
+    "code": "if(info.move.category===\"Status\") { if (callback)  callback({critical: false, miss: true, damage: 0});   $scope.willreturn='empty'; }",
     "keyname": "magicguard"
   },
   {
@@ -1607,7 +1607,7 @@
     "blocks": [
       "begin"
     ],
-    "code": " for (var stat of STATGLOBAL)\n            if (info.pokemonFriend.battle.stats[stat] > 0)\n                info.pokemonTarget.battle.stats[stat] = info.pokemonFriend.battle.stats[stat];",
+    "code": " for (var stat of $scope.STATGLOBAL)\n            if (info.pokemonFriend.battle.stats[stat] > 0)\n                info.pokemonTarget.battle.stats[stat] = info.pokemonFriend.battle.stats[stat];",
     "keyname": "mirrorarmor"
   },
   {
@@ -1696,7 +1696,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "for (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat(info.pokemonFriend,stat,-4);",
+    "code": "for (var stat of $scope.STATGLOBAL) if(stat.length<4) $scope.PKM.stat(info.pokemonFriend,stat,-4);",
     "keyname": "multitype"
   },
   {
@@ -1721,7 +1721,7 @@
     "blocks": [
       "switch"
     ],
-    "code": "if(yosoy===\"friend\")\n\tPOKEMONBATTLE.CLEARBADSTATS($scope.PKM.friend());\nif(yosoy===\"target\")\n\tPOKEMONBATTLE.CLEARBADSTATS($scope.PKM.target());",
+    "code": "if(yosoy===\"friend\")\n\t$scope.POKEMONBATTLE.CLEARBADSTATS($scope.PKM.friend());\nif(yosoy===\"target\")\n\t $scope.POKEMONBATTLE.CLEARBADSTATS($scope.PKM.target());",
     "keyname": "naturalcure"
   },
   {
@@ -1880,7 +1880,7 @@
     "blocks": [
       "target_finaldamage"
     ],
-    "code": "if(info.move.flags)\n\tif(info.move.flags.concat) \t\n\t{\n\t\tfor (var stat of STATGLOBAL){\n\t\t\tinfo.pokemonTarget.battle.stats[stat] = OSO(info.pokemonFriend.battle.stats[stat]);\n\t\t\tinfo.pokemonFriend.battle.stats[stat] = 0;\n\t\t}\n\t}",
+    "code": "if(info.move.flags)\n\tif(info.move.flags.concat) \t\n\t{\n\t\tfor (var stat of $scope.STATGLOBAL){\n\t\t\tinfo.pokemonTarget.battle.stats[stat] = OSO(info.pokemonFriend.battle.stats[stat]);\n\t\t\tinfo.pokemonFriend.battle.stats[stat] = 0;\n\t\t}\n\t}",
     "keyname": "pickpocket"
   },
   {
@@ -2262,7 +2262,7 @@
     "blocks": [
       "switch"
     ],
-    "code": "if(yosoy===\"friend\")\t\n\tfor (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat($scope.PKM.friend(),stat,-2);\nif(yosoy===\"target\")\n\tfor (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat($scope.PKM.target(),stat,-2);",
+    "code": "if(yosoy===\"friend\")\t\n\tfor (var stat of $scope.STATGLOBAL) if(stat.length<4) $scope.PKM.stat($scope.PKM.friend(),stat,-2);\nif(yosoy===\"target\")\n\tfor (var stat of  $scope.STATGLOBAL) if(stat.length<4) $scope.PKM.stat($scope.PKM.target(),stat,-2);",
     "keyname": "rkssystem"
   },
   {
@@ -2394,7 +2394,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "if($scope.PKM.hp(info.pokemonFriend)<=25)\nfor (var stat of STATGLOBAL) if(stat.length<4) $scope.PKM.stat(info.pokemonFriend,stat,-4);",
+    "code": "if($scope.PKM.hp(info.pokemonFriend)<=25)\nfor (var stat of  $scope.STATGLOBAL) if(stat.length<4) $scope.PKM.stat(info.pokemonFriend,stat,-4);",
     "keyname": "schooling"
   },
   {
@@ -2752,7 +2752,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
+    "code": " $scope.POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "stancechange"
   },
   {
@@ -2840,7 +2840,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
+    "code": " $scope.POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "stickyhold"
   },
   {
@@ -2881,7 +2881,7 @@
     "blocks": [
       "target_begin"
     ],
-    "code": "if(info.move.ohko) { if (callback) callback({critical: false, miss: true, damage: 0});  willreturn='empty';  }",
+    "code": "if(info.move.ohko) { if (callback) callback({critical: false, miss: true, damage: 0});   $scope.willreturn='empty';  }",
     "keyname": "sturdy"
   },
   {
@@ -2971,7 +2971,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "for (var stat of STATGLOBAL)\n\tif (info.pokemonTarget.battle.stats[stat] < 0)\n\t\tinfo.pokemonFriend.battle.stats[stat] = info.pokemonTarget.battle.stats[stat];",
+    "code": "for (var stat of  $scope.STATGLOBAL)\n\tif (info.pokemonTarget.battle.stats[stat] < 0)\n\t\tinfo.pokemonFriend.battle.stats[stat] = info.pokemonTarget.battle.stats[stat];",
     "keyname": "symbiosis"
   },
   {
@@ -3179,7 +3179,7 @@
     "blocks": [
       "calcstats"
     ],
-    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonTarget);",
+    "code": " $scope.POKEMONBATTLE.CLEARSTATS(info.pokemonTarget);",
     "keyname": "unaware"
   },
   {
@@ -3193,7 +3193,7 @@
     "blocks": [
       "target_calcstats"
     ],
-    "code": "POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
+    "code": " $scope.POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "unburden"
   },
   {
@@ -3333,7 +3333,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
+    "code": " $scope.POKEMONBATTLE.CLEARBADSTATS(info.pokemonFriend);",
     "keyname": "whitesmoke"
   },
   {
@@ -3346,7 +3346,7 @@
     "blocks": [
       "target_downhp"
     ],
-    "code": " if ($scope.PKM.hp(info.pokemonTarget) <= 50) {\n            var lives = [];\n            if (info.isEnemy)\n                for (var pok in $scope.session.pokemons) {\n                    if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)\n                        if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)\n                            lives.push(pok);\n                }\n\n            if (lives.length > 0) {\n\n                $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);\n                $scope.BATTLEOBJS.FRIEND = POKEMONBATTLE.FRIEND($scope);\n                \n\n                ACTIONS.ANIMATION.PLAYNATURAL(\"Hide\",\n                    POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                    POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        if (!info.isEnemy) {\n                            ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);\n                            ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl, SOUNDS.system);\n                        } else {\n                            ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);\n                            ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl, SOUNDS.system);\n                        }\n                    }, undefined, undefined, undefined, undefined, undefined);\n\n            }\n        }",
+    "code": " if ($scope.PKM.hp(info.pokemonTarget) <= 50) {\n            var lives = [];\n            if (info.isEnemy)\n                for (var pok in $scope.session.pokemons) {\n                    if (pok !== $scope.BATTLEOBJS.FRIENDINDEX)\n                        if ($scope.PKM.hp($scope.session.pokemons[pok]) > 0)\n                            lives.push(pok);\n                }\n\n            if (lives.length > 0) {\n\n                $scope.BATTLEOBJS.FRIENDINDEX = randomArray(lives);\n                $scope.BATTLEOBJS.FRIEND =  $scope.POKEMONBATTLE.FRIEND($scope);\n                \n\n                $scope.ACTIONS.ANIMATION.PLAYNATURAL(\"Hide\",\n                     $scope.POKEMONBATTLE.XS(info.target.body.x + (info.target.body.width / 2)),\n                     $scope.POKEMONBATTLE.YS(info.target.body.y + (info.target.body.height / 2)),\n                    function () {\n                        if (!info.isEnemy) {\n                            $scope.ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.TARGET.body, 0.3, 1);\n                            $scope.ACTIONS.SOUND.PLAY($scope.PKM.target().cryUrl,  $scope.SOUNDS.system);\n                        } else {\n                            $scope.ACTIONS.GAME.ALPHABASE($scope.BATTLEOBJS.FRIEND.body, 0.3, 1);\n                            $scope.ACTIONS.SOUND.PLAY($scope.PKM.friend().cryUrl,  $scope.SOUNDS.system);\n                        }\n                    }, undefined, undefined, undefined, undefined, undefined);\n\n            }\n        }",
     "keyname": "wimpout"
   },
   {
@@ -3418,7 +3418,7 @@
     "blocks": [
       "begin"
     ],
-    "code": "if ($scope.BATTLEOBJS.numTurn % 2 === 0) POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
+    "code": "if ($scope.BATTLEOBJS.numTurn % 2 === 0)  $scope.POKEMONBATTLE.CLEARSTATS(info.pokemonFriend);",
     "keyname": "rebound"
   },
   {

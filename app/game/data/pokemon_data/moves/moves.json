@@ -3350,7 +3350,7 @@
   },
   {
     "num": 464,
-    "accuracy": 50,
+    "accuracy": 40,
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target to fall asleep. This move cannot be used successfully unless the user's current form, while considering Transform, is Darkrai.",
@@ -7370,7 +7370,7 @@
   },
   {
     "num": 320,
-    "accuracy": 55,
+    "accuracy": 40,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -8706,7 +8706,7 @@
   },
   {
     "num": 95,
-    "accuracy": 60,
+    "accuracy": 45,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -9934,7 +9934,7 @@
   },
   {
     "num": 142,
-    "accuracy": 75,
+    "accuracy": 55,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -14334,7 +14334,7 @@
   {
     "num": 547,
     "accuracy": 100,
-    "basePower": 75,
+    "basePower": 55,
     "category": "Special",
     "desc": "Has a 10% chance to cause the target to fall asleep. If this move is successful on at least one target and the user is a Meloetta, it changes to Pirouette Forme if it is currently in Aria Forme, or changes to Aria Forme if it is currently in Pirouette Forme. This forme change does not happen if the Meloetta has the Sheer Force Ability. The Pirouette Forme reverts to Aria Forme when Meloetta is not active.",
     "shortDesc": "10% chance to sleep foe(s). Meloetta transforms.",
@@ -14406,7 +14406,7 @@
   {
     "num": 216,
     "accuracy": 100,
-    "basePower": 102,
+    "basePower": 70,
     "category": "Physical",
     "desc": "Power is equal to the greater of (user's Happiness * 2\/5), rounded down, or 1.",
     "shortDesc": "Max power",
@@ -15873,7 +15873,7 @@
   },
   {
     "num": 47,
-    "accuracy": 55,
+    "accuracy": 35,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -16182,7 +16182,7 @@
   },
   {
     "num": 79,
-    "accuracy": 75,
+    "accuracy": 40,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -17121,7 +17121,7 @@
   },
   {
     "num": 147,
-    "accuracy": 50,
+    "accuracy": 40,
     "basePower": 0,
     "category": "Status",
     "shortDesc": "Causes the target to fall asleep.",
@@ -20226,7 +20226,7 @@
   },
   {
     "num": 281,
-    "accuracy": 70,
+    "accuracy": 50,
     "basePower": 0,
     "category": "Status",
     "desc": "Causes the target to fall asleep at the end of the next turn. Fails when used if the target cannot fall asleep or if it already has a major status condition. At the end of the next turn, if the target is still active, does not have a major status condition, and can fall asleep, it falls asleep. If the target becomes affected, this effect cannot be prevented by Safeguard or a substitute, or by falling asleep and waking up during the effect.",

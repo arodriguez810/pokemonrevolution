@@ -77,7 +77,7 @@
                         </div>
 
                         <div ng-repeat="(key, player) in listFilter() | filter:search"
-                             style="float: left;text-align: center;border: 2px teal solid;min-height: 300px">
+                             style="float: left;text-align: center;border: 2px teal solid;min-height: 400px;min-width: 400px">
                             <div style="text-transform: capitalize">
                                 <div style="position: relative">
                                     <label style="font-size: 24px; width: 100%" class="bg-green">{{player.name}}, Rank:
