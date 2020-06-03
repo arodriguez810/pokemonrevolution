@@ -580,7 +580,7 @@ function RUNBATTLE($scope, $timeout) {
                             giga = form;
                     }
                 }
-                var sound_pokepath = DOMAINRESOURCE + `resources/poekemon/audio/cries_anime/${POKEDEX_.cleanName(pokemon.baseSpecies || name)}.ogg`;
+                var sound_pokepath = `../resources/poekemon/audio/cries_anime/${POKEDEX_.cleanName(pokemon.baseSpecies || name)}.ogg`;
                 var sexo = getRandomInt(100) > 50 ? "male" : "female";
                 var shiny = getRandomInt(100) > 98;
                 var superShiny = false;
@@ -3543,7 +3543,7 @@ function RUNBATTLE($scope, $timeout) {
             $scope.POKEMONBATTLE.CALCS.Status(result, info, $scope, function (statusstop, animation) {
                 if (statusstop) {
 
-                    var time = 2100;
+                    var time = 1600;
                     if (animation) {
                         $scope.ACTIONS.ANIMATION.PLAYNATURAL("Generic_" + info.pokemonFriend.battle.statusType + "_" + info.pokemonFriend.battle.statusCondition,
                             $scope.POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
@@ -3551,7 +3551,6 @@ function RUNBATTLE($scope, $timeout) {
                             function () {
                                 $scope.POKEMONBATTLE.CALCS.RunStatus(result, $scope, info, animation);
                             }, undefined, undefined, undefined, undefined, undefined);
-                        time += 1000;
                     }
                     $timeout(() => {
                             if ($scope.PKM.hp(info.pokemonTarget) <= 0) {
@@ -3616,7 +3615,7 @@ function RUNBATTLE($scope, $timeout) {
                                         }
                                 }
 
-                                var time = 2000;
+                                var time = 1500;
                                 if (animation) {
                                     $scope.ACTIONS.ANIMATION.PLAYNATURAL("Generic_" + info.pokemonFriend.battle.statusType + "_" + info.pokemonFriend.battle.statusCondition,
                                         $scope.POKEMONBATTLE.XS(info.friend.body.x + (info.friend.body.width / 2)),
@@ -3624,7 +3623,6 @@ function RUNBATTLE($scope, $timeout) {
                                         function () {
                                             $scope.POKEMONBATTLE.CALCS.RunStatus(result, $scope, info, animation);
                                         }, undefined, undefined, undefined, undefined, undefined);
-                                    time += 1000;
                                 }
                                 if ([521, 369].indexOf(info.move.num) !== -1) {
                                     var lives = $scope.POKEMONBATTLE.LIVES($scope, info.teamTarget, info.targetIndex);

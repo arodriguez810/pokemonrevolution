@@ -149,6 +149,17 @@ MAP_ = {
 _colors = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey", "black"];
 _colorsReal = ["#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#9E9E9E", "#607D8B", "#000000"];
 
+$(document).on("keydown", function (e) {
+    if (e.ctrlKey)
+        PRESS.CTRL = true;
+    if (e.shiftKey)
+        PRESS.SHIFT = true;
+});
+$(document).on("keyup", function (e) {
+    PRESS.CTRL = false;
+    PRESS.SHIFT = false;
+});
+
 pokemon.controller('map', ['$scope', function ($scope) {
     //Draw tools
     createjs.Ticker.framerate = 3;
@@ -516,7 +527,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         setTimeout(() => {
 
         }, 1000);
-        setTimeout(()=> {
+        setTimeout(function () {
 
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
@@ -561,7 +572,10 @@ pokemon.controller('map', ['$scope', function ($scope) {
             }
             $scope.newEvent(x, y);
             return;
+        } else {
+            IKNOWTOSAVE = true;
         }
+
         if ($scope.hideLayers.indexOf($scope.selection.layer) === -1) {
 
             var e = $scope.getTile($scope.selection.layer, x, y);
@@ -2273,7 +2287,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
         $scope.drawBattle();
         $scope.drawEvents();
         $("[loading='map']").hide(200);
-        setTimeout(()=> {
+        setTimeout(function () {
 
             $('.form-control').each(function () {
                 $(this).parents('.form-line').addClass('focused');
@@ -2390,7 +2404,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
     $scope.$watch('form.data.width', function (newValue, oldValue, scope) {
         if ($('#map_form').is(":visible"))
             if (typeof WORLD !== "undefined") {
-                setTimeout(()=> {
+                setTimeout(function () {
                     for (var l = 0; l < $scope.layers.length; l++) {
                         eval(`W_${$scope.layers[l]}A.update()`);
                     }
@@ -2401,7 +2415,7 @@ pokemon.controller('map', ['$scope', function ($scope) {
     $scope.$watch('form.data.height', function (newValue, oldValue, scope) {
         if ($('#map_form').is(":visible"))
             if (typeof WORLD !== "undefined") {
-                setTimeout(()=> {
+                setTimeout(function () {
                     for (var l = 0; l < $scope.layers.length; l++) {
                         eval(`W_${$scope.layers[l]}A.update()`);
                     }

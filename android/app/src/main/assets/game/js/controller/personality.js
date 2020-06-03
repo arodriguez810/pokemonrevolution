@@ -89,7 +89,7 @@ pokemon.controller('personality', ['$scope', function ($scope) {
             closeOnConfirm: false,
             showLoaderOnConfirm: true,
         }, function () {
-            PERSONALITY_.DELETE(data.data.name).then(function () {
+             $scope.PERSONALITY_.DELETE(data.data.name).then(function () {
                 $scope.clear();
                 $scope.refresh().then(function () {
 
@@ -101,7 +101,7 @@ pokemon.controller('personality', ['$scope', function ($scope) {
         });
     };
     $scope.save = async function () {
-        await PERSONALITY_.SAVE($scope.form.name, $scope.form);
+        await  $scope.PERSONALITY_.SAVE($scope.form.name, $scope.form);
         $("[loading='personality']").show();
         $("[loading='personality']").hide(200);
         $scope.clear();
@@ -110,7 +110,7 @@ pokemon.controller('personality', ['$scope', function ($scope) {
     $scope.refresh = async function () {
         $("[loading='personality']").show();
         $scope.list = [];
-        $scope.list = await PERSONALITY_.ALL();
+        $scope.list = await  $scope.PERSONALITY_.ALL();
         console.log($scope.list);
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;

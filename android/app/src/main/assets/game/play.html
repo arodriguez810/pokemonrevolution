@@ -26,6 +26,10 @@
         }
     </script>
     <style>
+        .pulsing {
+            border: yellow 6px solid !important;
+        }
+
         .myicon {
             top: 0 !important;
             left: -5px;
@@ -184,14 +188,14 @@
     <!--MENU-->
     <div id="footer" class="{{menuOpen?'bg-black':'bg-blue-grey'}}"
          style="float: left;z-index: 9999;width: {{menuOpen?'100%':'75px'}};padding: 5px">
-        <button pkmkey="z" ng-if="menu && !menuOpen" type="button" ng-click="ACTIONS.GAME.MENUTOGGLE()"
+        <button ng-if="menu && !menuOpen" type="button" ng-click="ACTIONS.GAME.MENUTOGGLE()"
                 class="btn bg-green    menuButton">
-            <i class="material-icons myicon">home</i> {{showkey("Z")}}
+            <i class="material-icons myicon">home</i>
         </button>
 
-        <button pkmkey="m" ng-if="menu && !menuOpen" type="button" ng-click="PKM.maper=!PKM.maper"
+        <button ng-if="menu && !menuOpen" type="button" ng-click="PKM.maper=!PKM.maper"
                 class="btn bg-blue    menuButton">
-            <i class="material-icons myicon">map</i> {{showkey("M")}}
+            <i class="material-icons myicon">map</i>
         </button>
 
         <button ng-if="menu && !menuOpen && logro.script && logro.icon && $index%2===0"
@@ -204,18 +208,18 @@
     </div>
     <div id="gameMenu" ng-if="menuOpen">
         <div style="text-align: center">
-            <button pkmkey="z" type="button" ng-click="ACTIONS.GAME.MENUTOGGLE()"
+            <button type="button" ng-click="ACTIONS.GAME.MENUTOGGLE()"
                     class="btn btn-danger  ">
-                <i class="material-icons">cancel</i> {{showkey("Z")}}
+                <i class="material-icons">cancel</i>
 
             </button>
-            <button pkmkey="{{homemenu.button}}" ng-if="!menuMessage" type="button" ng-click="subMenu(homemenu.name)"
+            <button ng-if="!menuMessage" type="button" ng-click="subMenu(homemenu.name)"
                     ng-repeat="(key, homemenu) in interface"
                     style="margin: 10px 10px 10px 10px;    font-size: 24px;color: #fff0ff !important;"
                     class="btn bg-{{subMenuOpen===homemenu.name?homemenu.color+' ':'blue-grey'}}     ">
                 <i class="material-icons">{{homemenu.icon}}</i>
                 <label style="text-transform: capitalize"
-                       ng-if="subMenuOpen===homemenu.name">{{homemenu.text}}</label> ({{showkey(homemenu.button)}})
+                       ng-if="subMenuOpen===homemenu.name">{{homemenu.text}}</label>
             </button>
         </div>
 
@@ -226,8 +230,8 @@
                 <h3>{{menuMessage.term}}</h3>
                 <h4>{{menuMessage.name}}:</h4>
                 <p style="font-size: 18px">{{menuMessage.desc}}</p>
-                <button pkmkey="x" ng-click="ACTIONS.GAME.MENUMESSAGE_CLOSE()" type="button" class="btn btn-danger ">
-                    <i class="material-icons">keyboard_backspace</i> {{showkey("X")}}
+                <button ng-click="ACTIONS.GAME.MENUMESSAGE_CLOSE()" type="button" class="btn btn-danger ">
+                    <i class="material-icons">keyboard_backspace</i>
                 </button>
             </div>
         </div>
@@ -277,31 +281,31 @@
 
             </table>
 
-            <button pkmkey="q" type="button" ng-click="signOut()"
+            <button type="button" ng-click="signOut()"
                     style="margin: 10px 10px 10px 10px;font-size: 24px;"
                     class="btn bg-pink  btn-lg   ">
                 <i class="material-icons">reply</i>
-                {{::LAN.t("Logout")}} - {{showkey("q")}}
+                {{::LAN.t("Logout")}}
             </button>
 
-            <button pkmkey="a" type="button" onclick="location.href='face.html'"
+            <button type="button" onclick="location.href='face.html'"
                     style="margin: 10px 10px 10px 10px;font-size: 24px;"
                     class="btn bg-pink  btn-lg   ">
                 <i class="material-icons">face</i>
-                {{::LAN.t("Appearance")}} {{showkey("a")}}
+                {{::LAN.t("Appearance")}}
             </button>
 
-            <button pkmkey="e" ng-if="LAN.CODE==='_es'" style="margin: 10px 10px 10px 10px;font-size: 24px;"
+            <button ng-if="LAN.CODE==='_es'" style="margin: 10px 10px 10px 10px;font-size: 24px;"
                     ng-click="ACTIONS.GAME.CHANGELANGUAGE('')"
                     type="button"
                     class="btn bg-green btn-lg m-l-15  animated bounceInLeft in">
-                English {{showkey("e")}}
+                English
             </button>
-            <button pkmkey="e" ng-if="LAN.CODE!=='_es'" style="margin: 10px 10px 10px 10px;font-size: 24px;"
+            <button ng-if="LAN.CODE!=='_es'" style="margin: 10px 10px 10px 10px;font-size: 24px;"
                     ng-click="ACTIONS.GAME.CHANGELANGUAGE('es')"
                     type="button"
                     class="btn bg-amber btn-lg m-l-15  animated bounceInLeft in">
-                Español {{showkey("e")}}
+                Español
             </button>
 
 
@@ -323,7 +327,7 @@
                             <td colspan="2" style="text-transform: capitalize;text-align: left">
                                 <div style="list-style: none;text-align: left">
 
-                                    <btn
+                                    <button
                                             style="float: left;min-width: 50%;text-align: left"
                                             class="btn btn-default">
                                         {{selectedPokemonClick().name}}
@@ -332,17 +336,18 @@
                                              ng-repeat="(tkey, type) in selectedPokemonClick().types"
                                              ng-src="{{::DOMAINRESOURCE}}resources/poekemon/types/{{type}}.png">
                                         <img ng-src="../resources/icons/{{selectedPokemonClick().gender}}.png">
-                                    </btn>
+                                    </button>
 
-                                    <btn
+                                    <button
                                             ng-click="desc(LAN.t('Ability'),LAN.t(selectedPokemonClick().ability.name),LAN.t(selectedPokemonClick().ability.shortDesc))"
                                             style="float: left;min-width: 50%;text-align: left"
                                             class="btn btn-default">
+
                                         {{LAN.t(selectedPokemonClick().ability.name)}}
                                         ({{selectedPokemonClick().ability.rating}})
                                         <img style="visibility: hidden"
                                              ng-src="../resources/icons/{{selectedPokemonClick().gender}}.png">
-                                    </btn>
+                                    </button>
                                     <div class="pokemonLife friendLife" style="width: 100%;border-width: 3px">
                                         <div class="{{PKM.hpcolor(PKM.hp(selectedPokemonClick()))}}"
                                              style="width: {{PKM.hp(selectedPokemonClick())}}%">
@@ -353,17 +358,17 @@
                                 </div>
                             </td>
                             <td>
-                                <button pkmkey="k" ng-if="session.pokemons.length>1"
+                                <button ng-if="session.pokemons.length>1"
                                         ng-click="deletePokemon(selectedPokemonClick(),selectedPokemon)" type="button"
                                         class="btn bg-red ">
-                                    <i class="material-icons">delete</i> {{showkey("K")}}
+                                    <i class="material-icons">delete</i>
                                 </button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2">
                                 <div>
-                                    <btn
+                                    <button
                                             ng-repeat="(mkey,move) in  selectedPokemonClick().moves"
                                             ng-click="desc(LAN.t('Move'),LAN.t(move.name),LAN.t(move.shortDesc))"
                                             style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
@@ -374,15 +379,15 @@
                                         <img ng-src="{{::DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                                              style="margin-left: 5px">
 
-                                    </btn>
+                                    </button>
 
                                 </div>
                             </td>
                             <td>
-                                <button pkmkey="t" ng-if="session.pokemons.length>1"
+                                <button ng-if="session.pokemons.length>1"
                                         ng-click="trasladePokemon(selectedPokemonClick(),selectedPokemon)" type="button"
                                         class="btn bg-blue ">
-                                    <i class="material-icons">desktop_windows</i> {{showkey("T")}}
+                                    <i class="material-icons">desktop_windows</i>
                                 </button>
                             </td>
                         </tr>
@@ -392,25 +397,25 @@
                                     <div class=".sorting"
                                          style="text-transform: capitalize;text-align: center !important;width: 16%;display: inline-block"
                                          ng-repeat="(kpo,pokemon) in session.pokemons">
-                                        <button pkmkey="{{['!','@','#','$','%','^'][$index]}}"
+                                        <button
                                                 ng-if="session.pokemons.length>1"
                                                 ng-click="itemOnLongPress($index)"
                                                 type="button"
                                                 class="btn bg-teal "
                                                 style="height: 22px;padding: 0;width: 36px;">
                                             <i class="material-icons">keyboard_backspace</i>
-                                            {{"shit "+ ($index+1)}}
+
                                         </button>
                                     </div>
                                     <br>
                                     <div class=".sorting"
                                          style="text-transform: capitalize;text-align: center !important;width: 16%;display: inline-block"
                                          ng-repeat="(kpo,pokemon) in session.pokemons">
-                                        <button style="background-color: transparent" pkmkey="{{$index+1}}"
+                                        <button style="background-color: transparent"
                                                 ng-click="menuPokemon($index)">
                                             <img
                                                     style="transform: scale(0.5);{{pokemon.style}};{{PKM.hp(pokemon)<=0?'filter: grayscale(1);':''}}"
-                                                    ng-src="{{pokemon.imageUrl}}"> {{showkey($index+1)}}
+                                                    ng-src="{{pokemon.imageUrl}}">
                                         </button>
                                     </div>
                                 </div>
@@ -449,7 +454,7 @@
                             <td style="text-transform: capitalize;text-align: left">
                                 <div style="list-style: none;text-align: left">
 
-                                    <btn
+                                    <button
                                             style="float: left;min-width: 50%;text-align: left"
                                             class="btn btn-default">
                                         {{selectedBobedaClick().name}}
@@ -458,9 +463,9 @@
                                              ng-repeat="(tkey, type) in selectedBobedaClick().types"
                                              ng-src="{{::DOMAINRESOURCE}}resources/poekemon/types/{{type}}.png">
                                         <img ng-src="../resources/icons/{{selectedBobedaClick().gender}}.png">
-                                    </btn>
+                                    </button>
 
-                                    <btn
+                                    <button
                                             ng-click="desc(LAN.t('Ability'),LAN.t(selectedBobedaClick().ability.name),LAN.t(selectedBobedaClick().ability.shortDesc))"
                                             style="float: left;min-width: 50%;text-align: left"
                                             class="btn btn-default">
@@ -468,7 +473,7 @@
                                         ({{selectedBobedaClick().ability.rating}})
                                         <img style="visibility: hidden"
                                              ng-src="../resources/icons/{{selectedBobedaClick().gender}}.png">
-                                    </btn>
+                                    </button>
 
                                 </div>
                             </td>
@@ -482,7 +487,7 @@
                         <tr>
                             <td colspan="2">
                                 <div>
-                                    <btn
+                                    <button
                                             ng-repeat="(mkey,move) in  selectedBobedaClick().moves"
                                             ng-click="desc(LAN.t('Move'),LAN.t(move.name),LAN.t(move.shortDesc))"
                                             style="float: left;min-width: 50%;background-color: {{typeColor[move.type]}};text-align: left"
@@ -491,7 +496,7 @@
                                              style="margin-left: 5px"> <b> {{LAN.t(move.name)}}</b>
                                         <img ng-src="{{::DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                                              style="margin-left: 5px">
-                                    </btn>
+                                    </button>
                                 </div>
                             </td>
                             <td>
@@ -512,13 +517,13 @@
              style="color: white;overflow: scroll;width: 97%;min-height: 270px;padding: 15px;"
              class="bg-orange tab-pane fade animated bounceInRight in active">
             <div ng-repeat="(mkey,logro) in  skills">
-                <btn
+                <button
                         ng-click="desc(logro.term,logro.name,logro.desc)"
                         style="float: left;font-size: large;text-align: center;padding: 17px;margin: 10px;min-width: 65px"
                         class="btn {{logro.script?'bg-blue-grey':'bg-yellow'}} ">
                     <img style="width: 32px;height: 32px;background-image: url('../resources/system/IconSet.png');background-position: -{{icon(logro.icon).x}}px -{{icon(logro.icon).y}}px;"
                          ng-if="logro.icon">
-                </btn>
+                </button>
 
             </div>
         </div>
@@ -613,7 +618,7 @@
                 </div>
                 <label class="StatusText" style="background-color: {{typeColor[PKM.friend().battle.statusType]}}"
                        ng-if="PKM.friend().battle.status">
-                    {{PKM.friend().battle.status}} x{{PKM.friend().battle.statusTurn}}
+                    {{PKM.friend().battle.status}}
                 </label>
                 <label class="STATSText bg-red" ng-if="PKM.friend().battle.stats.atk!==0">
                     a{{PKM.friend().battle.stats.atk*-1}}
@@ -649,7 +654,7 @@
                 <label class="StatusText"
                        style="float: left; background-color: {{typeColor[PKM.target().battle.statusType]}}"
                        ng-if="PKM.target().battle.status">
-                    {{PKM.target().battle.status}} x{{PKM.target().battle.statusTurn}}
+                    {{PKM.target().battle.status}}
                 </label>
                 <label class="STATSText bg-red" ng-if="PKM.target().battle.stats.atk!==0" style="float: left;">
                     a{{PKM.target().battle.stats.atk*-1}}
@@ -680,16 +685,11 @@
             </div>
         </div>
 
-        <button style="width: 20%;margin-top: 2px" ng-if="muted && !menuOpen" type="button"
-                ng-click="ACTIONS.GAME.MUTE_OFF()"
-                class="btn bg-red    menuButton">
-            <i class="material-icons myicon">volume_off</i>
-        </button>
-
-        <button style="width: 20%;margin-top: 2px" ng-if="!muted && !menuOpen" type="button"
-                ng-click="ACTIONS.GAME.MUTE()"
-                class="btn btn-red    menuButton">
+        <button style="width: 20%;margin-top: 2px" ng-if="!menuOpen" type="button" ng-click="ACTIONS.GAME.MUTE()"
+                class="btn bg-{{muted<0.20?'red':'blue'}}    menuButton">
             <i class="material-icons myicon">volume_up</i>
+            <div style="width: {{muted}}%;height: 10px" class="bg-brown"></div>
+
         </button>
 
         <button ng-if="PKM.mainMenu && (PKM.friend().battle.status!=='partiallytrapped' && PKM.target().battle.status !== 'ingrain') && session.pokemons.length>1"
@@ -745,22 +745,22 @@
                 <tr>
                     <td>
                         <div>
-                            <btn ng-repeat="(mkey,move) in  PKM.moves(selectedPokemonClick())"
-                                 style="    margin-top: 5px;float: left;min-width: 100%;background-color: {{typeColor[move.type]}};text-align: left;font-size: 16px"
-                                 class="btn ">
+                            <button ng-repeat="(mkey,move) in  PKM.moves(selectedPokemonClick())"
+                                    style="    margin-top: 5px;float: left;min-width: 100%;background-color: {{typeColor[move.type]}};text-align: left;font-size: 16px"
+                                    class="btn ">
                                 <img ng-src="{{::DOMAINRESOURCE}}resources/poekemon/types/{{move.type}}.png"
                                      style="margin-left: 5px">
                                 <b> {{LAN.t(move.name)}}</b>
                                 <img ng-src="{{::DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                                      style="margin-left: 5px">: {{LAN.t(move.shortDesc)}}
-                            </btn>
-                            <btn style="text-align: left" class="btn btn-default">
+                            </button>
+                            <button style="text-align: left" class="btn btn-default">
                                 <b style="text-transform: capitalize"> {{selectedPokemonClick().name}} </b>
                                 <img style="margin-left: 5px;text-align: left"
                                      ng-repeat="(tkey, type) in selectedPokemonClick().types"
                                      ng-src="{{::DOMAINRESOURCE}}resources/poekemon/types/{{type}}.png">
                                 <img ng-src="../resources/icons/{{selectedPokemonClick().gender}}.png">
-                            </btn>
+                            </button>
                         </div>
                     </td>
                     <td>
@@ -835,14 +835,14 @@
     <div ng-if="PKM.mainMenu && !BATTLEOBJS.batonpass && !PKM.forcehidemenu"
          style="position: absolute;bottom: 2px;text-align: center;z-index: 999;opacity: 0.9;width: 98%">
 
-        <btn ng-if="(PKM.pokeballCount && (BATTLEOBJS.isWild && (PKM.hp(PKM.friend())>0 && PKM.catchMove.num!==(BATTLEOBJS.disableMove||1).num))) && BATTLEOBJS.allowtrap"
-             ng-click="PKM.attack(PKM.catchMove)"
-             style="font-size: 26px;background-color: white;position: absolute;bottom: 68px;"
-             class="btn ">
+        <button ng-if="(PKM.pokeballCount && (BATTLEOBJS.isWild && (PKM.hp(PKM.friend())>0 && PKM.catchMove.num!==(BATTLEOBJS.disableMove||1).num))) && BATTLEOBJS.allowtrap"
+                ng-click="PKM.attack(PKM.catchMove)"
+                style="font-size: 26px;background-color: white;position: absolute;bottom: 68px;"
+                class="btn ">
             <b> {{PKM.catchMove.name}}</b>
 
             <img style="background-position: -{{PKM.pokeballLevel*40.962}}px 0px;width: 40.962px;height: 40px;background-image: url('../resources/animations/Pokemon/pokeballs.png') ">({{PKM.pokeballCount}})
-        </btn>
+        </button>
         <button ng-if="BATTLEOBJS.isWild && (PKM.friend().battle.status!=='partiallytrapped' && PKM.target().battle.status !== 'ingrain')"
                 style="font-size: 26px;background-color: white;position: absolute;bottom: 68px;right: 0;"
                 type="button"
@@ -851,17 +851,17 @@
             {{::LAN.t("Left")}} <i class="material-icons">directions_run</i>
         </button>
         <br>
-        <btn ng-if="PKM.hp(PKM.friend())>0 && move.num!==(BATTLEOBJS.disableMove||1).num"
-             ng-repeat="(mkey,move) in  PKM.friend().battle.moves || PKM.friend().moves"
-             ng-click="PKM.attack(move)"
+        <button ng-if="PKM.hp(PKM.friend())>0 && move.num!==(BATTLEOBJS.disableMove||1).num"
+                ng-repeat="(mkey,move) in  PKM.friend().battle.moves || PKM.friend().moves"
+                ng-click="PKM.attack(move)"
 
-             style="padding: 0 !important;font-size: 24px;float: left;width: 50%;background-color: {{typeColor[move.type]}};text-align: left;{{PKM.gigamaxAttack(move)}}"
-             class="btn ">
+                style="padding: 0 !important;font-size: 24px;float: left;width: 50%;background-color: {{typeColor[move.type]}};text-align: left;{{PKM.gigamaxAttack(move)}}"
+                class="btn ">
             <img ng-src="{{::DOMAINRESOURCE}}resources/poekemon/types/{{move.type}}.png" style="margin-left: 5px"><b>
             {{LAN.t(move.name)}}</b>
             <img ng-src="{{::DOMAINRESOURCE}}resources/poekemon/category/{{move.category}}.png"
                  style="margin-left: 5px">
-        </btn>
+        </button>
 
     </div>
     <div class="bg-white"
@@ -879,9 +879,9 @@
     <div style="position: absolute;width: 98%;z-index: 99999" ng-if="dialogText">
         <div class="DialogWindow" style="min-height: 172px;min-width: 600px;opacity: 1">
             <div class="DialogTitle">
-                <img style="float: right"
+                <img ng-if="dialogHero.name" style="float: right"
                      ng-src="{{::DOMAIN}}data/characters_file/{{dialogHero.name}}/face.png?v={{dialogHero.version||''}}">
-                <label style="font-size: 24px;color: #673AB7">{{dialogHero.name}}:</label>
+                <label ng-if="dialogHero.name" style="font-size: 24px;color: navajowhite">{{dialogHero.name}}:</label>
                 <span style="font-size: 18px;" id="dialogTextD">
                     {{dialogText}}
                 </span>
@@ -916,38 +916,20 @@
          style="position: absolute;bottom: 10px;right: 10px;text-align: center;z-index: 999;opacity: 0.6;">
         <button id="arrow_upward" type="button" class="btn btn-lg bg-green"
                 style="margin-bottom: 6px;">
-            <i class="material-icons">arrow_upward</i> {{::showkey('W')}}
+            <i class="material-icons">arrow_upward</i>
         </button>
         <br>
         <button id="arrow_back" type="button" class="btn btn-lg bg-red">
-            <i class="material-icons">arrow_back</i> {{::showkey('A')}}
+            <i class="material-icons">arrow_back</i>
         </button>
         <button id="arrow_downward" type="button" class="btn btn-lg bg-blue">
-            <i class="material-icons">arrow_downward</i> {{::showkey('S')}}
+            <i class="material-icons">arrow_downward</i>
         </button>
         <button id="arrow_forward" type="button" class="btn btn-lg bg-amber">
-            <i class="material-icons">arrow_forward</i> {{::showkey('D')}}
+            <i class="material-icons">arrow_forward</i>
         </button>
     </div>
 
-
-    <div ng-show="!isBattlening && !menuOpen && menu && desktop"
-         style="position: absolute;bottom: 10px;right: 10px;text-align: center;z-index: 999;opacity: 0.6;">
-        <button pkmkey="w" ng-click="PADMOVE('w')" id="arrow_upward" type="button" class="btn btn-lg bg-green"
-                style="margin-bottom: 6px;">
-            <i class="material-icons">arrow_upward</i> {{::showkey('W')}}
-        </button>
-        <br>
-        <button pkmkey="a" ng-click="PADMOVE('a')" id="arrow_back" type="button" class="btn btn-lg bg-red">
-            <i class="material-icons">arrow_back</i> {{::showkey('A')}}
-        </button>
-        <button pkmkey="s" ng-click="PADMOVE('s')" id="arrow_downward" type="button" class="btn btn-lg bg-blue">
-            <i class="material-icons">arrow_downward</i> {{::showkey('S')}}
-        </button>
-        <button pkmkey="d" ng-click="PADMOVE('d')" id="arrow_forward" type="button" class="btn btn-lg bg-amber">
-            <i class="material-icons">arrow_forward</i> {{::showkey('D')}}
-        </button>
-    </div>
 </section>
 
 <script src="js/tools/lodash.min.js?v=1.0.0.55"></script>

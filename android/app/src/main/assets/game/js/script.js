@@ -204,9 +204,16 @@ $(document).on("keyup", function (e) {
 
 
 UNIT = function () {
-    return angular.element($("#play")).scope().ACTIONS
+    return angular.element($("#play")).scope();
 };
 
+$(document).on("keyup", function (e) {
+    PRESS.CTRL = false;
+    PRESS.SHIFT = false;
+    if (TOUCHER)
+        clearInterval(TOUCHER);
+    TOUCHER = undefined;
+});
 $(document).on("click", ".gradientclass", function () {
     var a = $("<a>")
         .attr("href", $(this).attr('src'))

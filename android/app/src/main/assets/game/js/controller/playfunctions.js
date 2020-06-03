@@ -10,9 +10,9 @@ function playfunctions($scope, $timeout) {
         $scope.OBJECTS = [];
         createjs.Sound.stop();
         for (var l = 0; l <= 9; l++) {
-            eval(`layer${l}.removeAllChildren()`);
+            eval(` $scope.layer${l}.removeAllChildren()`);
         }
-        STAGE.update();
+        $scope.STAGE.update();
     };
     $scope.drawMap = function (name) {
         if ($scope.maps[$scope.FIRSTMAP].maper) {
@@ -26,9 +26,9 @@ function playfunctions($scope, $timeout) {
             var Sprite = new createjs.SpriteSheet({
                 framerate: $scope.spriteFrames,
                 "images": [
-                    $scope.mapQueues[name].getResult(`layer${L}_A`),
-                    $scope.mapQueues[name].getResult(`layer${L}_B`),
-                    $scope.mapQueues[name].getResult(`layer${L}_C`)
+                    $scope.mapQueues[name].getResult(` $scope.layer${L}_A`),
+                    $scope.mapQueues[name].getResult(` $scope.layer${L}_B`),
+                    $scope.mapQueues[name].getResult(` $scope.layer${L}_C`)
                 ],
                 "frames": [
                     // x, y, width, height, imageIndex*
@@ -45,7 +45,7 @@ function playfunctions($scope, $timeout) {
             item.x = 0;
             item.y = 0;
             item.name = `layer_${L}`;
-            eval(`layer${L}.addChild(item);`);
+            eval(` $scope.layer${L}.addChild(item);`);
             for (var x = 0; x < $scope.maps[name].width; x++) {
                 for (var y = 0; y < $scope.maps[name].height; y++) {
                     var e = $scope.maps[name].event[`${L}_${x}_${y}`];
@@ -94,21 +94,21 @@ function playfunctions($scope, $timeout) {
                 }
             }
         }
-        //STAGE.update();
+        //  $scope.STAGE.update();
         $scope.play("bgm" + $scope.FIRSTMAP, $scope.SOUNDS.bgm);
         $scope.play("bgs" + $scope.FIRSTMAP, $scope.SOUNDS.bgs);
         $scope.ACTIONS.MESSAGE.NOTI($scope.maps[name].displayName);
         $timeout(() => {
             for (var i in $scope.NPCS) {
                 var NPC = $scope.NPCS[i];
-                if (NPC.event.trigger === E_trigger.auto) {
+                if (NPC.event.trigger === $scope.E_trigger.auto) {
                     if (eval(NPC.event.conditions))
                         $scope.runActions(OSO(NPC.event.actions));
                 }
             }
             for (var i in $scope.OBJECTS) {
                 var NPC = $scope.OBJECTS[i];
-                if (NPC.event.trigger === E_trigger.auto) {
+                if (NPC.event.trigger === $scope.E_trigger.auto) {
                     if (eval(NPC.event.conditions))
                         $scope.runActions(OSO(NPC.event.actions));
                 }
@@ -151,22 +151,35 @@ function playfunctions($scope, $timeout) {
                     $scope.runScript(route);
                 }
             }
+
             if (!$scope.ASSAULTING) {
                 for (var i in $scope.TRAINERS) {
                     if ($scope.TRAINERS[i]) {
-                        if ($scope.TRAINERS[i].event.trigger === E_trigger.entrenador) {
+
+                        if ($scope.TRAINERS[i].event.trigger === $scope.E_trigger.entrenador) {
                             var DIR = randomArray(["UP", "DOWN", "LEFT", "RIGHT"]);
                             var ACT = randomArray(["MOVE_", "", "", ""]);
                             eval(`eval($scope.ACTIONS.NPC.${ACT}${DIR}("${$scope.TRAINERS[i].name}"));`);
                         }
                     }
                 }
+                for (var i in $scope.NEARS) {
+                    if ($scope.NEARS[i]) {
+                        if ($scope.NEARS[i].event.trigger === $scope.E_trigger.near) {
+                            var DIR = randomArray(["UP", "DOWN", "LEFT", "RIGHT"]);
+                            var ACT = randomArray(["MOVE_", "", "", ""]);
+                            eval(`eval($scope.ACTIONS.NPC.${ACT}${DIR}("${$scope.NEARS[i].name}"));`);
+                        }
+                    }
+                }
             }
             for (var i in $scope.ANDANTES) {
                 if ($scope.ANDANTES[i]) {
-                    var DIR = randomArray(["UP", "DOWN", "LEFT", "RIGHT"]);
-                    var ACT = randomArray(["MOVE_", "", "", ""]);
-                    eval(`eval($scope.ACTIONS.NPC.${ACT}${DIR}("${$scope.ANDANTES[i].name}"));`);
+                    if ($scope.ANDANTES[i].event.trigger === $scope.E_trigger.andante) {
+                        var DIR = randomArray(["UP", "DOWN", "LEFT", "RIGHT"]);
+                        var ACT = randomArray(["MOVE_", "", "", ""]);
+                        eval(`eval($scope.ACTIONS.NPC.${ACT}${DIR}("${$scope.ANDANTES[i].name}"));`);
+                    }
                 }
             }
         }
@@ -210,7 +223,7 @@ function playfunctions($scope, $timeout) {
 
                                 });
                                 $scope.ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
-                                    eval(`layer${L}.removeChild(hero.body);`);
+                                    eval(` $scope.layer${L}.removeChild(hero.body);`);
                                     delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
                                     $scope.breaking = false;
                                 });
@@ -304,16 +317,16 @@ function playfunctions($scope, $timeout) {
                     }
 
                     $scope.play("Jump", $scope.SOUNDS.system);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing2"]);`);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing1"]);`);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.body);`);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.shadow);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing2"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing1"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero.body);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero.shadow);`);
 
                     $scope.hero.l = uperLayer;
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing2"]);`);
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero.body);`);
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing1"]);`);
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero.shadow);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero["body" + "wing2"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero.body);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero["body" + "wing1"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero.shadow);`);
 
                     var dx = difference($scope.hero.x, x);
                     var dy = difference($scope.hero.y, y);
@@ -361,8 +374,8 @@ function playfunctions($scope, $timeout) {
 
             });
         }
-        eval(`layer${L}.addChild(hero.body);`);
-        STAGE.update();
+        eval(` $scope.layer${L}.addChild(hero.body);`);
+        $scope.STAGE.update();
     };
     $scope.breaking = false;
     $scope.reDrawObject = function (hero, filters) {
@@ -380,7 +393,7 @@ function playfunctions($scope, $timeout) {
             }
         });
         var old = {x: hero.x, y: hero.y, l: hero.l};
-        eval(`layer${old.l}.removeChild(hero.body);`);
+        eval(` $scope.layer${old.l}.removeChild(hero.body);`);
         hero.body = new createjs.Sprite(SpriteSheet, "run");
         hero.body.x = old.x * $scope.baseWidth;
         hero.body.y = old.y * $scope.baseHeight;
@@ -403,7 +416,7 @@ function playfunctions($scope, $timeout) {
 
                                 });
                                 $scope.ACTIONS.ANIMATION.PLAY_OBJECT(hero.body.name.replace('object_', ''), "AfterBreak", "UP", function () {
-                                    eval(`layer${L}.removeChild(hero.body);`);
+                                    eval(` $scope.layer${L}.removeChild(hero.body);`);
                                     delete $scope.OBJECTS[hero.body.name.replace('object_', '')];
                                     $scope.breaking = false;
                                 });
@@ -498,16 +511,16 @@ function playfunctions($scope, $timeout) {
                     }
 
                     $scope.play("Jump", $scope.SOUNDS.system);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing2"]);`);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing1"]);`);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.body);`);
-                    eval(`layer${$scope.hero.l}.removeChild($scope.hero.shadow);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing2"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero["body" + "wing1"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero.body);`);
+                    eval(` $scope.layer${$scope.hero.l}.removeChild($scope.hero.shadow);`);
 
                     $scope.hero.l = uperLayer;
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing2"]);`);
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero.body);`);
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero["body" + "wing1"]);`);
-                    eval(`layer${$scope.hero.l}.addChild($scope.hero.shadow);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero["body" + "wing2"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero.body);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero["body" + "wing1"]);`);
+                    eval(` $scope.layer${$scope.hero.l}.addChild($scope.hero.shadow);`);
 
                     var dx = difference($scope.hero.x, x);
                     var dy = difference($scope.hero.y, y);
@@ -555,8 +568,8 @@ function playfunctions($scope, $timeout) {
 
             });
         }
-        eval(`layer${old.l}.addChild(hero.body);`);
-        STAGE.update();
+        eval(` $scope.layer${old.l}.addChild(hero.body);`);
+        $scope.STAGE.update();
     };
     $scope.reDrawPlayer = function (hero, filters) {
         var name = hero.body.name.replace("player_", "");
@@ -571,7 +584,7 @@ function playfunctions($scope, $timeout) {
             "animations": $scope.animationConfig,
         });
         var old = {x: hero.x, y: hero.y, l: hero.l};
-        eval(`layer${old.l}.removeChild(hero.body);`);
+        eval(` $scope.layer${old.l}.removeChild(hero.body);`);
         hero.body = new createjs.Sprite(Sprite, $scope.ACTIONS.GAME.POSITION(hero));
         hero.body.mouseEnabled = true;
         if (!hero.isNPC && !hero.isObject)
@@ -597,7 +610,7 @@ function playfunctions($scope, $timeout) {
                 "animations": $scope.animationConfig,
             });
             var oldD = {x: hero.x, y: hero.y, l: hero.l};
-            eval(`layer${oldD.l}.removeChild(hero["body" + wing]);`);
+            eval(` $scope.layer${oldD.l}.removeChild(hero["body" + wing]);`);
             hero["body" + wing] = new createjs.Sprite(SpriteD, $scope.ACTIONS.GAME.POSITION(hero));
             hero["body" + wing].x = oldD.x * $scope.baseWidth;
             hero["body" + wing].y = oldD.y * $scope.baseHeight;
@@ -606,10 +619,10 @@ function playfunctions($scope, $timeout) {
         }
 
 
-        eval(`layer${old.l}.addChild(hero["body" + "wing2"]);`);
-        eval(`layer${old.l}.addChild(hero.body);`);
-        eval(`layer${old.l}.addChild(hero["body" + "wing1"]);`);
-        STAGE.update();
+        eval(` $scope.layer${old.l}.addChild(hero["body" + "wing2"]);`);
+        eval(` $scope.layer${old.l}.addChild(hero.body);`);
+        eval(` $scope.layer${old.l}.addChild(hero["body" + "wing1"]);`);
+        $scope.STAGE.update();
     };
     $scope.drawPlayer = function (hero, name, x, y, L) {
         x = x === undefined ? hero.x : x;
@@ -623,7 +636,7 @@ function playfunctions($scope, $timeout) {
         hero.shadow.y = y * $scope.baseHeight + hero.shadowY;
         hero.shadow.name = name + `_playershadow`;
         hero.shadow.cache(0, 0, $scope.baseWidth, $scope.baseHeight);
-        eval(`layer${L}.addChild(hero.shadow);`);
+        eval(` $scope.layer${L}.addChild(hero.shadow);`);
 
 
         hero.style = new createjs.Bitmap($scope.mapQueues["player_" + name].getResult(`TV`));
@@ -688,18 +701,18 @@ function playfunctions($scope, $timeout) {
 
         }
 
-        eval(`layer${L === 0 ? 1 : L}.addChild(hero["body" + "wing2"]);`);
-        eval(`layer${L === 0 ? 1 : L}.addChild(hero.body);`);
-        eval(`layer${L === 0 ? 1 : L}.addChild(hero["body" + "wing1"]);`);
+        eval(` $scope.layer${L === 0 ? 1 : L}.addChild(hero["body" + "wing2"]);`);
+        eval(` $scope.layer${L === 0 ? 1 : L}.addChild(hero.body);`);
+        eval(` $scope.layer${L === 0 ? 1 : L}.addChild(hero["body" + "wing1"]);`);
         if (L === 0) {
-            $scope.ACTIONS.GAME.ALPHABASE(layer1, 1, 0.5);
+            $scope.ACTIONS.GAME.ALPHABASE($scope.layer1, 1, 0.5);
             $scope.ACTIONS.GAME.ALPHABASE(hero, 1, 0.5);
             hero.body.framerate = 1;
             createjs.Sound.stop();
             $scope.play("Deep", $scope.SOUNDS.bgm);
             hero.deeping = true;
         }
-        STAGE.update();
+        $scope.STAGE.update();
     };
 
     //Events
@@ -746,8 +759,8 @@ function playfunctions($scope, $timeout) {
     };
     $scope.runShortCuts = function (script) {
         var newscript = script;
-        for (var i in E_shortcuts) {
-            newscript = newscript.split(i).join(E_shortcuts[i]);
+        for (var i in $scope.E_shortcuts) {
+            newscript = newscript.split(i).join($scope.E_shortcuts[i]);
         }
         return newscript;
     };
@@ -757,7 +770,7 @@ function playfunctions($scope, $timeout) {
             for (var i in $scope.NPCS) {
                 var NPC = $scope.NPCS[i];
                 if (NPC)
-                    if (NPC.body.visible || NPC.event.trigger === E_trigger.collision) {
+                    if (NPC.body.visible || NPC.event.trigger === $scope.E_trigger.collision) {
                         if (NPC.x === cx && NPC.y === cy)
                             if (NPC.l === hero.l || NPC.l === (hero.l + 1)) {
                                 if (NPC.event.trigger === trigger) {
@@ -785,7 +798,7 @@ function playfunctions($scope, $timeout) {
             for (var i in $scope.OBJECTS) {
                 var NPC = $scope.OBJECTS[i];
                 if (NPC)
-                    if (NPC.body.visible || NPC.event.trigger === E_trigger.collision) {
+                    if (NPC.body.visible || NPC.event.trigger === $scope.E_trigger.collision) {
                         if (NPC.x === cx && NPC.y === cy) {
                             if (NPC.l === hero.l || NPC.l === (hero.l + 1)) {
                                 if (NPC.event.trigger === trigger) {
@@ -816,8 +829,8 @@ function playfunctions($scope, $timeout) {
     };
 
     //Base
-    STAGE.on("stagemousedown", $scope.moveMe);
-    //STAGE.on("click", $scope.moveMe);
+    $scope.STAGE.on("stagemousedown", $scope.moveMe);
+    //  $scope.STAGE.on("click", $scope.moveMe);
 
     //Starters and Loadings
     $scope.addResource = function (url, object) {
@@ -849,8 +862,8 @@ function playfunctions($scope, $timeout) {
         $scope.loadingPage.set({
             textAlign: "center",
             textBaseline: "middle",
-            x: (($scope.width * $scope.baseWidth) / 2) + STAGE.regX,
-            y: (($scope.height * $scope.baseHeight) / 2) + STAGE.regY
+            x: (($scope.width * $scope.baseWidth) / 2) + $scope.STAGE.regX,
+            y: (($scope.height * $scope.baseHeight) / 2) + $scope.STAGE.regY
         });
     };
     $scope.stopLoading = function () {
@@ -868,7 +881,7 @@ function playfunctions($scope, $timeout) {
     };
     $scope.loadMap = (name) => new Promise(async (resolve, reject) => {
         if (!$scope.mapQueues[name]) {
-            $scope.mapQueues[name] = new createjs.LoadQueue(false);
+            $scope.mapQueues[name] = new createjs.LoadQueue();
             $scope.mapQueues[name].installPlugin(createjs.Sound);
 
             $scope.maps[name] = await $scope.GAME.GETMAP(name);
@@ -879,7 +892,7 @@ function playfunctions($scope, $timeout) {
                 for (var L = 1; L <= 9; L++) {
                     var chara = String.fromCharCode(A);
                     loadJson.push({
-                        id: `layer${L}_${chara}`,
+                        id: ` $scope.layer${L}_${chara}`,
                         src: DOMAIN + `data/maps_file/${name}/W_${L}${chara}.png?v=${$scope.maps[name].version}`
                     });
                 }
@@ -940,7 +953,7 @@ function playfunctions($scope, $timeout) {
     });
     $scope.loadNPC = (name) => new Promise(async (resolve, reject) => {
         if (!$scope.mapQueues["player_" + name]) {
-            $scope.mapQueues["player_" + name] = new createjs.LoadQueue(false);
+            $scope.mapQueues["player_" + name] = new createjs.LoadQueue();
             $scope.mapQueues["player_" + name].installPlugin(createjs.Sound);
             $scope.players[name] = await $scope.GAME.GETNPC(name);
             var loadJson = [];
@@ -975,7 +988,7 @@ function playfunctions($scope, $timeout) {
     $scope.loadPlayer = () => new Promise(async (resolve, reject) => {
         var name = $scope.session.id;
         if (!$scope.mapQueues["player_" + name]) {
-            $scope.mapQueues["player_" + name] = new createjs.LoadQueue(false);
+            $scope.mapQueues["player_" + name] = new createjs.LoadQueue();
             $scope.mapQueues["player_" + name].installPlugin(createjs.Sound);
             $scope.players[name] = await $scope.GAME.GETPLAYER($scope.session);
             var loadJson = [];
@@ -1010,7 +1023,7 @@ function playfunctions($scope, $timeout) {
     });
     $scope.loadObject = (e) => new Promise(async (resolve, reject) => {
         if (!$scope.mapQueues["object_" + e.name]) {
-            $scope.mapQueues["object_" + e.name] = new createjs.LoadQueue(false);
+            $scope.mapQueues["object_" + e.name] = new createjs.LoadQueue();
             $scope.mapQueues["object_" + e.name].installPlugin(createjs.Sound);
             $scope.players[e.name] = e.name;
 
@@ -1038,8 +1051,8 @@ function playfunctions($scope, $timeout) {
             $scope.loadingPage.set({
                 textAlign: "center",
                 textBaseline: "middle",
-                x: (($scope.width * $scope.baseWidth) / 2) + STAGE.regX,
-                y: (($scope.height * $scope.baseHeight) / 2) + STAGE.regY
+                x: (($scope.width * $scope.baseWidth) / 2) + $scope.STAGE.regX,
+                y: (($scope.height * $scope.baseHeight) / 2) + $scope.STAGE.regY
             });
             $scope.loadingPage.textBaseline = "alphabetic";
             $scope.transitions = new createjs.Shape();
@@ -1056,25 +1069,27 @@ function playfunctions($scope, $timeout) {
             $scope.bubble.x = 0;
             $scope.bubble.y = 0;
             $scope.bubble.visible = false;
-            layer9.mouseEnabled = false;
-            layerAnimation.addChild($scope.ambients);
-            layerAnimation.addChild($scope.transitions);
-            layerAnimation.addChild($scope.loadingPage);
-            layerAnimation.addChild($scope.bubble);
+            $scope.layer9.mouseEnabled = false;
+            $scope.layerAnimation.addChild($scope.ambients);
+            $scope.layerAnimation.addChild($scope.transitions);
+            $scope.layerAnimation.addChild($scope.loadingPage);
+            $scope.layerAnimation.addChild($scope.bubble);
             var name = "resources_system";
-            $scope.mapQueues[name] = new createjs.LoadQueue(false);
+            $scope.mapQueues[name] = new createjs.LoadQueue();
             $scope.mapQueues[name].installPlugin(createjs.Sound);
             $scope.maps[$scope.FIRSTMAP] = await $scope.GAME.GETMAP($scope.FIRSTMAP);
             var loadJson = [];
 
             var systemsounds = await $scope.GAME.systemSounds();
             var reforced = await $scope.GAME.ANIMATIONS();
+            var systemresources = [];
             for (var f = 0; f < reforced.length; f++) {
                 $scope.animations[reforced[f].name] = reforced[f];
                 if (reforced[f].isSystem === "1") {
-                    $scope.ACTIONS.LOAD.ADD([reforced[f].file]);
+                    systemresources.push(reforced[f].file);
                 }
             }
+            $scope.ACTIONS.LOAD.ADD(systemresources);
             for (var sound of systemsounds) {
                 var url = sound;
                 var nameFile = sound.split('/')[sound.split('/').length - 1].replace(".ogg", "");
@@ -1082,6 +1097,7 @@ function playfunctions($scope, $timeout) {
                     loadJson.push({id: nameFile, src: url});
                 }
                 $scope.addSound(nameFile, url);
+                $scope.addSound(url, url);
             }
 
 
@@ -1091,10 +1107,10 @@ function playfunctions($scope, $timeout) {
             }, this);
             $scope.mapQueues[name].load();
         } else {
-            layerAnimation.addChild($scope.ambients);
-            layerAnimation.addChild($scope.transitions)
-            layerAnimation.addChild($scope.loadingPage);
-            layerAnimation.addChild($scope.bubble);
+            $scope.layerAnimation.addChild($scope.ambients);
+            $scope.layerAnimation.addChild($scope.transitions)
+            $scope.layerAnimation.addChild($scope.loadingPage);
+            $scope.layerAnimation.addChild($scope.bubble);
             resolve(true);
         }
     });
@@ -1111,9 +1127,36 @@ function playfunctions($scope, $timeout) {
     $scope.setLife = function () {
         $scope.TRAINERS = [];
         $scope.ANDANTES = [];
+        $scope.NEARS = [];
         $scope.INSISTENCIA = {};
-        for (var i in $scope.NPCS)
-            if ($scope.NPCS[i].event.trigger === E_trigger.entrenador || $scope.NPCS[i].event.trigger === E_trigger.entrenadortranquilo) {
+        for (var i in $scope.NPCS) {
+            if ($scope.NPCS[i].event.trigger === $scope.E_trigger.near || $scope.NPCS[i].event.trigger === $scope.E_trigger.neartranquilo) {
+                $scope.NEARS[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
+                eval(`
+                $scope.NPCS['${i}'].body.on("click", function (evt) {
+
+                var actions = [];
+                if ($scope.NPCS['${i}'].event.actions.length > 0) {
+                    var actionsNaturals = OSO($scope.NPCS['${i}'].event.actions);
+                    for (var c of actionsNaturals) {
+                        if (eval(c.CC) && c.script.indexOf('//nonear') !== -1) {
+                            actions.push(c);
+                        }
+                        if (eval(c.CC) && c.script.indexOf('//nonear') === -1) {
+                            return;
+                        }
+                    }
+                }
+                if (actions.length === 0)
+                    return;
+                    
+                 $scope.ACTIONS.NPC.LOOK($scope.ACTIONS.NPC.GET('${i}'), $scope.ACTIONS.PLAYER.GET());
+                 $scope.ACTIONS.PLAYER.LOOK($scope.ACTIONS.NPC.GET('${i}'));   
+                 $scope.runActions(actions);
+                });
+                `);
+            }
+            if ($scope.NPCS[i].event.trigger === $scope.E_trigger.entrenador || $scope.NPCS[i].event.trigger === $scope.E_trigger.entrenadortranquilo) {
                 $scope.TRAINERS[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
                 eval(`
                 $scope.NPCS['${i}'].body.on("click", function (evt) {
@@ -1131,15 +1174,34 @@ function playfunctions($scope, $timeout) {
                         $scope.ACTIONS.POKEMON.BATTLESTART('${i}','revenge');
                         }
                         },
-                        {text: "No",click: function () { $scope.ACTIONS.GAME.RESUME(); }}
+                        {text: "No",click: function () { 
+                        
+                        $scope.ACTIONS.GAME.RESUME(); 
+                        var texts = $scope.personalities[ $scope.players['${i}'].personality];
+    
+                        if ( $scope.INSISTENCIA['${i}'])
+                             $scope.INSISTENCIA['${i}']++;
+                        else
+                             $scope.INSISTENCIA['${i}'] = 1;
+                        var insistencia =  $scope.INSISTENCIA['${i}'] > 3 ? "jarto" : "textos" +  $scope.INSISTENCIA['${i}'];
+                        var textFinal = randomArray(texts[insistencia]);
+                        
+                        $scope.ACTIONS.NPC.LOOK($scope.ACTIONS.NPC.GET('${i}'), $scope.ACTIONS.PLAYER.GET());
+                        $scope.ACTIONS.PLAYER.LOOK($scope.ACTIONS.NPC.GET('${i}'));
+                        
+                        $scope.ACTIONS.MESSAGE.CHOICE('${i}', $scope.personCheck(textFinal), [{
+                            text: 'Ok', click: function () {
+                                $scope.ACTIONS.MESSAGE.HIDE();
+                            }
+                        }]);
+                        
+                        }}
                         ]);
                     }
                 });
                 `);
             }
-
-        for (var i in $scope.NPCS)
-            if ($scope.NPCS[i].event.trigger === E_trigger.andante || $scope.NPCS[i].event.trigger === E_trigger.andantetranquilo) {
+            if ($scope.NPCS[i].event.trigger === $scope.E_trigger.andante || $scope.NPCS[i].event.trigger === $scope.E_trigger.andantetranquilo) {
                 $scope.ANDANTES[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
                 eval(`
                 $scope.NPCS['${i}'].body.on("click", function (evt) {
@@ -1166,12 +1228,13 @@ function playfunctions($scope, $timeout) {
                 });
                 `);
             }
+        }
     };
     $scope.init = async function () {
 
         LAN = await LANGUAGE_.ALL();
         $scope.LAN = LANGUAGE;
-        PERSONALITY = await PERSONALITY_.ALL();
+        PERSONALITY = await $scope.PERSONALITY_.ALL();
         var position = await $scope.GAME.PLAYERPOSITION();
         $scope.gposition = position;
         $scope.FIRSTMAP = position.map;

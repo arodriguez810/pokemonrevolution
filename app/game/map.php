@@ -578,6 +578,12 @@
                             </select>
                             <label class="form-label">Type </label>
                         </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-link waves-effect" style="" ng-click="save()">Guardar</button>
+                            <button type="button" class="btn btn-link waves-effect" ng-click="clear()" data-dismiss="modal">
+                                Cerrar
+                            </button>
+                        </div>
                     </div>
                     <div class="row clearfix">
 
@@ -709,10 +715,7 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-link waves-effect" ng-click="save()">Guardar</button>
-                    <button type="button" class="btn btn-link waves-effect" ng-click="clear()" data-dismiss="modal">
-                        Cerrar
-                    </button>
+
                 </div>
             </div>
         </div>

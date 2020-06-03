@@ -251,25 +251,13 @@ function playactions($scope, $timeout) {
             },
             CLICK: function () {
                 if ($scope.ACTIONS.PLAYER.POSITION() === "down") {
-                    $scope.moveOld($scope.hero, {
-                        stageX: (($scope.hero.x) * $scope.baseWidth) - STAGE.regX,
-                        stageY: (($scope.hero.y + 1) * $scope.baseHeight) - STAGE.regY
-                    }, true);
+                    $scope.moveEnter($scope.hero.x, $scope.hero.y + 1, true);
                 } else if ($scope.ACTIONS.PLAYER.POSITION() === "up") {
-                    $scope.moveOld($scope.hero, {
-                        stageX: (($scope.hero.x) * $scope.baseWidth) - STAGE.regX,
-                        stageY: (($scope.hero.y - 1) * $scope.baseHeight) - STAGE.regY
-                    }, true);
+                    $scope.moveEnter($scope.hero.x, $scope.hero.y - 1, true);
                 } else if ($scope.ACTIONS.PLAYER.POSITION() === "left") {
-                    $scope.moveOld($scope.hero, {
-                        stageX: (($scope.hero.x - 1) * $scope.baseWidth) - STAGE.regX,
-                        stageY: (($scope.hero.y) * $scope.baseHeight) - STAGE.regY
-                    }, true);
+                    $scope.moveEnter($scope.hero.x - 1, $scope.hero.y, true);
                 } else if ($scope.ACTIONS.PLAYER.POSITION() === "right") {
-                    $scope.moveOld($scope.hero, {
-                        stageX: (($scope.hero.x + 1) * $scope.baseWidth) - STAGE.regX,
-                        stageY: (($scope.hero.y) * $scope.baseHeight) - STAGE.regY
-                    }, true);
+                    $scope.moveEnter($scope.hero.x + 1, $scope.hero.y, true);
                 }
                 //if (!$scope.$$phase) $scope.$digest();
             },
@@ -677,16 +665,16 @@ function playactions($scope, $timeout) {
             MOVE: function (object, name, x, y, callback, force) {
                 if (object[name]) {
                     $scope.move(object[name], {
-                        stageX: (x * $scope.baseWidth) - STAGE.regX,
-                        stageY: (y * $scope.baseHeight) - STAGE.regY
+                        stageX: (x * $scope.baseWidth) - $scope.STAGE.regX,
+                        stageY: (y * $scope.baseHeight) - $scope.STAGE.regY
                     }, undefined, callback, force);
                 }
             },
             MOVEOBJECT: function (object, x, y, callback) {
                 if (object) {
                     $scope.move(object, {
-                        stageX: (x * $scope.baseWidth) - STAGE.regX,
-                        stageY: (y * $scope.baseHeight) - STAGE.regY
+                        stageX: (x * $scope.baseWidth) - $scope.STAGE.regX,
+                        stageY: (y * $scope.baseHeight) - $scope.STAGE.regY
                     }, undefined, callback);
                 }
             },
@@ -732,15 +720,15 @@ function playactions($scope, $timeout) {
                                 $scope.play("Wind", $scope.SOUNDS.bgm);
                             }
 
-                            eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
-                            eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
-                            eval(`layer${object.l}.removeChild(object.body);`);
-                            eval(`layer${object.l}.removeChild(object.shadow);`);
+                            eval(` $scope.layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                            eval(` $scope.layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                            eval(` $scope.layer${object.l}.removeChild(object.body);`);
+                            eval(` $scope.layer${object.l}.removeChild(object.shadow);`);
                             object.l = uperLayer;
-                            eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
-                            eval(`layer${uperLayer}.addChild(object.body);`);
-                            eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
-                            eval(`layer${uperLayer}.addChild(object.shadow);`);
+                            eval(` $scope.layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                            eval(` $scope.layer${uperLayer}.addChild(object.body);`);
+                            eval(` $scope.layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                            eval(` $scope.layer${uperLayer}.addChild(object.shadow);`);
                             if (object.shadow)
                                 object.shadowY = $scope.baseHeight;
                             $scope.ACTIONS.GAME.MOVEOBJECT(object, object.x, object.y - 1);
@@ -789,15 +777,15 @@ function playactions($scope, $timeout) {
 
                         $scope.ACTIONS.ANIMATION.PLAY_IN(object, "wing1", function () {
                             $scope.ACTIONS.GAME.MOVEOBJECT(object, object.x, object.y + 1, function () {
-                                eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
-                                eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
-                                eval(`layer${object.l}.removeChild(object.body);`);
-                                eval(`layer${object.l}.removeChild(object.shadow);`);
+                                eval(` $scope.layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                                eval(` $scope.layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                                eval(` $scope.layer${object.l}.removeChild(object.body);`);
+                                eval(` $scope.layer${object.l}.removeChild(object.shadow);`);
                                 object.l = uperLayer;
-                                eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
-                                eval(`layer${uperLayer}.addChild(object.body);`);
-                                eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
-                                eval(`layer${uperLayer}.addChild(object.shadow);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object.body);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object.shadow);`);
                                 object.flying = false;
                                 $scope.ACTIONS.GAME.UNBLOCK();
                                 if (object.isNPC) {
@@ -886,7 +874,7 @@ function playactions($scope, $timeout) {
                                 uperLayer = 0;
 
                                 if (!object.isNPC && !object.isObject)
-                                    $scope.ACTIONS.GAME.ALPHABASE(layer1, 1, 0.5);
+                                    $scope.ACTIONS.GAME.ALPHABASE($scope.layer1, 1, 0.5);
 
                                 if (object.isNPC) {
                                     $scope.ACTIONS.NPC.ALPHA(object.name, 0.5);
@@ -922,7 +910,7 @@ function playactions($scope, $timeout) {
                                     }
 
                                 if (!object.isNPC && !object.isObject)
-                                    $scope.ACTIONS.GAME.ALPHABASE(layer1, 1, 1);
+                                    $scope.ACTIONS.GAME.ALPHABASE($scope.layer1, 1, 1);
 
                                 if (object.isNPC) {
                                     $scope.ACTIONS.NPC.ALPHA(object.name, 1);
@@ -953,15 +941,15 @@ function playactions($scope, $timeout) {
                         if (uperLayer > object.l || uperLayer < object.l) {
                             object.l = uperLayer;
                             if (object.l !== 0) {
-                                eval(`layer${object.l}.removeChild(object["body" + "wing2"]);`);
-                                eval(`layer${object.l}.removeChild(object["body" + "wing1"]);`);
-                                eval(`layer${object.l}.removeChild(object.body);`);
-                                eval(`layer${object.l}.removeChild(object.shadow);`);
+                                eval(` $scope.layer${object.l}.removeChild(object["body" + "wing2"]);`);
+                                eval(` $scope.layer${object.l}.removeChild(object["body" + "wing1"]);`);
+                                eval(` $scope.layer${object.l}.removeChild(object.body);`);
+                                eval(` $scope.layer${object.l}.removeChild(object.shadow);`);
 
-                                eval(`layer${uperLayer}.addChild(object["body" + "wing2"]);`);
-                                eval(`layer${uperLayer}.addChild(object.body);`);
-                                eval(`layer${uperLayer}.addChild(object["body" + "wing1"]);`);
-                                eval(`layer${uperLayer}.addChild(object.shadow);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object["body" + "wing2"]);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object.body);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object["body" + "wing1"]);`);
+                                eval(` $scope.layer${uperLayer}.addChild(object.shadow);`);
                             }
                         }
                         if (!nosound)
@@ -1031,7 +1019,7 @@ function playactions($scope, $timeout) {
             },
             FILTER_STAGE: function (light, alpha, color) {
                 var color = tinycolor(color);
-                layer1.filters = [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)];
+                $scope.layer1.filters = [new createjs.ColorFilter(light, light, light, alpha, color._r, color._g, color._b)];
             },
             CLEAR_FILTER: function (object) {
                 if (object.isObject) {
@@ -1306,7 +1294,7 @@ function playactions($scope, $timeout) {
                         if (NPC.body.visible) {
                             if (NPC.x === x && NPC.y === y) {
                                 if (NPC.event.name.indexOf("Murito") !== -1) {
-                                    eval(`layer${L}.removeChild(NPC.body);`);
+                                    eval(` $scope.layer${L}.removeChild(NPC.body);`);
                                     delete $scope.OBJECTS[NPC.body.name.replace('object_', '')];
                                 }
                                 return;
@@ -1478,8 +1466,8 @@ function playactions($scope, $timeout) {
                 if (!$scope.walking)
                     if ($scope.hero)
                         $scope.move($scope.hero, {
-                            stageX: (x * $scope.baseWidth) - STAGE.regX,
-                            stageY: (y * $scope.baseHeight) - STAGE.regY
+                            stageX: (x * $scope.baseWidth) - $scope.STAGE.regX,
+                            stageY: (y * $scope.baseHeight) - $scope.STAGE.regY
                         }, undefined, callback, force);
             },
             MOVE_UP: function (callback) {
@@ -1678,6 +1666,46 @@ function playactions($scope, $timeout) {
                     }, true);
                 });
             },
+            CLEARASSAULT: function () {
+                $scope.ASSAULTING = false;
+                $scope.ACTIONS.GAME.UNBLOCK();
+                $scope.ACTIONS.GAME.RESUME();
+            },
+            ASSAULTNPC: function (trainer) {
+
+
+                if ($scope.ASSAULTING)
+                    return;
+
+                var actions = [];
+                if (trainer.event.actions.length > 0) {
+                    var actionsNaturals = OSO(trainer.event.actions);
+                    for (var c of actionsNaturals) {
+                        if (eval(c.CC) && c.script.indexOf('//nonear') === -1) {
+                            actions.push(c);
+                        }
+                    }
+                }
+                if (actions.length === 0)
+                    return;
+
+                $scope.ASSAULTING = true;
+                $scope.ACTIONS.SOUND.STOPALL();
+                $scope.ACTIONS.GAME.PAUSE();
+                $scope.ACTIONS.GAME.BLOCK();
+                $scope.ACTIONS.ANIMATION.PLAY_UP($scope.ACTIONS.NPC.GET(trainer.name), "b_admiracion", function () {
+                    $scope.ACTIONS.GAME.PAUSE();
+                    $scope.ACTIONS.GAME.BLOCK();
+                    $scope.ACTIONS.NPC.MOVE(trainer.name, $scope.ACTIONS.PLAYER.GET().x, $scope.ACTIONS.PLAYER.GET().y, function () {
+                        $scope.ACTIONS.GAME.PAUSE();
+                        $scope.ACTIONS.GAME.BLOCK();
+                        $scope.ACTIONS.NPC.LOOK($scope.ACTIONS.NPC.GET(trainer.name), $scope.ACTIONS.PLAYER.GET());
+                        $scope.ACTIONS.PLAYER.LOOK($scope.ACTIONS.NPC.GET(trainer.name));
+                        $scope.ACTIONS.GAME.RESUME();
+                        $scope.runActions(actions);
+                    }, true);
+                });
+            },
             WHOLOOKME: function (x, y) {
                 if ($scope.ASSAULTING)
                     return;
@@ -1688,8 +1716,9 @@ function playactions($scope, $timeout) {
                 if ($scope.lastEventLook !== `${x}x${y}x${l}`) {
                     $scope.TRAINERS = [];
                     for (var i in $scope.NPCS)
-                        if ($scope.NPCS[i].event.trigger === E_trigger.entrenador)
-                            $scope.TRAINERS[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
+                        if ($scope.NPCS[i].event.trigger === $scope.E_trigger.entrenador || $scope.NPCS[i].event.trigger === $scope.E_trigger.entrenadortranquilo)
+                            if ($scope.NPCS[i].body.visible)
+                                $scope.TRAINERS[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
 
                     $scope.lastEventLook = `${x}x${y}x${l}`;
                     var uplimit = ((y - range));
@@ -1760,6 +1789,97 @@ function playactions($scope, $timeout) {
                                         $scope.ACTIONS.PLAYER.ASSAULT(trainer);
                                         return;
                                     }
+                                } else
+                                    break
+                            }
+                        }
+                    }
+                }
+            },
+            WHOLOOKMENPC: function (x, y) {
+                if ($scope.ASSAULTING)
+                    return;
+                x = x || $scope.ACTIONS.PLAYER.GET().x;
+                y = y || $scope.ACTIONS.PLAYER.GET().y;
+                var l = $scope.ACTIONS.PLAYER.GET().l;
+                var range = 5;
+                if ($scope.lastEventLookNPC !== `${x}x${y}x${l}`) {
+                    $scope.NEARS = [];
+                    for (var i in $scope.NPCS)
+                        if ($scope.NPCS[i].event.trigger === $scope.E_trigger.near || $scope.NPCS[i].event.trigger === $scope.E_trigger.neartranquilo) {
+                            if ($scope.NPCS[i].body.visible)
+                                $scope.NEARS[`${$scope.NPCS[i].x}x${$scope.NPCS[i].y}x${$scope.NPCS[i].l}`] = $scope.NPCS[i];
+                        }
+
+                    $scope.lastEventLookNPC = `${x}x${y}x${l}`;
+                    var uplimit = ((y - range));
+                    if (y > 0) {
+                        for (var U = y; U >= uplimit; U--) {
+                            if ($scope.collision($scope.hero, x, U) && !$scope.NEARS[`${x}x${U}x${l}`]) {
+                                break;
+                            }
+                            if ($scope.NEARS[`${x}x${U}x${l}`]) {
+                                var trainer = $scope.NEARS[`${x}x${U}x${l}`];
+                                if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "down") {
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
+                                } else
+                                    break
+                            }
+                        }
+                    }
+                    var downlimit = ((y + range));
+                    if (y < $scope.maps[$scope.FIRSTMAP].height) {
+                        for (var U = y; U <= downlimit; U++) {
+                            if ($scope.collision($scope.hero, x, U) && !$scope.NEARS[`${x}x${U}x${l}`]) {
+                                break;
+                            }
+                            if ($scope.NEARS[`${x}x${U}x${l}`]) {
+                                var trainer = $scope.NEARS[`${x}x${U}x${l}`];
+                                if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "up") {
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
+                                } else
+                                    break
+
+                            }
+                        }
+                    }
+                    var uplimitx = ((x - range));
+                    if (x > 0) {
+                        for (var U = x; U >= uplimitx; U--) {
+                            if ($scope.collision($scope.hero, U, y) && !$scope.NEARS[`${U}x${y}x${l}`]) {
+                                break;
+                            }
+                            if ($scope.NEARS[`${U}x${y}x${l}`]) {
+                                var trainer = $scope.NEARS[`${U}x${y}x${l}`];
+                                if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "right") {
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
+                                } else
+                                    break
+                            }
+                        }
+                    }
+                    var downlimitx = ((x + range));
+                    if (x < $scope.maps[$scope.FIRSTMAP].width) {
+                        for (var U = x; U <= downlimitx; U++) {
+                            if ($scope.collision($scope.hero, U, y) && !$scope.NEARS[`${U}x${y}x${l}`]) {
+                                break;
+                            }
+                            if ($scope.NEARS[`${U}x${y}x${l}`]) {
+                                var trainer = $scope.NEARS[`${U}x${y}x${l}`];
+                                if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "left") {
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
                                 } else
                                     break
                             }
@@ -1967,7 +2087,7 @@ function playactions($scope, $timeout) {
                 }
             },
             SCROLLTO: function (name, s_in, s_state, s_out, callback) {
-                $scope.ACTIONS.GAME.SCROLLTO(STAGE, $scope.NPCS[name], s_in, s_state, s_out, callback);
+                $scope.ACTIONS.GAME.SCROLLTO($scope.STAGE, $scope.NPCS[name], s_in, s_state, s_out, callback);
             },
             SHAKE: function (name, interval, distance, times, callback) {
                 $scope.ACTIONS.GAME.SHAKE($scope.NPCS[name].body, interval, distance, times, callback);
@@ -1975,10 +2095,10 @@ function playactions($scope, $timeout) {
             },
             REMOVE: function (name) {
                 if ($scope.NPCS[name]) {
-                    eval(`layer${$scope.NPCS[name].l}.removeChild($scope.NPCS[name].body)`);
-                    eval(`layer${$scope.NPCS[name].l}.removeChild($scope.NPCS[name].shadow)`);
+                    eval(` $scope.layer${$scope.NPCS[name].l}.removeChild($scope.NPCS[name].body)`);
+                    eval(` $scope.layer${$scope.NPCS[name].l}.removeChild($scope.NPCS[name].shadow)`);
                     delete $scope.NPCS[name];
-                    STAGE.update();
+                    $scope.STAGE.update();
                 }
             },
             /**
@@ -2198,10 +2318,10 @@ function playactions($scope, $timeout) {
             },
             REMOVE: function (name) {
                 if ($scope.OBJECTS[name]) {
-                    eval(`layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].body)`);
-                    eval(`layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].shadow)`);
+                    eval(` $scope.layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].body)`);
+                    eval(` $scope.layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].shadow)`);
                     delete $scope.OBJECTS[name];
-                    STAGE.update();
+                    $scope.STAGE.update();
                 }
             },
             ALPHA: function (name, alpha, callback) {
@@ -2350,7 +2470,7 @@ function playactions($scope, $timeout) {
 
                 });
                 $scope.ACTIONS.ANIMATION.PLAY_OBJECT(name, "AfterBreak", "UP", function () {
-                    eval(`layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].body);`);
+                    eval(` $scope.layer${$scope.OBJECTS[name].l}.removeChild($scope.OBJECTS[name].body);`);
                     delete $scope.OBJECTS[name];
                 });
             },
@@ -2379,7 +2499,7 @@ function playactions($scope, $timeout) {
                                 thisdestry = wasdestry = true;
                             }
                             if (thisdestry) {
-                                eval(`layer${$scope.OBJECTS[NPC.name].l}.removeChild($scope.OBJECTS[NPC.name].body);`);
+                                eval(` $scope.layer${$scope.OBJECTS[NPC.name].l}.removeChild($scope.OBJECTS[NPC.name].body);`);
                                 delete $scope.OBJECTS[NPC.name];
                             }
                         }
@@ -2450,6 +2570,7 @@ function playactions($scope, $timeout) {
                     $scope.$evalAsync();
                     $("#texts").show(200);
                     $scope.play("Talk", $scope.SOUNDS.system);
+                    $scope.$evalAsync();
                     $scope.dialogTiming = $timeout(() => {
                         $("#texts").hide(200);
                         if ($scope.messageQuee.length > 0)
@@ -2459,6 +2580,7 @@ function playactions($scope, $timeout) {
                             if ($scope.tradeCallback)
                                 $scope.tradeCallback();
                         }
+                        $scope.$evalAsync();
                     }, time || ($scope.ACTIONS.MESSAGE.CONFIG.TIME.MESSAGE * 1000));
                 } else {
                     $scope.ACTIONS.GAME.RESUME();
@@ -2526,6 +2648,7 @@ function playactions($scope, $timeout) {
             REPLAY: function (time, callback) {
                 clearInterval($scope.dialogTiming);
                 $scope.ACTIONS.MESSAGE.PLAY(time, callback);
+                $scope.$evalAsync();
             },
             NOTI: function (message, time, callback) {
                 $scope.notificationText = $scope.ACTIONS.MESSAGE.FORMULATE(LANGUAGE.t(message)) || "...";
@@ -2556,11 +2679,24 @@ function playactions($scope, $timeout) {
         LOAD: {
             ADD: function (resources, callback) {
                 //ACTIONS.GAME.PAUSE();
+                var exists = true;
+                var validresources = [];
+                for (var url of resources) {
+                    var urlversion = url;
+                    if (!$scope.getResource(urlversion) && !$scope.existSound(urlversion) && validresources.indexOf(urlversion) === -1)
+                        validresources.push(urlversion);
+                }
+                if (validresources.length === 0) {
+                    $scope.ACTIONS.GAME.RESUME();
+                    if (callback)
+                        callback();
+                    return;
+                }
                 var temp = new createjs.LoadQueue(false);
                 temp.installPlugin(createjs.Sound);
                 var loadJson = [];
                 var newR = false;
-                for (var url of resources) {
+                for (var url of validresources) {
                     if (url.indexOf(".ogg") !== -1) {
                         if (!$scope.existSound(url)) {
                             loadJson.push({id: url, src: url});
@@ -2578,6 +2714,8 @@ function playactions($scope, $timeout) {
                     temp.loadManifest(loadJson);
                     temp.on("complete", function (event) {
                         for (var loaded of loadJson) {
+                            if (loaded.src.indexOf($scope.DOMAINRESOURCE) !== -1)
+                                console.logorange(loaded.src);
                             $scope.addResource(loaded.src, temp.getResult(loaded.id));
                         }
                         $scope.ACTIONS.GAME.RESUME();
@@ -2637,10 +2775,10 @@ function playactions($scope, $timeout) {
                     sprite.x = ((x * $scope.baseWidth) - (frameW / 2)) + $scope.midWidth;
                     sprite.y = ((y * $scope.baseHeight) - (frameH / 2)) + $scope.midHeight;
                     sprite.scale = scale || 1;
-                    layerAnimation.addChild(sprite);
+                    $scope.layerAnimation.addChild(sprite);
                     if (!loop) {
                         $timeout(() => {
-                            layerAnimation.removeChild(sprite);
+                            $scope.layerAnimation.removeChild(sprite);
                         }, (animation.frames.length / parseInt(animation.framerate)) * 1000);
                         $timeout(() => {
                             if (callback)
@@ -2682,10 +2820,10 @@ function playactions($scope, $timeout) {
                     sprite.y = ((y) - (frameH / 2));
                     sprite.scale = scale || 1;
 
-                    layerAnimation.addChild(sprite);
+                    $scope.layerAnimation.addChild(sprite);
                     if (!loop) {
                         $timeout(() => {
-                            layerAnimation.removeChild(sprite);
+                            $scope.layerAnimation.removeChild(sprite);
                         }, (animation.frames.length / parseInt(animation.framerate)) * 1000);
                         $timeout(() => {
                             if (callback)
@@ -2736,14 +2874,14 @@ function playactions($scope, $timeout) {
                     } else
                         sprite.scale = scale || 1;
 
-                    layerAnimation.addChild(sprite);
+                    $scope.layerAnimation.addChild(sprite);
 
                     var thetime = time === true ? (animation.frames.length / parseInt(animation.framerate)) * 1000 : time;
                     createjs.Tween.get(sprite).to({
                         x: ((x2 * $scope.baseWidth) - (frameW / 2)) + $scope.midWidth,
                         y: ((y2 * $scope.baseHeight) - (frameH / 2)) + $scope.midHeight
                     }, thetime).call(function () {
-                        layerAnimation.removeChild(sprite);
+                        $scope.layerAnimation.removeChild(sprite);
                         // if (!nopause)
                         //    $scope.ACTIONS.GAME.RESUME();
                         if (callback)
@@ -2783,14 +2921,14 @@ function playactions($scope, $timeout) {
                         sprite.scaleX = sprite.scaleY = ratio;
                     } else
                         sprite.scale = scale || 1;
-                    layerAnimation.addChild(sprite);
+                    $scope.layerAnimation.addChild(sprite);
 
                     var thetime = time === true ? (animation.frames.length / parseInt(animation.framerate)) * 1000 : time;
                     createjs.Tween.get(sprite).to({
                         x: x2 - (frameW / 2),
                         y: y2 - (frameH / 2)
                     }, thetime).call(function () {
-                        layerAnimation.removeChild(sprite);
+                        $scope.layerAnimation.removeChild(sprite);
                         // if (!nopause)
                         //    $scope.ACTIONS.GAME.RESUME();
                         if (callback)
@@ -2844,7 +2982,7 @@ function playactions($scope, $timeout) {
                 createjs.Sound.stop();
             },
             system: function (name, callback, time) {
-                $scope.SoundSystemVar = DOMAINRESOURCE + `resources/audio/system/${name}.ogg`;
+                $scope.SoundSystemVar = `../resources/audio/system/${name}.ogg`;
                 $scope.ACTIONS.SOUND.PLAY($scope.SoundSystemVar, $scope.SOUNDS.system);
                 if (callback) {
                     $timeout(() => {
@@ -2855,30 +2993,30 @@ function playactions($scope, $timeout) {
                 }
             },
             Sound: function (name, callback) {
-                $scope.SoundVar = DOMAINRESOURCE + `resources/audio/Sound/${name}.ogg`;
+                $scope.SoundVar = `../resources/audio/Sound/${name}.ogg`;
                 $scope.ACTIONS.SOUND.PLAY($scope.SoundVar, $scope.SOUNDS.system, callback);
             },
             pokemon: function (name, callback) {
                 $scope.ACTIONS.SOUND.STOPALL();
-                $scope.pokemonMusic = DOMAINRESOURCE + `resources/audio/pokemon/${name}.ogg`;
+                $scope.pokemonMusic = `../resources/audio/pokemon/${name}.ogg`;
                 $scope.ACTIONS.SOUND.PLAY($scope.pokemonMusic, $scope.SOUNDS.system, callback);
             },
             Enviroment: function (name, time, callback) {
                 $scope.ACTIONS.SOUND.STOPALL();
-                $scope.Enviroment = DOMAINRESOURCE + `resources/audio/Enviroment/${name}.ogg`;
+                $scope.Enviroment = `../resources/audio/Enviroment/${name}.ogg`;
                 $scope.ACTIONS.SOUND.PLAY($scope.Enviroment, $scope.SOUNDS.system);
                 if (callback) {
                     $timeout(() => {
                         $scope.ACTIONS.SOUND.BGM_RESTORE();
                         if (callback)
                             callback();
-                    }, time * 1000);
+                    }, (time + 1) * 1000);
                 }
             },
             BattleMusic: function (name, callback) {
                 $scope.ACTIONS.SOUND.STOPALL();
                 if (name) {
-                    $scope.battleMusic = DOMAINRESOURCE + `resources/audio/BattleMusic/${name}.ogg`;
+                    $scope.battleMusic = `../resources/audio/BattleMusic/${name}.ogg`;
                     $scope.ACTIONS.SOUND.PLAY($scope.battleMusic, $scope.SOUNDS.battle, callback);
                 } else {
                     if ($scope.maps[$scope.FIRSTMAP].battleback.music) {
@@ -2894,7 +3032,7 @@ function playactions($scope, $timeout) {
             },
             BGM: function (name, callback) {
                 $scope.stop("bgm" + $scope.FIRSTMAP);
-                $scope.chagedBGM = DOMAINRESOURCE + `resources/audio/BackGround/${name}.ogg`;
+                $scope.chagedBGM = `../resources/audio/BackGround/${name}.ogg`;
                 $scope.ACTIONS.SOUND.PLAY($scope.chagedBGM, $scope.SOUNDS.bgm, callback);
             },
             BGM_RESTORE: function () {
@@ -2910,6 +3048,23 @@ function playactions($scope, $timeout) {
             }
         },
         POKEMON: {
+            BATTLESTARTQUEST: function (trainer, text, wining, losing) {
+                $scope.ACTIONS.MESSAGE.CHOICE(trainer, "Quieres algo más?",
+                    [
+                        {
+                            text: "Volver a Pelear", click: function () {
+                                $scope.ACTIONS.POKEMON.BATTLESTART(trainer, text, wining, losing);
+                            }
+                        },
+                        {
+                            text: "Adiós", click: function () {
+                                $scope.ACTIONS.GAME.RESUME();
+                            }
+                        },
+                    ], function () {
+
+                    });
+            },
             BATTLESTART: function (trainer, text, wining, losing) {
                 $scope.ACTIONS.GAME.PAUSE();
                 $scope.ACTIONS.GAME.BLOCK();
@@ -3135,8 +3290,10 @@ function playactions($scope, $timeout) {
                 if ($scope.session.logros.indexOf(logro) !== -1)
                     return;
                 $scope.session.logros.push(logro);
-                if (can)
+                if (can) {
                     $scope.session[can] = true;
+                    $scope.hero[can] = true;
+                }
                 $scope.ACTIONS.GAME.SAVE(function () {
                     for (var skille of $scope.session.logros) {
                         if ($scope.LOGROS[skille]) {
@@ -3265,7 +3422,7 @@ function playactions($scope, $timeout) {
         for (var pokemon of $scope.session.pokemons) {
             var status = $scope.POKEMOMFIND.EVOLPROB(pokemon.name);
             var select = getRandomInt(100);
-            var select2 = getRandomInt(100) - 30;
+            var select2 = getRandomInt(100) - 15;
             if (lvl === 'salvaje') {
                 status.prob = 1;
             } else {
@@ -3331,6 +3488,9 @@ function playactions($scope, $timeout) {
     $scope.PKM.RatedFight = async function () {
         $scope.PKM.ratedBattleText = true;
         var trainers = await $scope.HOME_.GETFRIENDS();
+        trainers = trainers.filter(d => {
+            return (d.name !== $scope.session.name && d.pokemons.length === 6);
+        });
         var myratring = $scope.session.rating || 0;
         if (trainers.length > 0) {
             var justos = trainers.filter(d => {

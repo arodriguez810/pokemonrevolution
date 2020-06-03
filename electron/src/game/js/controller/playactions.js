@@ -1701,10 +1701,6 @@ function playactions($scope, $timeout) {
                         $scope.ACTIONS.GAME.BLOCK();
                         $scope.ACTIONS.NPC.LOOK($scope.ACTIONS.NPC.GET(trainer.name), $scope.ACTIONS.PLAYER.GET());
                         $scope.ACTIONS.PLAYER.LOOK($scope.ACTIONS.NPC.GET(trainer.name));
-                        $scope.ACTIONS.SOUND.system("looknpc");
-                        setTimeout(function () {
-                            $scope.ACTIONS.SOUND.BGM_RESTORE();
-                        }, 3000);
                         $scope.ACTIONS.GAME.RESUME();
                         $scope.runActions(actions);
                     }, true);
@@ -1825,10 +1821,10 @@ function playactions($scope, $timeout) {
                             if ($scope.NEARS[`${x}x${U}x${l}`]) {
                                 var trainer = $scope.NEARS[`${x}x${U}x${l}`];
                                 if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "down") {
-                                    if (!$scope.ACTIONS.PROGRESS.GETNATURAL("trainer" + trainer.name)) {
-                                        $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
-                                        return;
-                                    }
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
                                 } else
                                     break
                             }
@@ -1843,10 +1839,10 @@ function playactions($scope, $timeout) {
                             if ($scope.NEARS[`${x}x${U}x${l}`]) {
                                 var trainer = $scope.NEARS[`${x}x${U}x${l}`];
                                 if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "up") {
-                                    if (!$scope.ACTIONS.PROGRESS.GETNATURAL("trainer" + trainer.name)) {
-                                        $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
-                                        return;
-                                    }
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
                                 } else
                                     break
 
@@ -1862,10 +1858,10 @@ function playactions($scope, $timeout) {
                             if ($scope.NEARS[`${U}x${y}x${l}`]) {
                                 var trainer = $scope.NEARS[`${U}x${y}x${l}`];
                                 if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "right") {
-                                    if (!$scope.ACTIONS.PROGRESS.GETNATURAL("trainer" + trainer.name)) {
-                                        $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
-                                        return;
-                                    }
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
                                 } else
                                     break
                             }
@@ -1880,10 +1876,10 @@ function playactions($scope, $timeout) {
                             if ($scope.NEARS[`${U}x${y}x${l}`]) {
                                 var trainer = $scope.NEARS[`${U}x${y}x${l}`];
                                 if ($scope.ACTIONS.NPC.POSITION(trainer.name) === "left") {
-                                    if (!$scope.ACTIONS.PROGRESS.GETNATURAL("trainer" + trainer.name)) {
-                                        $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
-                                        return;
-                                    }
+
+                                    $scope.ACTIONS.PLAYER.ASSAULTNPC(trainer);
+                                    return;
+
                                 } else
                                     break
                             }

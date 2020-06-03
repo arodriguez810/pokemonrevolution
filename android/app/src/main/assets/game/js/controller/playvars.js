@@ -29,7 +29,7 @@ function playvars($scope, $timeout) {
         {type: 'Peleador', name: 'BlackBelt'},
         {type: 'Veneno', name: 'PunkGirl'},
     ];
-    $scope.routesTick = 5;
+    $scope.routesTick = 3;
     $scope.loadedSounds = [];
     $scope.extraResources = [];
     $scope.sounds = {};
@@ -74,10 +74,8 @@ function playvars($scope, $timeout) {
     $scope.width = 12;
     $scope.height = 8;
     $scope.baseHeight = 48;
-
     $scope.peopleWidth = 64;
     $scope.peopleHeight = 64;
-
     $scope.baseWidth = 48;
     $scope.baseHeight = 48;
     $scope.baseWidth = 48;
@@ -104,26 +102,25 @@ function playvars($scope, $timeout) {
     $scope.mapQueues = {};
     $scope.players = {};
     $scope.maps = {};
-    STAGE = new createjs.Stage("game");
-
-    ANIMATIONSSTAGE = new createjs.Stage("animations");
+    $scope.STAGE = new createjs.Stage("game");
+    $scope.ANIMATIONSSTAGE = new createjs.Stage("animations");
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
-    STAGE.snameToPixelsEnabled = true;
-    STAGE.snapToPixelEnabled = true;
-    createjs.Ticker.addEventListener("tick", STAGE);
-    createjs.Ticker.addEventListener("tick", ANIMATIONSSTAGE);
-    createjs.Ticker.maxDelta = 60;
-    createjs.Touch.enable(STAGE);
-    ANIMATIONSSTAGE.mouseEnabled = false;
-    ANIMATIONSSTAGE.mouseChildren = false;
+    $scope.STAGE.snameToPixelsEnabled = true;
+    $scope.STAGE.snapToPixelEnabled = true;
+    createjs.Ticker.addEventListener("tick", $scope.STAGE);
+    createjs.Ticker.addEventListener("tick", $scope.ANIMATIONSSTAGE);
+    //createjs.Ticker.maxDelta = 60;
+    createjs.Touch.enable($scope.STAGE);
+    $scope.ANIMATIONSSTAGE.mouseEnabled = false;
+    $scope.ANIMATIONSSTAGE.mouseChildren = false;
     for (var l = 0; l <= 9; l++) {
-        eval(`layer${l} = new createjs.Container();`);
-        eval(`STAGE.addChild(layer${l});`);
+        eval(`$scope.layer${l} = new createjs.Container();`);
+        eval(`  $scope.STAGE.addChild($scope.layer${l});`);
     }
-    layerBattle = new createjs.Container();
-    STAGE.addChild(layerBattle);
-    layerAnimation = new createjs.Container();
-    ANIMATIONSSTAGE.addChild(layerAnimation);
+    $scope.layerBattle = new createjs.Container();
+    $scope.STAGE.addChild($scope.layerBattle);
+    $scope.layerAnimation = new createjs.Container();
+    $scope.ANIMATIONSSTAGE.addChild($scope.layerAnimation);
 
     $scope.hero = {
         x: 0,
@@ -311,9 +308,9 @@ function playvars($scope, $timeout) {
                 var limitY = (($scope.maps[$scope.FIRSTMAP].height * $scope.baseHeight) - ($scope.height * $scope.baseHeight));
                 regY = regY > limitY ? limitY : regY;
             }
-            ANIMATIONSSTAGE.regX = regX;
-            ANIMATIONSSTAGE.regY = regY;
-            createjs.Tween.get(STAGE).to({regX: regX, regY: regY}, speed);
+            $scope.ANIMATIONSSTAGE.regX = regX;
+            $scope.ANIMATIONSSTAGE.regY = regY;
+            createjs.Tween.get($scope.STAGE).to({regX: regX, regY: regY}, speed);
         }
     };
     $scope.traslade = function (hero, animation, point, repeat, events, callback, force) {
@@ -463,30 +460,45 @@ function playvars($scope, $timeout) {
             if ($scope.pause)
                 return;
             if (!hero.walking) {
-                var local = STAGE.globalToLocal(event.stageX, event.stageY);
+                var local = $scope.STAGE.globalToLocal(event.stageX, event.stageY);
                 var cx = Math.floor(local.x / $scope.baseWidth);
                 var cy = Math.floor(local.y / $scope.baseHeight);
                 $scope.ACTIONS.PLAYER.LOOKDIR(cx, cy);
                 if (actions) {
-                    $scope.clickEvent(hero, cx, cy, E_trigger.click);
+                    $scope.clickEvent(hero, cx, cy,  $scope.E_trigger.click);
+                }
+            }
+        }
+    };
+    $scope.moveEnter = function (x, y, actions) {
+        if ($scope.hero) {
+            if ($scope.pause)
+                return;
+            if (!$scope.hero.walking) {
+                var cx = x;
+                var cy = y;
+                $scope.ACTIONS.PLAYER.LOOKDIR(cx, cy);
+                if (actions) {
+                    $scope.clickEvent($scope.hero, cx, cy,  $scope.E_trigger.click);
                 }
             }
         }
     };
     $scope.lastEventCollision = "";
     $scope.lastEventLook = "";
+    $scope.lastEventLookNPC = "";
     $scope.move = function (hero, event, actions, callback, force) {
 
         if (hero) {
             if ($scope.pause && !force)
                 return;
             if (!hero.walking) {
-                var local = STAGE.globalToLocal(event.stageX, event.stageY);
+                var local = $scope.STAGE.globalToLocal(event.stageX, event.stageY);
                 var cx = Math.floor(local.x / $scope.baseWidth);
                 var cy = Math.floor(local.y / $scope.baseHeight);
                 if (actions) {
                     if (!hero.isNPC) {
-                        var wasEvent = $scope.clickEvent(hero, cx, cy, E_trigger.click);
+                        var wasEvent = $scope.clickEvent(hero, cx, cy,  $scope.E_trigger.click);
                         if (wasEvent || wasEventC)
                             return;
                     }
@@ -507,11 +519,11 @@ function playvars($scope, $timeout) {
                     $scope.createEvent(events, hero, cx, cy, dx, dy, "x");
                 }
                 if (!hero.isNPC) {
-
                     if ($scope.lastEventCollision !== `${cx}x${cy}`) {
                         $scope.lastEventCollision = `${cx}x${cy}`;
                         $scope.ACTIONS.PLAYER.WHOLOOKME();
-                        $scope.clickEvent(hero, cx, cy, E_trigger.collision);
+                        $scope.ACTIONS.PLAYER.WHOLOOKMENPC();
+                        $scope.clickEvent(hero, cx, cy,  $scope.E_trigger.collision);
                     }
                 }
                 $scope.traslades(hero, events, callback, force);
